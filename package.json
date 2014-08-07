@@ -1,0 +1,13 @@
+{
+  "name": "ClumsyCMS",
+  "description": "A CMS for Laravel",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-watch": "*"
+  }
+}

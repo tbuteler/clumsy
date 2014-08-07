@@ -1,0 +1,14 @@
+{
+  "name": "ClumsyCMS",
+  "version": "0.1.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "tests"
+  ],
+  "dependencies": {
+    "tinymce": "~4.0.28"
+  }
+}
