@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
+        "cartalyst/sentry": "2.1.*",
         "clumsy/assets": "dev-master"
     },
     "autoload": {
@@ -23,7 +24,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.2.5-dev"
+            "dev-master": "0.2.6-dev"
         }
     },
     "minimum-stability": "dev"
