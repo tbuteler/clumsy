@@ -1,6 +1,6 @@
 $(function(){
     $('.delete-form').submit(function(e){
-        return confirm(handover.admin.delete_confirm);
+        return $(this).hasClass('user') ? confirm(handover.admin.delete_confirm_user) : confirm(handover.admin.delete_confirm);
     });
 
     if ($('.rich-text').length) {

@@ -12,8 +12,9 @@ Route::filter('admin_assets', function()
     Asset::enqueue('admin.css');
     Asset::enqueue('admin.js');
     Asset::json('admin', array(
-        'base_url'       => URL::to(\Config::get('cms::admin_prefix')),
-        'delete_confirm' => trans('clumsy/cms::alerts.delete_confirm'),
+        'base_url'            => URL::to(\Config::get('cms::admin_prefix')),
+        'delete_confirm'      => trans('clumsy/cms::alerts.delete_confirm'),
+        'delete_confirm_user' => trans('clumsy/cms::alerts.user.delete_confirm'),
     ));
 
     View::share('admin_prefix', \Config::get('cms::admin_prefix'));
