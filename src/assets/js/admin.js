@@ -6,7 +6,7 @@ $(function(){
     if ($('.rich-text').length) {
         tinymce.init({
             selector: ".rich-text",
-            content_css: handover.admin.base_url+'/../assets/css/tinymce.css',
+            content_css: handover.admin.base_url+'/../packages/clumsy/cms/css/tinymce.css',
             menubar : false,
             toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist",
             statusbar : false
