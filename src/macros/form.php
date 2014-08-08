@@ -247,7 +247,7 @@ Form::macro('delete', function($resource_type, $id) {
     $form_parameters = array(
         'method' => "DELETE",
         'url'    => URL::route("admin.$resource_type.destroy", $id),
-        'class'  => 'delete-form pull-right',
+        'class'  => "delete-form pull-right $resource_type",
     );
  
     return Form::open($form_parameters)
