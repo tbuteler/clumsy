@@ -207,7 +207,7 @@ Form::macro('media', function($options = array())
     $output .= '<input id="' . $id . '-input" type="file" name="files[]" data-url="' . $url . '"' . $multiple . '>';
     $output .= '</div>';
 
-    Event::listen('HTML body end', function() use($id, $label, $media)
+    Event::listen('Print footer scripts', function() use($id, $label, $media)
     {
         echo HTML::mediaModal($id, $label, $media);
     });
