@@ -4,7 +4,7 @@
 
     <h1 class="page-header first">
 
-        {{ $title }}
+        {{ $title or '' }}
 
         @yield('after-title')
     

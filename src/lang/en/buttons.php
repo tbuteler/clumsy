@@ -2,6 +2,8 @@
 
 return array(
 
+    'login'  => 'Login',
+
 	'add'    => 'Add new',
 
 	'save'   => 'Save changes',
@@ -13,5 +15,7 @@ return array(
 	'import' => 'Update :resources',
 
 	'toggle_navbar' => 'Toggle navigation',
+
+    'manage_users'  => 'Manage users',
 
 );

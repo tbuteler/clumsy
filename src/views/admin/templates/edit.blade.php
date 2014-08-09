@@ -8,7 +8,7 @@
 
     @else
 
-        {{ Form::open(array('url' => URL::route("admin.$resource.store"), 'id' => 'main-form')) }}
+        {{ Form::open(array('url' => route("admin.$resource.store"), 'id' => 'main-form')) }}
 
     @endif
 

@@ -3,12 +3,12 @@
 use URL;
 use View;
 use Input;
-use Sentry;
 use Redirect;
 use Validator;
 use MediaAssociation;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
+use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
 class AdminController extends \BaseController {
 

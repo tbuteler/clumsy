@@ -2,6 +2,8 @@
 
 return array(
 
+	'remember'		   => 'Manter sessão',
+
 	'first_name'       => 'Nome',
 
 	'last_name'        => 'Apelido',

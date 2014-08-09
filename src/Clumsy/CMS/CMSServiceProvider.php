@@ -17,7 +17,11 @@ class CMSServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function register() {}
+	public function register()
+	{
+		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
+		$this->app->register('Clumsy\Assets\AssetsServiceProvider');
+	}
 
 	/**
 	 * Boot the service provider.

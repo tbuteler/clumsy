@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         
-        <title>{{ $title }}</title>
+        <title>{{ $title or '' }}</title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
@@ -12,7 +12,7 @@
 
     @include('clumsy/cms::admin.templates.alert')
     
-    @if (Sentry::check())
+    @if (Cartalyst\Sentry\Facades\Laravel\Sentry::check())
 
         @include('clumsy/cms::admin.templates.navbar')
 

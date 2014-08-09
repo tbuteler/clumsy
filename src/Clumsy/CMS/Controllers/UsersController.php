@@ -3,11 +3,11 @@
 use URL;
 use View;
 use Input;
-use Sentry;
 use Redirect;
 use Validator;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
+use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
 class UsersController extends \BaseController {
 

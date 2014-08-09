@@ -4,26 +4,26 @@
 
     {{ Form::open() }}
 
-    {{ Form::hidden('intended', Session::has('intended') ? Session::get('intended') : URL::route('admin.home')) }}
+    {{ Form::hidden('intended', Session::has('intended') ? Session::get('intended') : route('admin.home')) }}
 
     <div class="form-group">
-        {{ Form::label('email', 'Email') }}
+        {{ Form::label('email', trans('clumsy/cms::fields.email')) }}
         {{ Form::text('email', Input::old('email'), array('class' => 'form-control')) }}
     </div>
 
     <div class="form-group">
-        {{ Form::label('password', 'Password') }}
+        {{ Form::label('password', trans('clumsy/cms::fields.password')) }}
         {{ Form::password('password', array('class' => 'form-control')) }}
     </div>
 
     <div class="checkbox">
         <label for="remember">
             {{ Form::checkbox('remember', '1', Input::old('remember'), array('id' => 'remember')) }}
-            Stay logged in
+            {{ trans('clumsy/cms::fields.remember') }}
         </label>
     </div>
 
-    {{ Form::submit('Login', array('class' => 'btn btn-primary')) }}
+    {{ Form::submit(trans('clumsy/cms::buttons.login'), array('class' => 'btn btn-primary')) }}
 
     {{ Form::close() }}
 

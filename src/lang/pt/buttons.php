@@ -2,6 +2,8 @@
 
 return array(
 
+    'login'  => 'Login',
+
 	'add'    => 'Adicionar novo',
 
 	'save'   => 'Salvar',
@@ -13,4 +15,6 @@ return array(
 	'import' => 'Actualizar :resources',
 
 	'toggle_navbar' => 'Mostrar menu de navegação',
+
+    'manage_users'  => 'Gerenciar usuários',
 );

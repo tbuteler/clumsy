@@ -38,5 +38,8 @@ Route::filter('admin_assets', function()
 
 Route::filter('admin_auth', function()
 {
-    if (!Sentry::check()) return Redirect::guest(\Config::get('cms::admin_prefix').'/login');
+    /*if (!Cartalyst\Sentry\Facades\Laravel\Sentry::check())
+    {
+        return Redirect::guest(\Config::get('cms::admin_prefix').'/login');
+    }*/
 });

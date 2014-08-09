@@ -2,6 +2,8 @@
 
 return array(
 
+	'count'          => '{0} No :resources found|[1,Inf]:count :resources found',
+
 	'item_added'     => 'New item added successfully.',
 	
 	'item_updated'   => 'Item was successfully updated.',
@@ -37,5 +39,7 @@ return array(
 
 		'undefined' => 'Import failed. No importer defined for :resources.',
 	),
+
+	'token_mismatch' => 'Your session expired before submitting changes. If you believe this is an error, please contact the website administrator.',
 
 );

@@ -2,6 +2,8 @@
 
 return array(
 
+	'count'          => '{0} Nenhum :resource encontrado|[1,Inf]:count :resources encontrados',
+
 	'item_added'     => 'Novo item adicionado com sucesso.',
 	
 	'item_updated'   => 'O item foi actualizado com sucesso.',
@@ -37,5 +39,7 @@ return array(
 
 		'undefined' => 'A importação falhou. Não foi encontrado um importador para :resources',
 	),
+
+	'token_mismatch' => 'Sua sessão expirou antes que pudesse salvar as mudanças. Se acredita que isto é um erro, por favor entre em contacto com o administrador do sistema.'
 
 );

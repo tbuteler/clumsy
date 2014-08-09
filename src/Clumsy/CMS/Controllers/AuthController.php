@@ -2,8 +2,8 @@
 
 use View;
 use Input;
-use Sentry;
 use Redirect;
+use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
 class AuthController extends \BaseController {
 
