@@ -1,14 +1,15 @@
 <?php namespace Clumsy\CMS\Controllers;
 
-use URL;
-use View;
-use Input;
-use Redirect;
-use Validator;
-use MediaAssociation;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
+use Clumsy\Eminem\Facade as MediaManager;
 
 class AdminController extends \BaseController {
 
@@ -60,43 +61,8 @@ class AdminController extends \BaseController {
         }
 
         View::share('user', $user);
-
         View::share('username', implode(' ', $username));
-
         View::share('usergroup', str_singular($user->getGroups()->first()->name));
-    }
-
-    public function setupMedia(&$data, $id = null)
-    {
-        $defaults = array(
-            'association_type'  => $this->model,
-            'association_id'    => $id,
-        );
-
-        $model = $this->model;
-
-        if ($model::$media)
-        {
-            if (!is_associative($model::$media))
-            {
-                foreach ($model::$media as $media)
-                {
-                    $data['media'][$media['position']] = array_merge(
-                        $defaults,
-                        array('id' => $media['position']),
-                        $media
-                    );
-                }
-            }
-            else
-            {
-                $data['media'][$model::$media['position']] = array_merge(
-                    $defaults,
-                    array('id' => $model::$media['position']),
-                    $model::$media
-                );
-            }
-        }
     }
 
     /**
@@ -145,8 +111,6 @@ class AdminController extends \BaseController {
             $data['title'] = trans('clumsy/cms::titles.new_item', array('resource' => $this->displayName()));
         }
 
-        $this->setupMedia($data);
-
         $data['form_fields'] = "admin.{$this->resource_plural}.fields";
 
         if (View::exists("admin.{$this->resource_plural}.edit"))
@@ -157,6 +121,8 @@ class AdminController extends \BaseController {
         {    
             $view = 'clumsy/cms::admin.templates.edit';
         }
+
+        $data['media'] = MediaManager::slots($this->model);
 
         return View::make($view, $data);
     }
@@ -183,30 +149,7 @@ class AdminController extends \BaseController {
                 ));
         }
 
-        unset($data['media-bind']);
-
         $item = $model::create($data);
-
-        if (Input::has('media-bind'))
-        {
-            foreach (Input::get('media-bind') as $media_id => $attributes)
-            {
-                if (!$attributes['allow_multiple'])
-                {
-                    MediaAssociation::where('media_association_type', $this->resource)
-                             ->where('media_association_id', $item->id)
-                             ->where('position', $attributes['position'])
-                             ->delete();
-                }
-
-                MediaAssociation::create(array(
-                    'media_id'    => $media_id,
-                    'media_association_type' => $this->resource,
-                    'media_association_id'   => $item->id,
-                    'position'    => $attributes['position'],
-                ));
-            }
-        }
 
         $url = URL::route("admin.{$this->resource}.index");
 
@@ -246,8 +189,6 @@ class AdminController extends \BaseController {
             $data['title'] = trans('clumsy/cms::titles.edit_item', array('resource' => $this->displayName()));
         }
 
-        $this->setupMedia($data, $id);
-
         $data['form_fields'] = "admin.{$this->resource_plural}.fields";
 
         if (View::exists("admin.{$this->resource_plural}.edit"))
@@ -258,6 +199,8 @@ class AdminController extends \BaseController {
         {    
             $view = 'clumsy/cms::admin.templates.edit';
         }
+
+        $data['media'] = MediaManager::slots($this->model, $id);
 
         return View::make($view, $data);
     }
@@ -287,10 +230,10 @@ class AdminController extends \BaseController {
                 ));
         }
 
-        foreach ((array)$model::$booleans as $check) {
-
-            if (!Input::has($check)) {
-
+        foreach ((array)$model::$booleans as $check)
+        {
+            if (!Input::has($check))
+            {
                 $data[$check] = 0;
             }
         }
@@ -359,7 +302,7 @@ class AdminController extends \BaseController {
             }
         }
 
-        return ucwords(str_replace('_', ' ', $string));
+        return Str::title(str_replace('_', ' ', $string));
     }
 
     public function displayNamePlural($string = false)
@@ -380,6 +323,6 @@ class AdminController extends \BaseController {
             $string = str_plural($string);
         }
 
-        return ucwords(str_replace('_', ' ', $string));
+        return Str::title(str_replace('_', ' ', $string));
     }
 }

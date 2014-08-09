@@ -21,6 +21,7 @@ class CMSServiceProvider extends ServiceProvider {
 	{
 		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
 		$this->app->register('Clumsy\Assets\AssetsServiceProvider');
+		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
 	}
 
 	/**
@@ -36,13 +37,14 @@ class CMSServiceProvider extends ServiceProvider {
         $admin_assets = include($this->guessPackagePath() . '/assets/assets.php');
 		Asset::batchRegister($admin_assets);
 
+		require $this->guessPackagePath().'/helpers.php';
+
 		require $this->guessPackagePath().'/filters.php';
 		require $this->guessPackagePath().'/routes.php';
 		require $this->guessPackagePath().'/errors.php';
 
-		require $this->guessPackagePath().'/helpers.php';
 		require $this->guessPackagePath().'/macros/form.php';
-		require $this->guessPackagePath().'/macros/html.php';
+		require $this->guessPackagePath().'/macros/string.php';
 	}
 
 	/**

@@ -2,6 +2,10 @@
 
 return array(
 
+	'yes'			   => 'Yes',
+
+	'no'			   => 'No',
+
 	'remember'		   => 'Stay logged in',
 
 	'first_name'       => 'First name',

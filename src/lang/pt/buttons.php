@@ -4,7 +4,7 @@ return array(
 
     'login'  => 'Login',
 
-	'add'    => 'Adicionar novo',
+	'add'    => 'Adicionar',
 
 	'save'   => 'Salvar',
 

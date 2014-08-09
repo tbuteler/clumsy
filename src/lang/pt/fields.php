@@ -2,6 +2,10 @@
 
 return array(
 
+	'yes'			   => 'Sim',
+
+	'no'			   => 'Não',
+
 	'remember'		   => 'Manter sessão',
 
 	'first_name'       => 'Nome',

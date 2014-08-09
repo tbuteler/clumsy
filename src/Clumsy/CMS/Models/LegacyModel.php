@@ -1,8 +1,9 @@
 <?php namespace Clumsy\CMS\Models;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Input;
 
-class BaseModel extends \Eloquent {
+class LegacyModel extends \Eloquent {
 
     protected $guarded = array('id');
 
@@ -18,10 +19,12 @@ class BaseModel extends \Eloquent {
     
     public static $parent_id_column = null;
 
+    public static $media = array();
+
     public static function boot()
     {
         parent::boot();
-        
+
         if (static::$has_slug)
         {
             self::saving(function($model)
@@ -29,6 +32,23 @@ class BaseModel extends \Eloquent {
                 $model->slug = \Str::slug($model->title);
             });
         }
+        
+        self::creating(function($model)
+        {
+            if (isset($model->media_bind)) unset($model->media_bind);
+        });
+        
+        self::created(function($model)
+        {
+            if (Input::has('media_bind'))
+            {
+                foreach (Input::get('media_bind') as $media_id => $attributes)
+                {
+                    $association_type = \Illuminate\Support\Str::lower(class_basename($model));
+                    \Clumsy\Eminem\Facade::bind($media_id, $model->id, $association_type, $attributes);
+                }
+            }
+        });
     }
 
     public static function isNested()
@@ -86,5 +106,51 @@ class BaseModel extends \Eloquent {
     public static function displayNamePlural()
     {
         return false;
+    }
+
+    public function images()
+    {
+        return $this->morphToMany('Media', 'media_association')->select(array('media.*', 'position'));
+    }
+
+    public function hasImages()
+    {
+        return (bool)sizeof($this->images);
+    }
+    
+    public function image($position = null)
+    {
+        if ($this->hasImages())
+        {
+            if ($position)
+            {
+                $image = $this->images->filter(function($image) use ($position)
+                    {
+                        return $image->position === $position;
+                    })
+                    ->first();
+            }
+            else
+            {    
+                $image = $this->images->first();
+            }
+
+            if ($image)
+            {
+                return $image->path();
+            }
+        }
+
+        return $this->imagePlaceholder($position);
+    }
+
+    public function imagePlaceholder($position = null)
+    {
+        return '';
+    }
+
+    public static function mediaSlots()
+    {
+        return static::$media;
     }
 }

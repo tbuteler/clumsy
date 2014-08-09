@@ -25,7 +25,7 @@
                     {
                         list($slug, $type) = explode(':', $slug);
                     }
-                    $value = $type === 'boolean' ? ($item->$slug == 1 ? 'Yes' : 'No') : $item->$slug;
+                    $value = $type === 'boolean' ? ($item->$slug == 1 ? trans('clumsy/cms::fields.yes') : trans('clumsy/cms::fields.no')) : $item->$slug;
 
                     ?>
 
@@ -52,7 +52,9 @@
 @else
 
     <div class="panel-body">
-        <h5>{{ trans_choice('clumsy/cms::alerts.count', 0, array('resource' => $display_name, 'resources' => $display_name_plural)) }}</h5>
+        <h5>
+            {{ trans_choice('clumsy/cms::alerts.count', 0, array('resource' => $display_name, 'resources' => $display_name_plural)) }}
+        </h5>
     </div>
 
 @endif

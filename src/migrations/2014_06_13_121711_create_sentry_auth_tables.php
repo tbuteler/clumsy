@@ -22,16 +22,7 @@ class CreateSentryAuthTables extends Migration {
      */
     public function down()
     {
-        /*
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
-        (new MigrationCartalystSentryInstallUsersGroupsPivot)->down();
-        (new MigrationCartalystSentryInstallGroups)->down();
-        (new MigrationCartalystSentryInstallThrottle)->down();
-        (new MigrationCartalystSentryInstallUsers)->down();
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        */
+        //
     }
 
 }
