@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Str;
 
 class LegacyModel extends \Eloquent {
 
@@ -29,7 +30,7 @@ class LegacyModel extends \Eloquent {
         {
             self::saving(function($model)
             {
-                $model->slug = \Str::slug($model->title);
+                $model->slug = Str::slug($model->title);
             });
         }
         
@@ -44,7 +45,7 @@ class LegacyModel extends \Eloquent {
             {
                 foreach (Input::get('media_bind') as $media_id => $attributes)
                 {
-                    $association_type = \Illuminate\Support\Str::lower(class_basename($model));
+                    $association_type = Str::lower(class_basename($model));
                     \Clumsy\Eminem\Facade::bind($media_id, $model->id, $association_type, $attributes);
                 }
             }

@@ -4,7 +4,7 @@
 
     {{ Form::open() }}
 
-    {{ Form::hidden('intended', Session::has('intended') ? Session::get('intended') : route('admin.home')) }}
+    {{ Form::hidden('intended', Session::has('intended') ? Session::get('intended') : URL::route('admin.home')) }}
 
     <div class="form-group">
         {{ Form::label('email', trans('clumsy/cms::fields.email')) }}

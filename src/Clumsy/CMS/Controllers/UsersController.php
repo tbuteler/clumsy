@@ -1,13 +1,14 @@
 <?php namespace Clumsy\CMS\Controllers;
 
-use URL;
-use View;
-use Input;
-use Redirect;
-use Validator;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
+use Clumsy\CMS\Controllers\AdminController;
 
 class UsersController extends \BaseController {
 

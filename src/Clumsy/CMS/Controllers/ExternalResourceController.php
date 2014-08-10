@@ -1,6 +1,6 @@
 <?php namespace Clumsy\CMS\Controllers;
 
-use Redirect;
+use Illuminate\Support\Facades\Redirect;
 use Clumsy\CMS\Models\LocalChange;
 
 class ExternalResourceController extends AdminController {

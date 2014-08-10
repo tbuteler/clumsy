@@ -31,6 +31,21 @@ return array(
 		'forbidden' => 'You don\'t have permission to manage users.',
 	),
 
+	'auth'   => array(
+
+        'login_required'    => 'Login field is required.',
+        
+        'password_required' => 'Password field is required.',
+        
+        'wrong_password'    => 'Wrong password, try again.',
+        
+        'unknown_user'      => 'User was not found.',
+        
+        'inactive_user'     => 'User is not activated.',
+        
+        'logged_out'	    => 'You have logged out.',
+	),
+
 	'import' => array(
 
 		'required'  => 'To add :resources please use the parent website and run the automatic update routines afterwards.',

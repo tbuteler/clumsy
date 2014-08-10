@@ -2,6 +2,8 @@
 
 return array(
 
+    'login'      => 'Login',
+
 	'new_item'   => 'New :resource',
 
 	'edit_item'  => 'Edit :resource',

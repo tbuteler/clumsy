@@ -60,9 +60,11 @@ class AdminController extends \BaseController {
             $username = (array)$user->email;
         }
 
+        $usergroup = Str::lower(str_singular($user->getGroups()->first()->name));
+
         View::share('user', $user);
         View::share('username', implode(' ', $username));
-        View::share('usergroup', str_singular($user->getGroups()->first()->name));
+        View::share('usergroup', trans("clumsy/cms::fields.roles.$usergroup"));
     }
 
     /**

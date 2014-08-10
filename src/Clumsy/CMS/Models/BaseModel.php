@@ -1,6 +1,7 @@
 <?php namespace Clumsy\CMS\Models;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class BaseModel extends \Eloquent {
 
@@ -26,7 +27,7 @@ class BaseModel extends \Eloquent {
         {
             self::saving(function($model)
             {
-                $model->slug = \Str::slug($model->title);
+                $model->slug = Str::slug($model->title);
             });
         }
     }

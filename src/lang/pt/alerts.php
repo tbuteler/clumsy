@@ -31,6 +31,21 @@ return array(
 		'forbidden' => 'Não tem permissões para gerenciar usuários.',
 	),
 
+	'auth'   => array(
+
+        'login_required'    => 'O campo login é requerido.',
+        
+        'password_required' => 'O campo password é requerido.',
+        
+        'wrong_password'    => 'Password inválida, tente novamente.',
+        
+        'unknown_user'      => 'Usuário desconhecido.',
+        
+        'inactive_user'     => 'Usuário inativo.',
+        
+        'logged_out'	    => 'A sessão foi terminada.',
+	),
+
 	'import' => array(
 
 		'required'  => 'Para adicionar :resources por favor utilize o website principal e ative as rotinas de actualização automática.',

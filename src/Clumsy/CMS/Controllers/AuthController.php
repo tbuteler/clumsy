@@ -1,8 +1,9 @@
 <?php namespace Clumsy\CMS\Controllers;
 
-use View;
-use Input;
-use Redirect;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
 class AuthController extends \BaseController {
@@ -28,27 +29,27 @@ class AuthController extends \BaseController {
 
             $user = Sentry::authenticate($credentials, Input::has('remember'));
             
-            return Redirect::intended('admin.home');
+            return Redirect::intended(URL::route('admin.home'));
 
         } catch (\Cartalyst\Sentry\Users\LoginRequiredException $e) {
             
-            $message = 'Login field is required.';
+            $message = trans('clumsy/cms::alerts.auth.login_required');
 
         } catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e) {
             
-            $message = 'Password field is required.';
+            $message = trans('clumsy/cms::alerts.auth.password_required');
 
         } catch (\Cartalyst\Sentry\Users\WrongPasswordException $e) {
             
-            $message = 'Wrong password, try again.';
+            $message = trans('clumsy/cms::alerts.auth.wrong_password');
 
         } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
             
-            $message = 'User was not found.';
+            $message = trans('clumsy/cms::alerts.auth.unknown_user');
 
         } catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e) {
             
-            $message = 'User is not activated.';
+            $message = trans('clumsy/cms::alerts.auth.inactive_user');
         }
 
         return Redirect::back()->withInput()->with(array(
@@ -63,7 +64,7 @@ class AuthController extends \BaseController {
 
         return Redirect::route('login')->with(array(
             'status'  => 'success',
-            'message' => 'You have logged out.'
+            'message' => trans('clumsy/cms::alerts.auth.logged_out')
         ));
     }
 }
