@@ -24,8 +24,6 @@ class UsersController extends \BaseController {
 
         $this->beforeFilter('csrf', array('only' => array('store', 'update', 'destroy')));
 
-		with(new AdminController)->setupUser();
-
 		View::share('resource', 'user');
 	}
 

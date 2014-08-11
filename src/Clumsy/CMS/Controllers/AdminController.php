@@ -23,8 +23,6 @@ class AdminController extends \BaseController {
         $this->beforeFilter('@setupResource');
 
         $this->beforeFilter('csrf', array('only' => array('store', 'update', 'destroy')));
-
-        $this->beforeFilter('@setupUser');
     }
 
     /**
@@ -44,27 +42,6 @@ class AdminController extends \BaseController {
         View::share('display_name', $this->displayName());
         View::share('display_name_plural', $this->displayNamePlural());
         View::share('id', $route->getParameter($this->resource));
-    }
-
-    public function setupUser()
-    {
-        $user = Sentry::getUser();
-
-        $username = array_filter(array(
-            $user->first_name,
-            $user->last_name,
-        ));
-
-        if (!count($username))
-        {
-            $username = (array)$user->email;
-        }
-
-        $usergroup = Str::lower(str_singular($user->getGroups()->first()->name));
-
-        View::share('user', $user);
-        View::share('username', implode(' ', $username));
-        View::share('usergroup', trans("clumsy/cms::fields.roles.$usergroup"));
     }
 
     /**
