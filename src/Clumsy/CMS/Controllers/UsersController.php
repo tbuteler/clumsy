@@ -75,10 +75,27 @@ class UsersController extends \BaseController {
 	{
 		$data['title'] = trans('clumsy/cms::titles.new_user');
 
-        $data['form_fields'] = 'clumsy/cms::admin.users.fields';
-
 		$data['edited_user_id'] = 'new';
 		$data['edited_user_group'] = '';
+
+		$groups = array_map(function($group)
+		{
+			return $group->name;
+
+		}, Sentry::findAllGroups());
+
+		$data['groups'] = array_combine($groups, array_map(function($group)
+		{
+		    if (Lang::has('clumsy/cms::fields.roles.'.Str::lower(str_singular($group))))
+		    {
+		        return trans('clumsy/cms::fields.roles.'.Str::lower(str_singular($group)));
+		    }
+
+		    return str_singular($group);
+
+		}, $groups));
+
+        $data['form_fields'] = 'clumsy/cms::admin.users.fields';
 
         return View::make('clumsy/cms::admin.users.edit', $data);
 	}
