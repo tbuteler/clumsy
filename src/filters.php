@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\URL;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Lang;
+use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\Assets\Facade as Asset;
 
 /*
@@ -67,8 +68,11 @@ Route::filter('admin_user', function()
     }
 
     $usergroup = str_singular($user->getGroups()->first()->name);
-    $display_group = trans("clumsy/cms::fields.roles.$usergroup");
-    $usergroup = $display_group !== "clumsy/cms::fields.roles.$usergroup" ? Str::lower($display_group) : $usergroup;
+
+    if (Lang::has('clumsy/cms::fields.roles.'.Str::lower($usergroup)))
+    {
+        $usergroup = trans('clumsy/cms::fields.roles.'.Str::lower($usergroup));
+    }
 
     View::share('user', $user);
     View::share('username', implode(' ', $username));

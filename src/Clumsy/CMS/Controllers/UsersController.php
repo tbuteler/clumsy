@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Lang;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\CMS\Controllers\AdminController;
 
@@ -160,6 +162,23 @@ class UsersController extends \BaseController {
 
         $data['edited_user_id'] = $id;
         $data['edited_user_group'] = $data['item']->getGroups()->first()->name;
+
+		$groups = array_map(function($group)
+		{
+			return $group->name;
+
+		}, Sentry::findAllGroups());
+
+		$data['groups'] = array_combine($groups, array_map(function($group)
+		{
+		    if (Lang::has('clumsy/cms::fields.roles.'.Str::lower(str_singular($group))))
+		    {
+		        return trans('clumsy/cms::fields.roles.'.Str::lower(str_singular($group)));
+		    }
+
+		    return str_singular($group);
+
+		}, $groups));
 
         $data['form_fields'] = 'clumsy/cms::admin.users.fields';
 
