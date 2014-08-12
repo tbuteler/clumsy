@@ -96,11 +96,38 @@ class ExternalResourceController extends AdminController {
 
         if ($this->hasImporter($model))
         {
-            call_user_func(self::importer($model));
+            $import = call_user_func(self::importer($model));
             
+            if ($import !== false)
+            {
+                if ($import instanceof \Illuminate\Support\MessageBag && $import->any())
+                {
+
+                    if ($import->has('error'))
+                    {
+                        return Redirect::route("admin.$resource_type.index")->with(array(
+                            'status'  => 'warning',
+                            'message' => $import->first('error'),
+                        ));
+                    }
+
+                    return Redirect::route("admin.$resource_type.index")->with(array(
+                        'status'  => 'success',
+                        'message' => $import->first(),
+                    ));
+                }
+
+                // General success
+                return Redirect::route("admin.$resource_type.index")->with(array(
+                    'status'  => 'success',
+                    'message' => trans('clumsy/cms::alerts.import.success', array('resources' => $this->displayNamePlural($resource_type))),
+                ));
+            }
+
+            // General failure message
             return Redirect::route("admin.$resource_type.index")->with(array(
-                'status'  => 'success',
-                'message' => trans('clumsy/cms::alerts.import.success', array('resources' => $this->displayNamePlural($resource_type))),
+                'status'  => 'warning',
+                'message' => trans('clumsy/cms::alerts.import.fail', array('resources' => $this->displayNamePlural($resource_type))),
             ));
         }
         else

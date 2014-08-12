@@ -52,6 +52,8 @@ return array(
 
 		'success'   => ':resources importados com sucesso.',
 
+		'fail'      => 'A importação falhou. Verifique a fonte e tente novamente.',
+
 		'undefined' => 'A importação falhou. Não foi encontrado um importador para :resources',
 	),
 

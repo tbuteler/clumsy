@@ -52,6 +52,8 @@ return array(
 
 		'success'   => ':resources imported successfully.',
 
+		'fail'      => 'Import failed. Please check the source and try again.',
+
 		'undefined' => 'Import failed. No importer defined for :resources.',
 	),
 
