@@ -12,8 +12,7 @@ class RunEminemMigrations extends Migration {
 	 */
 	public function up()
 	{
-        Artisan::call('migrate', array('--bench' => 'clumsy/eminem'));
-        // Artisan::call('migrate', array('--package' => 'clumsy/eminem'));
+        Artisan::call('migrate', array('--package' => 'clumsy/eminem'));
 	}
 
 	/**
