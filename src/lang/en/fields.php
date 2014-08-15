@@ -31,5 +31,7 @@ return array(
 		'administrator' => 'Administrator',
 
 		'editor'		=> 'Editor',
+
+		'user'			=> 'User',
 	),
 );

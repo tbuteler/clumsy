@@ -124,7 +124,7 @@ class LegacyModel extends \Eloquent {
 
     public function images()
     {
-        return $this->morphToMany('Media', 'media_association')->select(array('media.*', 'position'));
+        return $this->morphToMany('\Clumsy\Eminem\Models\Media', 'media_association')->select(array('media.*', 'position'));
     }
 
     public function hasImages()

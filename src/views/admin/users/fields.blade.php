@@ -6,7 +6,7 @@
 
 @if ($edited_user_id == 'new' || $edited_user_id != $user->id)
 
-    {{ Form::dropdown('group', trans('clumsy/cms::fields.role'), array('Administrators' => trans('clumsy/cms::fields.roles.administrator'), 'Editors' => trans('clumsy/cms::fields.roles.editor')), $edited_user_group) }}
+    {{ Form::dropdown('group', trans('clumsy/cms::fields.role'), $groups, $edited_user_group) }}
 
     @if ($edited_user_id == 'new')
 

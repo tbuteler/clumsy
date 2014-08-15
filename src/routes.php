@@ -29,7 +29,7 @@ Route::get(Config::get('cms::admin_prefix').'/logout', array(
 Route::group(
     array(
         'prefix' => Config::get('cms::admin_prefix'),
-        'before' => 'admin_auth|admin_assets|admin_extra',
+        'before' => 'admin_auth|admin_user|admin_assets|admin_extra',
     ),
     function()
     {
