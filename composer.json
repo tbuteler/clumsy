@@ -12,7 +12,9 @@
     "require": {
         "php": ">=5.3.0",
         "cartalyst/sentry": "2.1.*",
+        "clumsy/locale": "dev-master",
         "clumsy/assets": "dev-master",
+        "clumsy/utils": "dev-master",
         "clumsy/eminem": "dev-master"
     },
     "autoload": {
