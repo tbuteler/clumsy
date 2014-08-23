@@ -56,20 +56,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-        copy: {
-            update: {
-                files: [
-                {
-                    expand: true,
-                    cwd: 'bower_components/tinymce/',
-                    src: '**',
-                    dest: 'public/js/libs/tinymce/',
-                    flatten: false,
-                    filter: 'isFile',
-                }
-                ]
-            }
-        },
         watch: {
             less: {
                 files: ['src/assets/less/*.less'],
@@ -87,7 +73,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     
     grunt.registerTask('default', function() {
@@ -96,12 +81,5 @@ module.exports = function(grunt) {
             'uglify',
             'less'
         ]);
-    });
-
-    grunt.registerTask('update', 'Task to run after updating dependencies', function() {
-        grunt.task.run([
-            'copy:update'
-        ]);
-        grunt.task.run('default');
     });
 };
