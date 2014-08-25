@@ -132,7 +132,7 @@ class LegacyModel extends \Eloquent {
         return (bool)sizeof($this->images);
     }
     
-    public function image($position = null)
+    public function image($position = null, $offset = 0)
     {
         if ($this->hasImages())
         {
@@ -142,11 +142,14 @@ class LegacyModel extends \Eloquent {
                     {
                         return $image->position === $position;
                     })
-                    ->first();
+                    ->values();
+
+                $image = $image->offsetExists($offset) ? $image->offsetGet($offset) : null;
+
             }
             else
             {    
-                $image = $this->images->first();
+                $image = $this->images->offsetExists($offset) ? $this->images->offsetGet($offset) : null;
             }
 
             if ($image)
