@@ -181,6 +181,14 @@ class AdminController extends \BaseController {
 
         $data['media'] = MediaManager::slots($this->model, $id);
 
+        foreach ((array)$data['item']->required_by as $required)
+        {
+            if (!method_exists($model, $required))
+            {
+                throw new \Exception('The model\'s required resources must be defined by a dynamic property with queryable Eloquent relations');
+            }
+        }
+
         return View::make($view, $data);
     }
 

@@ -9,7 +9,7 @@ class LegacyModel extends \Eloquent {
 
     protected $guarded = array('id');
 
-    protected $required_by = array();
+    public $required_by = array();
 
     public static $has_slug = false;
     
@@ -100,7 +100,7 @@ class LegacyModel extends \Eloquent {
         foreach ((array)$this->required_by as $relationship)
         {
             $required_by = $required_by->merge(
-                $this->$relationship ? $this->$relationship : array()
+                $this->$relationship()->first() ? $this->$relationship()->first() : array()
             );
         }
 
