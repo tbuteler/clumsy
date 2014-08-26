@@ -21,6 +21,8 @@ class LegacyModel extends \Eloquent {
     
     public static $parent_id_column = null;
 
+    public static $child_resource = null;
+
     public static $media = array();
 
     public static function boot()
@@ -91,6 +93,21 @@ class LegacyModel extends \Eloquent {
     {
         $parent_model = static::parentModel();
         return $parent_model::find(static::parentItemId());
+    }
+
+    public static function hasChildren()
+    {
+        return (bool)static::childResource();
+    }
+
+    public static function childResource()
+    {
+        return (string)static::$child_resource;
+    }
+
+    public static function childModel()
+    {
+        return (string)studly_case(static::$child_resource);
     }
 
     public function requiredBy()

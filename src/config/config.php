@@ -33,4 +33,16 @@ return array(
      */
 
 	'admin_prefix' => 'admin',
+
+    /*
+     |--------------------------------------------------------------------------
+     | Default properties
+     |--------------------------------------------------------------------------
+     |
+     | Which columns should be shown on resource tables on admin area, if
+     | no properties are set
+     |
+     */
+
+    'default_columns' => array('title' => trans('clumsy/cms::fields.title')),
 );

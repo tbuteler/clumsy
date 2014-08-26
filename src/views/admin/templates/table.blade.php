@@ -1,5 +1,3 @@
-<?php if (!isset($properties)) $properties = array('title' => 'Title'); ?>
-
 <div class="panel panel-default">
 
 @if (count($items))

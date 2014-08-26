@@ -8,6 +8,8 @@ return array(
 
 	'remember'		   => 'Manter sessão',
 
+	'title'            => 'Título',
+
 	'first_name'       => 'Nome',
 
 	'last_name'        => 'Apelido',

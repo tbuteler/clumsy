@@ -1,15 +1,17 @@
 <?php namespace Clumsy\CMS\Controllers;
 
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\Eminem\Facade as MediaManager;
+use Clumsy\Utils\Facades\HTTP;
 
 class AdminController extends \BaseController {
 
@@ -42,6 +44,7 @@ class AdminController extends \BaseController {
         View::share('display_name', $this->displayName());
         View::share('display_name_plural', $this->displayNamePlural());
         View::share('id', $route->getParameter($this->resource));
+        View::share('properties', Config::get('cms::default_columns'));
     }
 
     /**
@@ -174,8 +177,30 @@ class AdminController extends \BaseController {
         {
             $view = "admin.{$this->resource_plural}.edit";
         }
-        else
+        elseif ($model::hasChildren())
         {    
+            $child_resource = $model::childResource();
+            $child_model = $model::childModel();
+            $child_display_name = $child_model::displayNamePlural();
+
+            $data['add_child'] = HTTP::queryStringAdd(URL::route("admin.$child_resource.create"), 'parent', $id);
+            $data['child_resource'] = $child_resource;
+            $data['children_title'] = $child_display_name ? $this->displayNamePlural($child_display_name) : $this->displayNamePlural($child_resource);
+
+            if (!isset($data['children']))
+            {
+                $data['children'] = $child_model::all();
+            }
+
+            if (!isset($data['child_properties']))
+            {
+                $data['child_properties'] = Config::get('cms::default_columns');
+            }
+
+            $view = 'clumsy/cms::admin.templates.edit-nested';
+        }
+        else
+        {
             $view = 'clumsy/cms::admin.templates.edit';
         }
 
