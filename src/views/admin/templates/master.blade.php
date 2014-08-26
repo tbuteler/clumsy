@@ -12,7 +12,11 @@
 
     @yield('before-content')
 
-    @yield('master')
+    <div class="clearfix">
+    	@yield('before')
+    	@yield('master')
+    	@yield('after')
+    </div>
 
     @yield('after-content')
 
