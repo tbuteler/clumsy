@@ -15,7 +15,7 @@
     @include($form_fields)
 
     <div class="bottom-buttons">
-        {{ Form::submit(isset($item) ? trans('clumsy/cms::buttons.save') : trans('clumsy/cms::buttons.create'), array('class' => 'btn btn-primary')) }}
+        {{ Form::submit(isset($item) ? trans('clumsy/cms::buttons.save') : trans('clumsy/cms::buttons.create'), array('class' => 'btn btn-primary pull-right')) }}
     </div>
 
     {{ Form::close() }}
