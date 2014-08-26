@@ -18,10 +18,10 @@ Form::macro('delete', function($resource_type, $id) {
     $form_parameters = array(
         'method' => "DELETE",
         'url'    => URL::route("admin.$resource_type.destroy", $id),
-        'class'  => "delete-form btn-outside pull-right $resource_type",
+        'class'  => "delete-form btn-outside pull-left $resource_type",
     );
  
     return Form::open($form_parameters)
-            . Form::button('', array('type' => 'submit', 'title' => trans('clumsy/cms::buttons.delete'), 'class' => 'btn btn-danger glyphicon glyphicon-trash'))
+            . Form::button('', array('type' => 'submit', 'title' => trans('clumsy/cms::buttons.delete'), 'class' => 'btn btn-lg btn-danger glyphicon glyphicon-trash'))
             . Form::close();
 });
