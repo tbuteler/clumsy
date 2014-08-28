@@ -2,13 +2,20 @@
 
 <div class="container master">
 
+    @section('heading')
     <h1 class="page-header first">
-
-        @section('title')
-            {{ $title or '' }}
-        @show
-    
+        <div class="row">
+			<div class="col-sm-9">
+	        @section('title')
+	            {{ $title or '' }}
+	        @show
+	        </div>
+			<div class="col-sm-3 after-title">
+	        @yield('after-title')
+			</div>
+    	</div>
     </h1>
+    @show
 
     @yield('before-content')
 
