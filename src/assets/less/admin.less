@@ -175,7 +175,8 @@ table {
 }
 
 .after-title {
-    text-align: right;
+    margin-top: 10px;
+    text-align: left;
 }
 
 .bottom-buttons {
@@ -195,5 +196,13 @@ table {
 
     &.active {
         display: block;
+    }
+}
+
+@media (min-width:768px) {
+
+    .after-title {
+        margin-top: 0;
+        text-align: right;
     }
 }
