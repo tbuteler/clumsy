@@ -2,7 +2,6 @@
 
 <div class="container master">
 
-    @section('heading')
     <h1 class="page-header first">
         <div class="row">
 			<div class="col-sm-9">
@@ -15,7 +14,6 @@
 			</div>
     	</div>
     </h1>
-    @show
 
     @yield('before-content')
 
