@@ -1,7 +1,9 @@
 @extends('clumsy/cms::admin.templates.master')
 
-@section('after-title')
+@section('title')
     
+	@parent
+
     @if (isset($importer))
         
         @if ($importer)

@@ -4,19 +4,15 @@
 
     <h1 class="page-header first">
 
-        {{ $title or '' }}
-
-        @yield('after-title')
+        @section('title')
+            {{ $title or '' }}
+        @show
     
     </h1>
 
     @yield('before-content')
 
-    <div class="clearfix">
-    	@yield('before')
-    	@yield('master')
-    	@yield('after')
-    </div>
+    @yield('master')
 
     @yield('after-content')
 
