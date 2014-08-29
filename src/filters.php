@@ -51,6 +51,17 @@ Route::filter('admin_assets', function()
     {
         View::share('navbar', View::make($navbar)->render());
     }
+
+    $alert = $alert_status = false;
+
+    if (Session::has('alert'))
+    {
+        $alert = Session::get('alert');
+        $alert_status = Session::has('alert_status') ? Session::get('alert_status') : 'warning';
+    }
+
+    View::share('alert', $alert);
+    View::share('alert_status', $alert_status);
 });
 
 Route::filter('admin_user', function()

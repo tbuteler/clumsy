@@ -126,9 +126,17 @@ class AdminController extends \BaseController {
                 ->withErrors($validator)
                 ->withInput()
                 ->with(array(
-                    'status'   => 'warning',
-                    'message'  => trans('clumsy/cms::alerts.invalid'),
+                    'alert_status' => 'warning',
+                    'alert'        => trans('clumsy/cms::alerts.invalid'),
                 ));
+        }
+
+        foreach ((array)$model::$booleans as $check)
+        {
+            if (!Input::has($check))
+            {
+                $data[$check] = 0;
+            }
         }
 
         $item = $model::create($data);
@@ -141,8 +149,8 @@ class AdminController extends \BaseController {
         }
 
         return Redirect::to($url)->with(array(
-           'status'   => 'success',
-           'message'  => trans('clumsy/cms::alerts.item_added'),
+           'alert_status' => 'success',
+           'alert'        => trans('clumsy/cms::alerts.item_added'),
         ));
     }
 
@@ -237,8 +245,8 @@ class AdminController extends \BaseController {
                 ->withErrors($validator)
                 ->withInput()
                 ->with(array(
-                    'status'   => 'warning',
-                    'message'  => trans('clumsy/cms::alerts.invalid'),
+                    'alert_status' => 'warning',
+                    'alert'        => trans('clumsy/cms::alerts.invalid'),
                 ));
         }
 
@@ -260,8 +268,8 @@ class AdminController extends \BaseController {
         }
 
         return Redirect::to($url)->with(array(
-           'status'   => 'success',
-           'message'  => trans('clumsy/cms::alerts.item_updated'),
+           'alert_status' => 'success',
+           'alert'        => trans('clumsy/cms::alerts.item_updated'),
         ));
     }
 
@@ -280,8 +288,8 @@ class AdminController extends \BaseController {
         if ($item->isRequiredByOthers())
         {
             return Redirect::route("admin.{$this->resource}.edit", $id)->with(array(
-               'status'   => 'warning',
-               'message'  => trans('clumsy/cms::alerts.required_by'),
+               'alert_status' => 'warning',
+               'alert'        => trans('clumsy/cms::alerts.required_by'),
             ));
         }
 
@@ -295,8 +303,8 @@ class AdminController extends \BaseController {
         $model::destroy($id);
 
         return Redirect::to($url)->with(array(
-           'status'   => 'success',
-           'message'  => trans('clumsy/cms::alerts.item_deleted'),
+           'alert_status' => 'success',
+           'alert'        => trans('clumsy/cms::alerts.item_deleted'),
         ));
     }
 

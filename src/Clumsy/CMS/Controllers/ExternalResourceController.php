@@ -47,8 +47,8 @@ class ExternalResourceController extends AdminController {
         $model = $this->model;
 
         return Redirect::route("admin.{$this->resource}.index")->with(array(
-            'status' => 'warning',
-            'message' => trans('clumsy/cms::alerts.import.required', array('resources' => $this->displayNamePlural())),
+            'alert_status' => 'warning',
+            'alert'        => trans('clumsy/cms::alerts.import.required', array('resources' => $this->displayNamePlural())),
         ));
     }
 
@@ -75,8 +75,8 @@ class ExternalResourceController extends AdminController {
 
                 LocalChange::firstOrCreate(array(
                     'resource_type' => $resource,
-                    'resource_id' => $item->id,
-                    'field' => $field,
+                    'resource_id'   => $item->id,
+                    'field'         => $field,
                 ));
             }
         });
@@ -106,35 +106,35 @@ class ExternalResourceController extends AdminController {
                     if ($import->has('error'))
                     {
                         return Redirect::route("admin.$resource_type.index")->with(array(
-                            'status'  => 'warning',
-                            'message' => $import->first('error'),
+                            'alert_status' => 'warning',
+                            'alert'        => $import->first('error'),
                         ));
                     }
 
                     return Redirect::route("admin.$resource_type.index")->with(array(
-                        'status'  => 'success',
-                        'message' => $import->first(),
+                        'alert_status' => 'success',
+                        'alert'        => $import->first(),
                     ));
                 }
 
                 // General success
                 return Redirect::route("admin.$resource_type.index")->with(array(
-                    'status'  => 'success',
-                    'message' => trans('clumsy/cms::alerts.import.success', array('resources' => $this->displayNamePlural($resource_type))),
+                    'alert_status' => 'success',
+                    'alert'        => trans('clumsy/cms::alerts.import.success', array('resources' => $this->displayNamePlural($resource_type))),
                 ));
             }
 
             // General failure message
             return Redirect::route("admin.$resource_type.index")->with(array(
-                'status'  => 'warning',
-                'message' => trans('clumsy/cms::alerts.import.fail', array('resources' => $this->displayNamePlural($resource_type))),
+                'alert_status' => 'warning',
+                'alert'        => trans('clumsy/cms::alerts.import.fail', array('resources' => $this->displayNamePlural($resource_type))),
             ));
         }
         else
         {
             return Redirect::route("admin.$resource_type.index")->with(array(
-                'status'  => 'warning',
-                'message' => trans('clumsy/cms::alerts.import.undefined', array('resources' => $this->displayNamePlural($resource_type))),
+                'alert_status' => 'warning',
+                'alert'        => trans('clumsy/cms::alerts.import.undefined', array('resources' => $this->displayNamePlural($resource_type))),
             ));
         }
     }

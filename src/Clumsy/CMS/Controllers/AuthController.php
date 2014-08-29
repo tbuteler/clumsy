@@ -33,28 +33,28 @@ class AuthController extends \BaseController {
 
         } catch (\Cartalyst\Sentry\Users\LoginRequiredException $e) {
             
-            $message = trans('clumsy/cms::alerts.auth.login_required');
+            $alert = trans('clumsy/cms::alerts.auth.login_required');
 
         } catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e) {
             
-            $message = trans('clumsy/cms::alerts.auth.password_required');
+            $alert = trans('clumsy/cms::alerts.auth.password_required');
 
         } catch (\Cartalyst\Sentry\Users\WrongPasswordException $e) {
             
-            $message = trans('clumsy/cms::alerts.auth.wrong_password');
+            $alert = trans('clumsy/cms::alerts.auth.wrong_password');
 
         } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
             
-            $message = trans('clumsy/cms::alerts.auth.unknown_user');
+            $alert = trans('clumsy/cms::alerts.auth.unknown_user');
 
         } catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e) {
             
-            $message = trans('clumsy/cms::alerts.auth.inactive_user');
+            $alert = trans('clumsy/cms::alerts.auth.inactive_user');
         }
 
         return Redirect::back()->withInput()->with(array(
-            'status'    => 'warning',
-            'message'   => $message,
+            'alert_status' => 'warning',
+            'alert'        => $alert,
         ));
     }
 
@@ -63,8 +63,8 @@ class AuthController extends \BaseController {
         Sentry::logout();
 
         return Redirect::route('login')->with(array(
-            'status'  => 'success',
-            'message' => trans('clumsy/cms::alerts.auth.logged_out')
+            'alert_status' => 'success',
+            'alert'        => trans('clumsy/cms::alerts.auth.logged_out')
         ));
     }
 }

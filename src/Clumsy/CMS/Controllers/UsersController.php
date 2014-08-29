@@ -39,8 +39,8 @@ class UsersController extends \BaseController {
 			if (!in_array($route->getName(), array('admin.user.edit', 'admin.user.update')) || $requested_user_id != $user->id) {
 
 				return Redirect::route('clumsy/cms::admin.user.edit', $user->id)->with(array(
-					'status'  => 'warning',
-					'message' => trans('clumsy/cms::alerts.users.forbidden'),
+					'alert_status'  => 'warning',
+					'alert' => trans('clumsy/cms::alerts.users.forbidden'),
 				));
 			}
 		}
@@ -125,8 +125,8 @@ class UsersController extends \BaseController {
 				->withErrors($validator)
 				->withInput()
                 ->with(array(
-                    'status'   => 'warning',
-                    'message'  => trans('clumsy/cms::alerts.invalid'),
+                    'alert_status' => 'warning',
+                    'alert' 	   => trans('clumsy/cms::alerts.invalid'),
                 ));
 		}
 
@@ -144,8 +144,8 @@ class UsersController extends \BaseController {
 		$new_user->addGroup($group);
 
 		return Redirect::route('admin.user.index')->with(array(
-           'status'   => 'success',
-           'message'  => trans('clumsy/cms::alerts.user.added'),
+           'alert_status' => 'success',
+           'alert'  	  => trans('clumsy/cms::alerts.user.added'),
         ));
 	}
 
@@ -228,8 +228,8 @@ class UsersController extends \BaseController {
 				->withErrors($validator)
 				->withInput()
                 ->with(array(
-                    'status'   => 'warning',
-                    'message'  => trans('clumsy/cms::alerts.invalid'),
+                    'alert_status' => 'warning',
+                    'alert'  	   => trans('clumsy/cms::alerts.invalid'),
                 ));
 		}
 
@@ -266,8 +266,8 @@ class UsersController extends \BaseController {
 		}
 
 		return Redirect::to($url)->with(array(
-           'status'   => 'success',
-           'message'  => trans('clumsy/cms::alerts.user.updated'),
+           'alert_status' => 'success',
+           'alert'  	  => trans('clumsy/cms::alerts.user.updated'),
         ));
 	}
 
@@ -295,8 +295,8 @@ class UsersController extends \BaseController {
 		}
 
 		return Redirect::route('admin.user.index')->with(array(
-           'status'   => $status,
-           'message'  => $message,
+           'alert_status' => $status,
+           'alert'        => $message,
         ));
 	}
 
