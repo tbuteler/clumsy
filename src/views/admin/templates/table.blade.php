@@ -5,7 +5,7 @@
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>
-            @foreach ($properties as $slug => $name)
+            @foreach ($columns as $slug => $name)
                 <th>{{ $name }}</th>
             @endforeach
             </thead>
@@ -14,7 +14,7 @@
             @foreach ($items as $item)
 
                 <tr>
-                @foreach ($properties as $slug => $name)
+                @foreach ($columns as $slug => $name)
 
                     <?php
 

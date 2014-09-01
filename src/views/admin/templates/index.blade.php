@@ -18,4 +18,10 @@
 
     @include('clumsy/cms::admin.templates.table')
 
+    @if ($pagination)
+    	<div class="pull-right">
+			{{ $pagination }}
+    	</div>
+    @endif
+
 @stop

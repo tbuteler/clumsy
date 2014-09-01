@@ -15,7 +15,13 @@
 	    	</div>
 	    </h1>
 
-        @include('clumsy/cms::admin.templates.table', array('items' => $children, 'properties' => $child_properties, 'resource' => $child_resource))
+        @include('clumsy/cms::admin.templates.table', array('items' => $children, 'columns' => $child_columns, 'resource' => $child_resource))
+
+	    @if ($pagination)
+	    	<div class="pull-right">
+				{{ $pagination }}
+	    	</div>
+	    @endif
 
     @endif
 

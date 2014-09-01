@@ -55,7 +55,7 @@ class UsersController extends \BaseController {
 	{
 		$data['items'] = Sentry::findAllUsers();
 
-		$data['properties'] = array(
+		$data['columns'] = array(
 			'first_name' => trans('clumsy/cms::fields.first_name'),
 			'last_name'  => trans('clumsy/cms::fields.last_name'),
 			'email'		 => trans('clumsy/cms::fields.email'),

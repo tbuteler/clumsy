@@ -44,7 +44,11 @@ class AdminController extends \BaseController {
         View::share('display_name', $this->displayName());
         View::share('display_name_plural', $this->displayNamePlural());
         View::share('id', $route->getParameter($this->resource));
-        View::share('properties', Config::get('cms::default_columns'));
+        View::share('pagination', '');
+
+        $model = $this->model;
+        $columns = $model::$columns ? $model::$columns : Config::get('cms::default_columns');
+        View::share('columns', $columns);
     }
 
     /**
@@ -59,7 +63,18 @@ class AdminController extends \BaseController {
         if (!isset($data['items']))
         {
             $model = $this->model;
-            $data['items'] = $model::orderBy('id', 'desc')->get();
+            $query = $model::select('*')->orderBy('id', 'desc');
+            $per_page = property_exists($model, 'admin_per_page') ? $model::$admin_per_page : Config::get('cms::per_page');
+
+            if ($per_page)
+            {
+                $data['items'] = $query->paginate($per_page);
+                $data['pagination'] = $data['items']->links();
+            }
+            else
+            {
+                $data['items'] = $query->get();
+            }
         }
 
         if (!isset($data['title']))
@@ -93,8 +108,15 @@ class AdminController extends \BaseController {
             $data['title'] = trans('clumsy/cms::titles.new_item', array('resource' => $this->displayName()));
         }
 
-        $data['form_fields'] = "admin.{$this->resource_plural}.fields";
-
+        if (View::exists("admin.{$this->resource_plural}.fields"))
+        {
+            $data['form_fields'] = "admin.{$this->resource_plural}.fields";
+        }
+        else
+        {
+            $data['form_fields'] = 'clumsy/cms::admin.templates.fields';
+        }
+        
         if (View::exists("admin.{$this->resource_plural}.edit"))
         {
             $view = "admin.{$this->resource_plural}.edit";
@@ -179,7 +201,14 @@ class AdminController extends \BaseController {
             $data['title'] = trans('clumsy/cms::titles.edit_item', array('resource' => $this->displayName()));
         }
 
-        $data['form_fields'] = "admin.{$this->resource_plural}.fields";
+        if (View::exists("admin.{$this->resource_plural}.fields"))
+        {
+            $data['form_fields'] = "admin.{$this->resource_plural}.fields";
+        }
+        else
+        {
+            $data['form_fields'] = 'clumsy/cms::admin.templates.fields';
+        }
 
         if (View::exists("admin.{$this->resource_plural}.edit"))
         {
@@ -197,12 +226,23 @@ class AdminController extends \BaseController {
 
             if (!isset($data['children']))
             {
-                $data['children'] = $child_model::all();
+                $query = $child_model::select('*')->where($child_model::parentIdColumn(), $id)->orderBy('id', 'desc');
+                $per_page = property_exists($child_model, 'admin_per_page') ? $child_model::$admin_per_page : Config::get('cms::per_page');
+
+                if ($per_page)
+                {
+                    $data['children'] = $query->paginate($per_page);
+                    $data['pagination'] = $data['children']->links();
+                }
+                else
+                {
+                    $data['children'] = $query->get();
+                }
             }
 
-            if (!isset($data['child_properties']))
+            if (!isset($data['child_columns']))
             {
-                $data['child_properties'] = Config::get('cms::default_columns');
+                $data['child_columns'] = $child_model::$columns ? $child_model::$columns : Config::get('cms::default_columns');
             }
 
             $view = 'clumsy/cms::admin.templates.edit-nested';

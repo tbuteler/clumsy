@@ -36,13 +36,28 @@ return array(
 
     /*
      |--------------------------------------------------------------------------
-     | Default properties
+     | Default columns
      |--------------------------------------------------------------------------
      |
      | Which columns should be shown on resource tables on admin area, if
-     | no properties are set
+     | no columns are manually set
      |
      */
 
     'default_columns' => array('title' => trans('clumsy/cms::fields.title')),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Default items per page
+     |--------------------------------------------------------------------------
+     |
+     | How many items of a given resource should be shown per page. You can
+     | also override this on each model by defining an "admin_per_page"
+     | property.
+     |
+     | To disable paging, set to 'false'.
+     |
+     */
+
+    'per_page' => 50,
 );

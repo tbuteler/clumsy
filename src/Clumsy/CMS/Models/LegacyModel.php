@@ -13,14 +13,12 @@ class LegacyModel extends \Eloquent {
 
     public static $has_slug = false;
     
+    public static $columns = null;
     public static $rules = array();
-
     public static $booleans = array();
 
     public static $parent_resource = null;
-    
     public static $parent_id_column = null;
-
     public static $child_resource = null;
 
     public static $media = array();
@@ -82,17 +80,21 @@ class LegacyModel extends \Eloquent {
         return (string)studly_case(static::$parent_resource);
     }
 
+    public static function parentIdColumn()
+    {
+        return static::$parent_id_column === null ? static::$parent_resource.'_id' : static::$parent_id_column;
+    }
+
     public static function parentItemId($id)
     {
-        $id_column = static::$parent_id_column === null ? static::$parent_resource.'_id' : static::$parent_id_column;
-
+        $id_column = self::parentIdColumn();
         return self::find($id)->$id_column;
     }
 
     public static function parentItem($id)
     {
         $parent_model = static::parentModel();
-        return $parent_model::find(static::parentItemId());
+        return $parent_model::find(static::parentItemId($id));
     }
 
     public static function hasChildren()
