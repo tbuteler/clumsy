@@ -27,6 +27,7 @@ class UsersController extends \BaseController {
         $this->beforeFilter('csrf', array('only' => array('store', 'update', 'destroy')));
 
 		View::share('resource', 'user');
+		View::share('pagination', '');
 	}
 
 	public function checkPermissions(Route $route, Request $request)
