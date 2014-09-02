@@ -1,5 +1,7 @@
 <?php namespace Clumsy\CMS;
 
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Clumsy\Assets\Facade as Asset;
 
@@ -33,7 +35,10 @@ class CMSServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-        $this->package('clumsy/cms', 'clumsy/cms');
+		View::addNamespace('clumsy', $this->guessPackagePath() . '/views');
+		Lang::addNamespace('clumsy', $this->guessPackagePath() . '/lang');
+
+        $this->package('clumsy/cms', 'clumsy');
         $this->app['config']->package('clumsy/cms', $this->guessPackagePath() . '/config');
 
         $admin_assets = include($this->guessPackagePath() . '/assets/assets.php');

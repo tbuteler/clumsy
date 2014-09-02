@@ -1,4 +1,4 @@
-@extends('clumsy/cms::admin.templates.edit')
+@extends('clumsy::templates.edit')
 
 @section('after-content')
 
@@ -15,7 +15,7 @@
 	    	</div>
 	    </h1>
 
-        @include('clumsy/cms::admin.templates.table', array('items' => $children, 'columns' => $child_columns, 'resource' => $child_resource))
+        @include('clumsy::templates.table', array('items' => $children, 'columns' => $child_columns, 'resource' => $child_resource))
 
 	    @if ($pagination)
 	    	<div class="pull-right">

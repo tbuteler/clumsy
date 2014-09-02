@@ -32,7 +32,7 @@ return array(
      |
      */
 
-	'admin_prefix' => 'admin',
+	'admin_prefix' => 'test',
 
     /*
      |--------------------------------------------------------------------------
@@ -44,7 +44,7 @@ return array(
      |
      */
 
-    'default_columns' => array('title' => trans('clumsy/cms::fields.title')),
+    'default_columns' => array('title' => trans('clumsy::fields.title')),
 
     /*
      |--------------------------------------------------------------------------

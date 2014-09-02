@@ -1,10 +1,11 @@
 <?php namespace Clumsy\CMS\Controllers;
 
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -26,6 +27,9 @@ class UsersController extends \BaseController {
 
         $this->beforeFilter('csrf', array('only' => array('store', 'update', 'destroy')));
 
+		$this->admin_prefix = Config::get('clumsy::admin_prefix');
+
+		View::share('admin_prefix', $this->admin_prefix);
 		View::share('resource', 'user');
 		View::share('pagination', '');
 	}
@@ -37,11 +41,11 @@ class UsersController extends \BaseController {
 
 		if (!$user->hasAccess('users')) {
 
-			if (!in_array($route->getName(), array('admin.user.edit', 'admin.user.update')) || $requested_user_id != $user->id) {
+			if (!in_array($route->getName(), array("{$this->admin_prefix}.user.edit", "{$this->admin_prefix}.user.update")) || $requested_user_id != $user->id) {
 
-				return Redirect::route('clumsy/cms::admin.user.edit', $user->id)->with(array(
+				return Redirect::route('{$this->admin_prefix}.user.edit', $user->id)->with(array(
 					'alert_status'  => 'warning',
-					'alert' => trans('clumsy/cms::alerts.users.forbidden'),
+					'alert' => trans('clumsy::alerts.users.forbidden'),
 				));
 			}
 		}
@@ -57,14 +61,14 @@ class UsersController extends \BaseController {
 		$data['items'] = Sentry::findAllUsers();
 
 		$data['columns'] = array(
-			'first_name' => trans('clumsy/cms::fields.first_name'),
-			'last_name'  => trans('clumsy/cms::fields.last_name'),
-			'email'		 => trans('clumsy/cms::fields.email'),
+			'first_name' => trans('clumsy::fields.first_name'),
+			'last_name'  => trans('clumsy::fields.last_name'),
+			'email'		 => trans('clumsy::fields.email'),
 		);
 
-        $data['title'] = trans('clumsy/cms::titles.users');
+        $data['title'] = trans('clumsy::titles.users');
 
-		return View::make('clumsy/cms::admin.users.index', $data);
+		return View::make('clumsy::users.index', $data);
 	}
 
 	/**
@@ -74,7 +78,7 @@ class UsersController extends \BaseController {
 	 */
 	public function create()
 	{
-		$data['title'] = trans('clumsy/cms::titles.new_user');
+		$data['title'] = trans('clumsy::titles.new_user');
 
 		$data['edited_user_id'] = 'new';
 		$data['edited_user_group'] = '';
@@ -87,18 +91,18 @@ class UsersController extends \BaseController {
 
 		$data['groups'] = array_combine($groups, array_map(function($group)
 		{
-		    if (Lang::has('clumsy/cms::fields.roles.'.Str::lower(str_singular($group))))
+		    if (Lang::has('clumsy::fields.roles.'.Str::lower(str_singular($group))))
 		    {
-		        return trans('clumsy/cms::fields.roles.'.Str::lower(str_singular($group)));
+		        return trans('clumsy::fields.roles.'.Str::lower(str_singular($group)));
 		    }
 
 		    return str_singular($group);
 
 		}, $groups));
 
-        $data['form_fields'] = 'clumsy/cms::admin.users.fields';
+        $data['form_fields'] = 'clumsy::users.fields';
 
-        return View::make('clumsy/cms::admin.users.edit', $data);
+        return View::make('clumsy::users.edit', $data);
 	}
 
 	/**
@@ -127,7 +131,7 @@ class UsersController extends \BaseController {
 				->withInput()
                 ->with(array(
                     'alert_status' => 'warning',
-                    'alert' 	   => trans('clumsy/cms::alerts.invalid'),
+                    'alert' 	   => trans('clumsy::alerts.invalid'),
                 ));
 		}
 
@@ -144,9 +148,9 @@ class UsersController extends \BaseController {
 		$group = Sentry::findGroupByName(Input::get('group'));
 		$new_user->addGroup($group);
 
-		return Redirect::route('admin.user.index')->with(array(
+		return Redirect::route("{$this->admin_prefix}.user.index")->with(array(
            'alert_status' => 'success',
-           'alert'  	  => trans('clumsy/cms::alerts.user.added'),
+           'alert'  	  => trans('clumsy::alerts.user.added'),
         ));
 	}
 
@@ -158,7 +162,7 @@ class UsersController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        return Redirect::route('admin.user.edit', $id);
+        return Redirect::route("{$this->admin_prefix}.user.edit", $id);
 	}
 
 	/**
@@ -176,7 +180,7 @@ class UsersController extends \BaseController {
 			$data['supress_delete'] = true;
 		}
 
-        $data['title'] = $self ? trans('clumsy/cms::titles.profile') : trans('clumsy/cms::titles.edit_user');
+        $data['title'] = $self ? trans('clumsy::titles.profile') : trans('clumsy::titles.edit_user');
 
         $data['edited_user_id'] = $id;
         $data['edited_user_group'] = $data['item']->getGroups()->first()->name;
@@ -189,18 +193,18 @@ class UsersController extends \BaseController {
 
 		$data['groups'] = array_combine($groups, array_map(function($group)
 		{
-		    if (Lang::has('clumsy/cms::fields.roles.'.Str::lower(str_singular($group))))
+		    if (Lang::has('clumsy::fields.roles.'.Str::lower(str_singular($group))))
 		    {
-		        return trans('clumsy/cms::fields.roles.'.Str::lower(str_singular($group)));
+		        return trans('clumsy::fields.roles.'.Str::lower(str_singular($group)));
 		    }
 
 		    return str_singular($group);
 
 		}, $groups));
 
-        $data['form_fields'] = 'clumsy/cms::admin.users.fields';
+        $data['form_fields'] = 'clumsy::users.fields';
 
-		return View::make('clumsy/cms::admin.users.edit', $data);
+		return View::make('clumsy::users.edit', $data);
 	}
 
 	/**
@@ -230,7 +234,7 @@ class UsersController extends \BaseController {
 				->withInput()
                 ->with(array(
                     'alert_status' => 'warning',
-                    'alert'  	   => trans('clumsy/cms::alerts.invalid'),
+                    'alert'  	   => trans('clumsy::alerts.invalid'),
                 ));
 		}
 
@@ -259,16 +263,16 @@ class UsersController extends \BaseController {
 
 		$user->update($data);
 
-        $url = URL::route('admin.user.index');
+        $url = URL::route("{$this->admin_prefix}.user.index");
 
 		if (!$user->hasAccess('users')) {
 
-			$url = URL::route('admin.user.edit', $user->id);
+			$url = URL::route("{$this->admin_prefix}.user.edit", $user->id);
 		}
 
 		return Redirect::to($url)->with(array(
            'alert_status' => 'success',
-           'alert'  	  => trans('clumsy/cms::alerts.user.updated'),
+           'alert'  	  => trans('clumsy::alerts.user.updated'),
         ));
 	}
 
@@ -283,7 +287,7 @@ class UsersController extends \BaseController {
 		if (Sentry::getUser()->id == $id) {
 
 			$status = 'warning';
-			$message = trans('clumsy/cms::alerts.user.suicide');
+			$message = trans('clumsy::alerts.user.suicide');
 
 		} else {
 			
@@ -292,10 +296,10 @@ class UsersController extends \BaseController {
 		    $user->delete();
 
 			$status = 'success';
-			$message = trans('clumsy/cms::alerts.user.deleted');
+			$message = trans('clumsy::alerts.user.deleted');
 		}
 
-		return Redirect::route('admin.user.index')->with(array(
+		return Redirect::route("{$this->admin_prefix}.user.index")->with(array(
            'alert_status' => $status,
            'alert'        => $message,
         ));

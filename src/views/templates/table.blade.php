@@ -23,14 +23,14 @@
                     {
                         list($slug, $type) = explode(':', $slug);
                     }
-                    $value = $type === 'boolean' ? ($item->$slug == 1 ? trans('clumsy/cms::fields.yes') : trans('clumsy/cms::fields.no')) : $item->$slug;
+                    $value = $type === 'boolean' ? ($item->$slug == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no')) : $item->$slug;
 
                     ?>
 
                     <td>
                     @if (!isset($readonly) || !$readonly)
                     
-                        <a href="{{ route("admin.$resource.edit", $item->id); }}">{{ $value }}</a>
+                        <a href="{{ route("$admin_prefix.$resource.edit", $item->id); }}">{{ $value }}</a>
                     
                     @else
                     
@@ -51,7 +51,7 @@
 
     <div class="panel-body">
         <h5>
-            {{ trans_choice('clumsy/cms::alerts.count', 0, array('resource' => $display_name, 'resources' => $display_name_plural)) }}
+            {{ trans_choice('clumsy::alerts.count', 0, array('resource' => $display_name, 'resources' => $display_name_plural)) }}
         </h5>
     </div>
 

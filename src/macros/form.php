@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\URL;
 
@@ -17,11 +18,11 @@ Form::macro('delete', function($resource_type, $id) {
 
     $form_parameters = array(
         'method' => "DELETE",
-        'url'    => URL::route("admin.$resource_type.destroy", $id),
+        'url'    => URL::route(Config::get('clumsy::admin_prefix').".$resource_type.destroy", $id),
         'class'  => "delete-form btn-outside pull-left $resource_type",
     );
  
     return Form::open($form_parameters)
-            . Form::button('', array('type' => 'submit', 'title' => trans('clumsy/cms::buttons.delete'), 'class' => 'btn btn-lg btn-danger glyphicon glyphicon-trash'))
+            . Form::button('', array('type' => 'submit', 'title' => trans('clumsy::buttons.delete'), 'class' => 'btn btn-lg btn-danger glyphicon glyphicon-trash'))
             . Form::close();
 });

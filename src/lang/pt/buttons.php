@@ -4,6 +4,8 @@ return array(
 
     'login'  => 'Login',
 
+    'logout' => 'Terminar sessão',
+
 	'add'    => 'Adicionar',
 
 	'save'   => 'Salvar',

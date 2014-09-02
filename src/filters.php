@@ -19,8 +19,8 @@ use Clumsy\Assets\Facade as Asset;
 Route::filter('admin_auth', function()
 {
     if (!Sentry::check())
-    {
-        return Redirect::guest(Config::get('cms::admin_prefix').'/login');
+    {        
+        return Redirect::guest(Config::get('clumsy::admin_prefix').'/login');
     }
 });
 
@@ -29,12 +29,12 @@ Route::filter('admin_assets', function()
     Asset::enqueue('admin.css');
     Asset::enqueue('admin.js');
     Asset::json('admin', array(
-        'base_url'            => URL::to(Config::get('cms::admin_prefix')),
-        'delete_confirm'      => trans('clumsy/cms::alerts.delete_confirm'),
-        'delete_confirm_user' => trans('clumsy/cms::alerts.user.delete_confirm'),
+        'base_url'            => URL::to(Config::get('clumsy::admin_prefix')),
+        'delete_confirm'      => trans('clumsy::alerts.delete_confirm'),
+        'delete_confirm_user' => trans('clumsy::alerts.user.delete_confirm'),
     ));
 
-    View::share('admin_prefix', Config::get('cms::admin_prefix'));
+    View::share('admin_prefix', Config::get('clumsy::admin_prefix'));
 
     $navbar = false;
 
@@ -80,9 +80,9 @@ Route::filter('admin_user', function()
 
     $usergroup = str_singular($user->getGroups()->first()->name);
 
-    if (Lang::has('clumsy/cms::fields.roles.'.Str::lower($usergroup)))
+    if (Lang::has('clumsy::fields.roles.'.Str::lower($usergroup)))
     {
-        $usergroup = trans('clumsy/cms::fields.roles.'.Str::lower($usergroup));
+        $usergroup = trans('clumsy::fields.roles.'.Str::lower($usergroup));
     }
 
     View::share('user', $user);

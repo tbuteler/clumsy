@@ -1,6 +1,7 @@
 <?php namespace Clumsy\CMS\Controllers;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
@@ -32,6 +33,8 @@ class AdminController extends \BaseController {
      */
     public function setupResource(Route $route, Request $request)
     {
+        $this->admin_prefix = Config::get('clumsy::admin_prefix');
+
         if (strpos($route->getName(), '.'))
         {
             $resource_arr = explode('.', $route->getName());
@@ -40,6 +43,7 @@ class AdminController extends \BaseController {
             $this->model = studly_case($this->resource);
         }
 
+        View::share('admin_prefix', $this->admin_prefix);
         View::share('resource', $this->resource);
         View::share('display_name', $this->displayName());
         View::share('display_name_plural', $this->displayNamePlural());
@@ -47,7 +51,7 @@ class AdminController extends \BaseController {
         View::share('pagination', '');
 
         $model = $this->model;
-        $columns = $model::$columns ? $model::$columns : Config::get('cms::default_columns');
+        $columns = $model::$columns ? $model::$columns : Config::get('clumsy::default_columns');
         View::share('columns', $columns);
     }
 
@@ -64,7 +68,7 @@ class AdminController extends \BaseController {
         {
             $model = $this->model;
             $query = $model::select('*')->orderBy('id', 'desc');
-            $per_page = property_exists($model, 'admin_per_page') ? $model::$admin_per_page : Config::get('cms::per_page');
+            $per_page = property_exists($model, 'admin_per_page') ? $model::$admin_per_page : Config::get('clumsy::per_page');
 
             if ($per_page)
             {
@@ -82,13 +86,13 @@ class AdminController extends \BaseController {
             $data['title'] = $this->displayNamePlural();
         }
 
-        if (View::exists("admin.{$this->resource_plural}.index"))
+        if (View::exists("{$this->resource_plural}.index"))
         {
-            $view = "admin.{$this->resource_plural}.index";
+            $view = "{$this->resource_plural}.index";
         }
         else
         {
-            $view = 'clumsy/cms::admin.templates.index';
+            $view = 'clumsy::templates.index';
         }
 
         return View::make($view, $data);
@@ -105,28 +109,35 @@ class AdminController extends \BaseController {
 
         if (!isset($data['title']))
         {
-            $data['title'] = trans('clumsy/cms::titles.new_item', array('resource' => $this->displayName()));
+            $data['title'] = trans('clumsy::titles.new_item', array('resource' => $this->displayName()));
         }
 
-        if (View::exists("admin.{$this->resource_plural}.fields"))
+        if (View::exists("{$this->resource_plural}.fields"))
         {
-            $data['form_fields'] = "admin.{$this->resource_plural}.fields";
+            $data['form_fields'] = "{$this->resource_plural}.fields";
         }
         else
         {
-            $data['form_fields'] = 'clumsy/cms::admin.templates.fields';
+            $data['form_fields'] = 'clumsy::templates.fields';
         }
         
-        if (View::exists("admin.{$this->resource_plural}.edit"))
+        if (View::exists("{$this->resource_plural}.edit"))
         {
-            $view = "admin.{$this->resource_plural}.edit";
+            $view = "{$this->resource_plural}.edit";
         }
         else
         {    
-            $view = 'clumsy/cms::admin.templates.edit';
+            $view = 'clumsy::templates.edit';
         }
 
         $data['media'] = MediaManager::slots($this->model);
+
+        $data['parent_field'] = null;
+
+        if ($model::isNested())
+        {   
+            $data['parent_field'] = Form::hidden($model::parentIdColumn(), Input::get('parent'));
+        }
 
         return View::make($view, $data);
     }
@@ -149,7 +160,7 @@ class AdminController extends \BaseController {
                 ->withInput()
                 ->with(array(
                     'alert_status' => 'warning',
-                    'alert'        => trans('clumsy/cms::alerts.invalid'),
+                    'alert'        => trans('clumsy::alerts.invalid'),
                 ));
         }
 
@@ -163,22 +174,22 @@ class AdminController extends \BaseController {
 
         $item = $model::create($data);
 
-        $url = URL::route("admin.{$this->resource}.index");
+        $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
 
         if ($model::isNested())
         {
-            $url = URL::route('admin.' . $model::parentResource() . '.edit', $model::parentItemId($item->id));
+            $url = URL::route("{$this->admin_prefix}.".$model::parentResource().'.edit', $model::parentItemId($item->id));
         }
 
         return Redirect::to($url)->with(array(
            'alert_status' => 'success',
-           'alert'        => trans('clumsy/cms::alerts.item_added'),
+           'alert'        => trans('clumsy::alerts.item_added'),
         ));
     }
 
     public function show($id)
     {
-        return Redirect::route("admin.{$this->resource}.edit", $id);
+        return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $id);
     }
 
     /**
@@ -198,21 +209,21 @@ class AdminController extends \BaseController {
 
         if (!isset($data['title']))
         {
-            $data['title'] = trans('clumsy/cms::titles.edit_item', array('resource' => $this->displayName()));
+            $data['title'] = trans('clumsy::titles.edit_item', array('resource' => $this->displayName()));
         }
 
-        if (View::exists("admin.{$this->resource_plural}.fields"))
+        if (View::exists("{$this->resource_plural}.fields"))
         {
-            $data['form_fields'] = "admin.{$this->resource_plural}.fields";
+            $data['form_fields'] = "{$this->resource_plural}.fields";
         }
         else
         {
-            $data['form_fields'] = 'clumsy/cms::admin.templates.fields';
+            $data['form_fields'] = 'clumsy::templates.fields';
         }
 
-        if (View::exists("admin.{$this->resource_plural}.edit"))
+        if (View::exists("{$this->resource_plural}.edit"))
         {
-            $view = "admin.{$this->resource_plural}.edit";
+            $view = "{$this->resource_plural}.edit";
         }
         elseif ($model::hasChildren())
         {    
@@ -220,14 +231,14 @@ class AdminController extends \BaseController {
             $child_model = $model::childModel();
             $child_display_name = $child_model::displayNamePlural();
 
-            $data['add_child'] = HTTP::queryStringAdd(URL::route("admin.$child_resource.create"), 'parent', $id);
+            $data['add_child'] = HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.$child_resource.create"), 'parent', $id);
             $data['child_resource'] = $child_resource;
             $data['children_title'] = $child_display_name ? $this->displayNamePlural($child_display_name) : $this->displayNamePlural($child_resource);
 
             if (!isset($data['children']))
             {
                 $query = $child_model::select('*')->where($child_model::parentIdColumn(), $id)->orderBy('id', 'desc');
-                $per_page = property_exists($child_model, 'admin_per_page') ? $child_model::$admin_per_page : Config::get('cms::per_page');
+                $per_page = property_exists($child_model, 'admin_per_page') ? $child_model::$admin_per_page : Config::get('clumsy::per_page');
 
                 if ($per_page)
                 {
@@ -242,14 +253,14 @@ class AdminController extends \BaseController {
 
             if (!isset($data['child_columns']))
             {
-                $data['child_columns'] = $child_model::$columns ? $child_model::$columns : Config::get('cms::default_columns');
+                $data['child_columns'] = $child_model::$columns ? $child_model::$columns : Config::get('clumsy::default_columns');
             }
 
-            $view = 'clumsy/cms::admin.templates.edit-nested';
+            $view = 'clumsy::templates.edit-nested';
         }
         else
         {
-            $view = 'clumsy/cms::admin.templates.edit';
+            $view = 'clumsy::templates.edit';
         }
 
         $data['media'] = MediaManager::slots($this->model, $id);
@@ -260,6 +271,14 @@ class AdminController extends \BaseController {
             {
                 throw new \Exception('The model\'s required resources must be defined by a dynamic property with queryable Eloquent relations');
             }
+        }
+
+        $data['parent_field'] = null;
+
+        if ($model::isNested())
+        {
+            $parent_id_column = $model::parentIdColumn();
+            $data['parent_field'] = Form::hidden($parent_id_column, $data['item']->$parent_id_column);
         }
 
         return View::make($view, $data);
@@ -286,7 +305,7 @@ class AdminController extends \BaseController {
                 ->withInput()
                 ->with(array(
                     'alert_status' => 'warning',
-                    'alert'        => trans('clumsy/cms::alerts.invalid'),
+                    'alert'        => trans('clumsy::alerts.invalid'),
                 ));
         }
 
@@ -300,16 +319,16 @@ class AdminController extends \BaseController {
 
         $item->update($data);
 
-        $url = URL::route("admin.{$this->resource}.index");
+        $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
 
         if ($model::isNested())
         {
-            $url = URL::route('admin.' . $model::parentResource() . '.edit', $model::parentItemId($id));
+            $url = URL::route("{$this->admin_prefix}.".$model::parentResource().'.edit', $model::parentItemId($id));
         }
 
         return Redirect::to($url)->with(array(
            'alert_status' => 'success',
-           'alert'        => trans('clumsy/cms::alerts.item_updated'),
+           'alert'        => trans('clumsy::alerts.item_updated'),
         ));
     }
 
@@ -327,24 +346,24 @@ class AdminController extends \BaseController {
 
         if ($item->isRequiredByOthers())
         {
-            return Redirect::route("admin.{$this->resource}.edit", $id)->with(array(
+            return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $id)->with(array(
                'alert_status' => 'warning',
-               'alert'        => trans('clumsy/cms::alerts.required_by'),
+               'alert'        => trans('clumsy::alerts.required_by'),
             ));
         }
 
-        $url = URL::route("admin.{$this->resource}.index");
+        $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
 
         if ($model::isNested())
         {
-            $url = URL::route('admin.' . $model::parentResource() . '.edit', $model::parentItemId($id));
+            $url = URL::route("{$this->admin_prefix}.".$model::parentResource().'.edit', $model::parentItemId($id));
         }
 
         $model::destroy($id);
 
         return Redirect::to($url)->with(array(
            'alert_status' => 'success',
-           'alert'        => trans('clumsy/cms::alerts.item_deleted'),
+           'alert'        => trans('clumsy::alerts.item_deleted'),
         ));
     }
 

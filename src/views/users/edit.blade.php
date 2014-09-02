@@ -1,0 +1,1 @@
+@extends('clumsy::templates.edit')

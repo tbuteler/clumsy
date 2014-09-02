@@ -14,10 +14,10 @@
     </head>
     <body class="{{ $body_class or '' }}">
 
-    @include('clumsy/cms::admin.templates.alert')
+    @include('clumsy::templates.alert')
     
     @if (Cartalyst\Sentry\Facades\Laravel\Sentry::check())
 
-        @include('clumsy/cms::admin.templates.navbar')
+        @include('clumsy::templates.navbar')
 
     @endif

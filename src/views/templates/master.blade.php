@@ -1,4 +1,4 @@
-@include('clumsy/cms::admin.templates.header')
+@include('clumsy::templates.header')
 
 <div class="container master">
 
@@ -27,4 +27,4 @@
 
 </div>
 
-@include('clumsy/cms::admin.templates.footer')
+@include('clumsy::templates.footer')
