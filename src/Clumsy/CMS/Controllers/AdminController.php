@@ -51,7 +51,14 @@ class AdminController extends \BaseController {
         View::share('pagination', '');
 
         $model = $this->model;
-        $columns = $model::$columns ? $model::$columns : Config::get('clumsy::default_columns');
+        if ($model && $model::$columns)
+        {
+            $columns = $model::$columns;
+        }
+        else
+        {
+            $columns = Config::get('clumsy::default_columns');
+        }
         View::share('columns', $columns);
     }
 
