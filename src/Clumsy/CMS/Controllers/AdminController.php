@@ -93,9 +93,9 @@ class AdminController extends \BaseController {
             $data['title'] = $this->displayNamePlural();
         }
 
-        if (View::exists("{$this->resource_plural}.index"))
+        if (View::exists("admin.{$this->resource_plural}.index"))
         {
-            $view = "{$this->resource_plural}.index";
+            $view = "admin.{$this->resource_plural}.index";
         }
         else
         {
@@ -119,18 +119,18 @@ class AdminController extends \BaseController {
             $data['title'] = trans('clumsy::titles.new_item', array('resource' => $this->displayName()));
         }
 
-        if (View::exists("{$this->resource_plural}.fields"))
+        if (View::exists("admin.{$this->resource_plural}.fields"))
         {
-            $data['form_fields'] = "{$this->resource_plural}.fields";
+            $data['form_fields'] = "admin.{$this->resource_plural}.fields";
         }
         else
         {
             $data['form_fields'] = 'clumsy::templates.fields';
         }
         
-        if (View::exists("{$this->resource_plural}.edit"))
+        if (View::exists("admin.{$this->resource_plural}.edit"))
         {
-            $view = "{$this->resource_plural}.edit";
+            $view = "admin.{$this->resource_plural}.edit";
         }
         else
         {    
@@ -219,18 +219,18 @@ class AdminController extends \BaseController {
             $data['title'] = trans('clumsy::titles.edit_item', array('resource' => $this->displayName()));
         }
 
-        if (View::exists("{$this->resource_plural}.fields"))
+        if (View::exists("admin.{$this->resource_plural}.fields"))
         {
-            $data['form_fields'] = "{$this->resource_plural}.fields";
+            $data['form_fields'] = "admin.{$this->resource_plural}.fields";
         }
         else
         {
             $data['form_fields'] = 'clumsy::templates.fields';
         }
 
-        if (View::exists("{$this->resource_plural}.edit"))
+        if (View::exists("admin.{$this->resource_plural}.edit"))
         {
-            $view = "{$this->resource_plural}.edit";
+            $view = "admin.{$this->resource_plural}.edit";
         }
         elseif ($model::hasChildren())
         {    
