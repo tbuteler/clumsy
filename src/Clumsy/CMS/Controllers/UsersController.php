@@ -13,26 +13,16 @@ use Illuminate\Support\Facades\Lang;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\CMS\Controllers\AdminController;
 
-class UsersController extends \BaseController {
+class UsersController extends AdminController {
 
-	public static $validationRules = array(
-		'first_name' => 'max:255',
-		'last_name'  => 'max:255',
-		'email'		 => 'required|email|max:255',
-	);
-
-	public function __construct()
-	{
+    public function __construct()
+    {
 		$this->beforeFilter('@checkPermissions');
 
-        $this->beforeFilter('csrf', array('only' => array('store', 'update', 'destroy')));
-
-		$this->admin_prefix = Config::get('clumsy::admin_prefix');
-
-		View::share('admin_prefix', $this->admin_prefix);
-		View::share('resource', 'user');
-		View::share('pagination', '');
-	}
+        $this->namespace = '\Clumsy\CMS\Models';
+        
+        parent::__construct();
+    }
 
 	public function checkPermissions(Route $route, Request $request)
 	{
@@ -56,53 +46,23 @@ class UsersController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($data = array())
 	{
 		$data['items'] = Sentry::findAllUsers();
 
-		$data['columns'] = array(
-			'first_name' => trans('clumsy::fields.first_name'),
-			'last_name'  => trans('clumsy::fields.last_name'),
-			'email'		 => trans('clumsy::fields.email'),
-		);
-
         $data['title'] = trans('clumsy::titles.users');
 
-		return View::make('clumsy::users.index', $data);
+        return parent::index();
 	}
 
-	/**
-	 * Show the form for creating a new user
-	 *
-	 * @return Response
-	 */
-	public function create()
+	public function create($data = array())
 	{
 		$data['title'] = trans('clumsy::titles.new_user');
 
 		$data['edited_user_id'] = 'new';
 		$data['edited_user_group'] = '';
 
-		$groups = array_map(function($group)
-		{
-			return $group->name;
-
-		}, Sentry::findAllGroups());
-
-		$data['groups'] = array_combine($groups, array_map(function($group)
-		{
-		    if (Lang::has('clumsy::fields.roles.'.Str::lower(str_singular($group))))
-		    {
-		        return trans('clumsy::fields.roles.'.Str::lower(str_singular($group)));
-		    }
-
-		    return str_singular($group);
-
-		}, $groups));
-
-        $data['form_fields'] = 'clumsy::users.fields';
-
-        return View::make('clumsy::users.edit', $data);
+		return $this->edit($id = null, $data);
 	}
 
 	/**
@@ -112,8 +72,10 @@ class UsersController extends \BaseController {
 	 */
 	public function store()
 	{
+		$model = $this->model();
+
 		$rules = array_merge(
-			self::$validationRules,
+			$model::$rules,
 			array(
 				'password' => 'required|min:6|max:255',
 				'confirm_password' => 'required|same:password',
@@ -165,25 +127,22 @@ class UsersController extends \BaseController {
         return Redirect::route("{$this->admin_prefix}.user.edit", $id);
 	}
 
-	/**
-	 * Show the form for editing the specified user.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
+	public function edit($id, $data = array())
 	{
-		$data['item'] = Sentry::findUserById($id);
+		if ($id)
+		{
+			$data['item'] = Sentry::findUserById($id);
 
-		if ($self = (Sentry::getUser()->id == $id)) {
-			
-			$data['supress_delete'] = true;
+			if ($self = (Sentry::getUser()->id == $id)) {
+				
+				$data['supress_delete'] = true;
+			}
+
+	        $data['title'] = $self ? trans('clumsy::titles.profile') : trans('clumsy::titles.edit_user');
+
+	        $data['edited_user_id'] = $id;
+	        $data['edited_user_group'] = $data['item']->getGroups()->first()->name;
 		}
-
-        $data['title'] = $self ? trans('clumsy::titles.profile') : trans('clumsy::titles.edit_user');
-
-        $data['edited_user_id'] = $id;
-        $data['edited_user_group'] = $data['item']->getGroups()->first()->name;
 
 		$groups = array_map(function($group)
 		{
@@ -202,9 +161,7 @@ class UsersController extends \BaseController {
 
 		}, $groups));
 
-        $data['form_fields'] = 'clumsy::users.fields';
-
-		return View::make('clumsy::users.edit', $data);
+		return parent::edit($id, $data);
 	}
 
 	/**
@@ -215,9 +172,9 @@ class UsersController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$user = Sentry::findUserById($id);
+		$model = $this->model();
 
-		$rules = self::$validationRules;
+		$rules = $model::$rules;
 
 		if ($new_password = (Input::has('new_password') && Input::get('new_password') != '')) {
 
@@ -244,6 +201,8 @@ class UsersController extends \BaseController {
 		}
 		unset($data['new_password']);
 		unset($data['confirm_new_password']);
+
+		$user = Sentry::findUserById($id);
 
 		if (Input::has('group')) {
 
@@ -304,5 +263,4 @@ class UsersController extends \BaseController {
            'alert'        => $message,
         ));
 	}
-
 }

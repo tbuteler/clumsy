@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
@@ -19,6 +20,7 @@ class AdminController extends \BaseController {
     protected $resource = '';
     protected $resource_plural = '';
     protected $display_name = '';
+    protected $namespace = '';
     protected $model = '';
 
     public function __construct()
@@ -26,6 +28,11 @@ class AdminController extends \BaseController {
         $this->beforeFilter('@setupResource');
 
         $this->beforeFilter('csrf', array('only' => array('store', 'update', 'destroy')));
+    }
+
+    protected function model()
+    {
+        return "{$this->namespace}\\{$this->model}";
     }
 
     /**
@@ -50,16 +57,17 @@ class AdminController extends \BaseController {
         View::share('id', $route->getParameter($this->resource));
         View::share('pagination', '');
 
-        $model = $this->model;
-        if ($model && $model::$columns)
+        if ($model = $this->model())
         {
-            $columns = $model::$columns;
+            $columns = $model::columns();
         }
         else
         {
             $columns = Config::get('clumsy::default_columns');
         }
         View::share('columns', $columns);
+        
+        View::share('sortable', false);
     }
 
     /**
@@ -69,12 +77,11 @@ class AdminController extends \BaseController {
      */
     public function index($data = array())
     {
-        $model = $this->model;
+        $model = $this->model();
 
         if (!isset($data['items']))
         {
-            $model = $this->model;
-            $query = $model::select('*')->orderBy('id', 'desc');
+            $query = $model::select('*')->orderAuto();
             $per_page = property_exists($model, 'admin_per_page') ? $model::$admin_per_page : Config::get('clumsy::per_page');
 
             if ($per_page)
@@ -112,41 +119,7 @@ class AdminController extends \BaseController {
      */
     public function create($data = array())
     {
-        $model = $this->model;
-
-        if (!isset($data['title']))
-        {
-            $data['title'] = trans('clumsy::titles.new_item', array('resource' => $this->displayName()));
-        }
-
-        if (View::exists("admin.{$this->resource_plural}.fields"))
-        {
-            $data['form_fields'] = "admin.{$this->resource_plural}.fields";
-        }
-        else
-        {
-            $data['form_fields'] = 'clumsy::templates.fields';
-        }
-        
-        if (View::exists("admin.{$this->resource_plural}.edit"))
-        {
-            $view = "admin.{$this->resource_plural}.edit";
-        }
-        else
-        {    
-            $view = 'clumsy::templates.edit';
-        }
-
-        $data['media'] = MediaManager::slots($this->model);
-
-        $data['parent_field'] = null;
-
-        if ($model::isNested())
-        {   
-            $data['parent_field'] = Form::hidden($model::parentIdColumn(), Input::get('parent'));
-        }
-
-        return View::make($view, $data);
+        return $this->edit($id = null, $data);
     }
 
     /**
@@ -156,7 +129,7 @@ class AdminController extends \BaseController {
      */
     public function store()
     {
-        $model = $this->model;
+        $model = $this->model();
 
         $validator = Validator::make($data = Input::all(), $model::$rules);
 
@@ -207,7 +180,7 @@ class AdminController extends \BaseController {
      */
     public function edit($id, $data = array())
     {
-        $model = $this->model;
+        $model = $this->model();
 
         if (!isset($data['item']))
         {
@@ -223,14 +196,22 @@ class AdminController extends \BaseController {
         {
             $data['form_fields'] = "admin.{$this->resource_plural}.fields";
         }
+        elseif (View::exists("clumsy::{$this->resource_plural}.fields"))
+        {
+            $data['form_fields'] = "clumsy::{$this->resource_plural}.fields";
+        }
         else
         {
             $data['form_fields'] = 'clumsy::templates.fields';
         }
-
+        
         if (View::exists("admin.{$this->resource_plural}.edit"))
         {
             $view = "admin.{$this->resource_plural}.edit";
+        }
+        elseif (View::exists("clumsy::{$this->resource_plural}.edit"))
+        {
+            $view = "clumsy::{$this->resource_plural}.edit";
         }
         elseif ($model::hasChildren())
         {    
@@ -244,7 +225,7 @@ class AdminController extends \BaseController {
 
             if (!isset($data['children']))
             {
-                $query = $child_model::select('*')->where($child_model::parentIdColumn(), $id)->orderBy('id', 'desc');
+                $query = $child_model::select('*')->where($child_model::parentIdColumn(), $id)->orderAuto();
                 $per_page = property_exists($child_model, 'admin_per_page') ? $child_model::$admin_per_page : Config::get('clumsy::per_page');
 
                 if ($per_page)
@@ -260,7 +241,7 @@ class AdminController extends \BaseController {
 
             if (!isset($data['child_columns']))
             {
-                $data['child_columns'] = $child_model::$columns ? $child_model::$columns : Config::get('clumsy::default_columns');
+                $data['child_columns'] = $child_model::columns();
             }
 
             $view = 'clumsy::templates.edit-nested';
@@ -270,13 +251,16 @@ class AdminController extends \BaseController {
             $view = 'clumsy::templates.edit';
         }
 
-        $data['media'] = MediaManager::slots($this->model, $id);
+        $data['media'] = MediaManager::slots($this->model(), $id);
 
-        foreach ((array)$data['item']->required_by as $required)
+        if ($id)
         {
-            if (!method_exists($model, $required))
+            foreach ((array)$data['item']->required_by as $required)
             {
-                throw new \Exception('The model\'s required resources must be defined by a dynamic property with queryable Eloquent relations');
+                if (!method_exists($model, $required))
+                {
+                    throw new \Exception('The model\'s required resources must be defined by a dynamic property with queryable Eloquent relations');
+                }
             }
         }
 
@@ -285,7 +269,7 @@ class AdminController extends \BaseController {
         if ($model::isNested())
         {
             $parent_id_column = $model::parentIdColumn();
-            $data['parent_field'] = Form::hidden($parent_id_column, $data['item']->$parent_id_column);
+            $data['parent_field'] = Form::hidden($parent_id_column, $id ? $data['item']->$parent_id_column : Input::get('parent'));
         }
 
         return View::make($view, $data);
@@ -299,7 +283,7 @@ class AdminController extends \BaseController {
      */
     public function update($id)
     {
-        $model = $this->model;
+        $model = $this->model();
 
         $item = $model::findOrFail($id);
 
@@ -347,7 +331,7 @@ class AdminController extends \BaseController {
      */
     public function destroy($id)
     {
-        $model = $this->model;
+        $model = $this->model();
 
         $item = $model::find($id);
 
@@ -378,7 +362,7 @@ class AdminController extends \BaseController {
     {
         if (!$string)
         {
-            $model = $this->model;
+            $model = $this->model();
 
             $string = $model ? $model::displayName() : false;
             
@@ -395,7 +379,7 @@ class AdminController extends \BaseController {
     {
         if (!$string)
         {
-            $model = $this->model;
+            $model = $this->model();
             
             $string = $model ? $model::displayNamePlural() : false;
             

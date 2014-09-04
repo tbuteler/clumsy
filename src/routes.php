@@ -28,8 +28,9 @@ Route::get(Config::get('clumsy::admin_prefix').'/logout', array(
 
 Route::group(
     array(
-        'prefix' => Config::get('clumsy::admin_prefix'),
-        'before' => 'admin_auth|admin_user|admin_assets|admin_extra',
+        'namespace' => 'Clumsy\CMS\Controllers',
+        'prefix'    => Config::get('clumsy::admin_prefix'),
+        'before'    => 'admin_auth|admin_user|admin_assets|admin_extra',
     ),
     function()
     {
@@ -43,9 +44,26 @@ Route::group(
 
         Route::get('import/{resource?}', array(
             'as'   => 'import',
-            'uses' => 'Clumsy\CMS\Controllers\ExternalResourceController@import',
+            'uses' => 'ExternalResourceController@import',
         ));
 
-        Route::resource('user', 'Clumsy\CMS\Controllers\UsersController');
+        Route::get('sort/{resource}', array(
+            'as'   => 'sort',
+            function($resource)
+            {
+                if (Input::get('reset') !== null)
+                {
+                    Session::forget("clumsy.order.$resource");
+                }
+                else
+                {
+                    Session::put("clumsy.order.$resource", array(Input::get('column'), Input::get('direction')));
+                }
+
+                return Redirect::back();
+            }
+        ));
+
+        Route::resource('user', 'UsersController');
     }
 );

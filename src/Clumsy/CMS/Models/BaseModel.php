@@ -1,6 +1,8 @@
 <?php namespace Clumsy\CMS\Models;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class BaseModel extends \Eloquent {
@@ -11,9 +13,10 @@ class BaseModel extends \Eloquent {
 
     public static $has_slug = false;
     
-    public static $columns = null;
     public static $rules = array();
     public static $booleans = array();
+
+    public static $default_order = array();
 
     public static $parent_resource = null;
     public static $parent_id_column = null;
@@ -30,6 +33,11 @@ class BaseModel extends \Eloquent {
                 $model->slug = Str::slug($model->title);
             });
         }
+    }
+
+    public static function columns()
+    {
+        return Config::get('clumsy::default_columns');
     }
 
     public static function isNested()
@@ -96,6 +104,35 @@ class BaseModel extends \Eloquent {
     public function isRequiredByOthers()
     {
         return !self::requiredBy()->isEmpty();
+    }
+
+    public function scopeOrderAuto($query)
+    {
+        $resource = snake_case(class_basename(get_class($this)));
+
+        if (Session::has("clumsy.order.$resource"))
+        {
+            list($column, $direction) = Session::get("clumsy.order.$resource");
+        }
+        else
+        {
+            if (sizeof(static::$default_order) > 1)
+            {
+                list($column, $direction) = static::$default_order;
+            }
+            elseif (sizeof(static::$default_order) === 1)
+            {
+                $column = head(static::$default_order);
+                $direction = 'asc';
+            }
+            else
+            {
+                $column = Config::get('clumsy::default_order.column');
+                $direction = Config::get('clumsy::default_order.direction');
+            }
+        }
+
+        return $query->orderBy($column, $direction);
     }
 
     public static function displayName()

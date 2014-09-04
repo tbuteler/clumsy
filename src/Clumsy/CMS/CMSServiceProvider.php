@@ -44,6 +44,7 @@ class CMSServiceProvider extends ServiceProvider {
         $admin_assets = include($this->guessPackagePath() . '/assets/assets.php');
 		Asset::batchRegister($admin_assets);
 		
+		require $this->guessPackagePath().'/helpers.php';
 		require $this->guessPackagePath().'/macros/form.php';
 		require $this->guessPackagePath().'/filters.php';
 		require $this->guessPackagePath().'/routes.php';

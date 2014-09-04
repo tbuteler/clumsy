@@ -48,6 +48,23 @@ return array(
 
     /*
      |--------------------------------------------------------------------------
+     | Default order of indexes
+     |--------------------------------------------------------------------------
+     |
+     | Which columns should be used to sort items by default, if no other has
+     | been defined by the user, and in which direction (asc vs. desc)
+     |
+     */
+
+    'default_order' => array(
+
+        'column'    => 'id',
+
+        'direction' => 'desc',
+    ),
+
+    /*
+     |--------------------------------------------------------------------------
      | Default items per page
      |--------------------------------------------------------------------------
      |

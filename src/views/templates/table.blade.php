@@ -3,10 +3,10 @@
 @if (count($items))
 
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-striped">
             <thead>
-            @foreach ($columns as $slug => $name)
-                <th>{{ $name }}</th>
+            @foreach ($columns as $column => $name)
+                <th>{{ $sortable ? sort_link($resource, $column, $name) : $name }}</th>
             @endforeach
             </thead>
 
@@ -14,16 +14,16 @@
             @foreach ($items as $item)
 
                 <tr>
-                @foreach ($columns as $slug => $name)
+                @foreach ($columns as $column => $name)
 
                     <?php
 
                     $type = 'text';
-                    if (strpos($slug, ':'))
+                    if (strpos($column, ':'))
                     {
-                        list($slug, $type) = explode(':', $slug);
+                        list($column, $type) = explode(':', $column);
                     }
-                    $value = $type === 'boolean' ? ($item->$slug == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no')) : $item->$slug;
+                    $value = $type === 'boolean' ? ($item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no')) : $item->$column;
 
                     ?>
 

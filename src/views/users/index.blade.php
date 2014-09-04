@@ -1,1 +1,0 @@
-@extends('clumsy::templates.index')
