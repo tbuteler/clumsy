@@ -2,10 +2,14 @@
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\HTML;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class BaseModel extends \Eloquent {
+
+    public $resource_name;
 
     protected $guarded = array('id');
 
@@ -21,6 +25,13 @@ class BaseModel extends \Eloquent {
     public static $parent_resource = null;
     public static $parent_id_column = null;
     public static $child_resource = null;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->resource_name = snake_case(class_basename(get_class($this)));
+    }
 
     public static function boot()
     {
@@ -108,11 +119,9 @@ class BaseModel extends \Eloquent {
 
     public function scopeOrderAuto($query)
     {
-        $resource = snake_case(class_basename(get_class($this)));
-
-        if (Session::has("clumsy.order.$resource"))
+        if (Session::has("clumsy.order.{$this->resource_name}"))
         {
-            list($column, $direction) = Session::get("clumsy.order.$resource");
+            list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
         }
         else
         {
@@ -133,6 +142,30 @@ class BaseModel extends \Eloquent {
         }
 
         return $query->orderBy($column, $direction);
+    }
+
+    public function columnValue($column)
+    {
+        $value = $this->$column;
+        
+        $mutator = 'get'.studly_case($column).'Attribute';
+        if (method_exists($this, $mutator))
+        {
+            return $this->$mutator();
+        }
+        elseif (in_array($column, (array)static::$booleans))
+        {
+            return $this->booleanColumnValue($column);
+        }
+
+        $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);
+
+        return HTML::link($url, $value);
+    }
+
+    public function booleanColumnValue($column)
+    {
+        return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }
 
     public static function displayName()

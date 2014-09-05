@@ -6,42 +6,17 @@
         <table class="table table-striped">
             <thead>
             @foreach ($columns as $column => $name)
-                <th>{{ $sortable ? sort_link($resource, $column, $name) : $name }}</th>
+                <th>{{ $sortable ? HTML::columnTitle($resource, $column, $name) : $name }}</th>
             @endforeach
             </thead>
 
             <tbody>
             @foreach ($items as $item)
-
                 <tr>
                 @foreach ($columns as $column => $name)
-
-                    <?php
-
-                    $type = 'text';
-                    if (strpos($column, ':'))
-                    {
-                        list($column, $type) = explode(':', $column);
-                    }
-                    $value = $type === 'boolean' ? ($item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no')) : $item->$column;
-
-                    ?>
-
-                    <td>
-                    @if (!isset($readonly) || !$readonly)
-                    
-                        <a href="{{ route("$admin_prefix.$resource.edit", $item->id); }}">{{ $value }}</a>
-                    
-                    @else
-                    
-                        {{ $value }}
-                    
-                    @endif
-                    </td>
-
+                    <td>{{ $item->columnValue($column) }}</td>
                 @endforeach
                 </tr>
-
             @endforeach
             </tbody>
         </table>

@@ -3,11 +3,15 @@
 use Clumsy\Eminem\Models\Media;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\HTML;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class LegacyModel extends \Eloquent {
+
+    public $resource_name;
 
     protected $guarded = array('id');
 
@@ -25,6 +29,13 @@ class LegacyModel extends \Eloquent {
     public static $child_resource = null;
 
     public static $media = array();
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->resource_name = snake_case(class_basename(get_class($this)));
+    }
 
     public static function boot()
     {
@@ -141,11 +152,9 @@ class LegacyModel extends \Eloquent {
 
     public function scopeOrderAuto($query)
     {
-        $resource = snake_case(class_basename(get_class($this)));
-
-        if (Session::has("clumsy.order.$resource"))
+        if (Session::has("clumsy.order.{$this->resource_name}"))
         {
-            list($column, $direction) = Session::get("clumsy.order.$resource");
+            list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
         }
         else
         {
@@ -166,6 +175,31 @@ class LegacyModel extends \Eloquent {
         }
 
         return $query->orderBy($column, $direction);
+    }
+
+    public function columnValue($column)
+    {
+        $value = $this->$column;
+        
+        $mutator = 'get'.studly_case($column).'Attribute';
+        if (method_exists($this, $mutator))
+        {
+            return $this->$mutator();
+        }
+        
+        if (in_array($column, (array)static::$booleans))
+        {
+            return $this->booleanColumnValue($column);
+        }
+
+        $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);
+
+        return HTML::link($url, $value);
+    }
+
+    public function booleanColumnValue($column)
+    {
+        return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }
 
     public static function displayName()

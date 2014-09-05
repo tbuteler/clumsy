@@ -67,7 +67,7 @@ class AdminController extends \BaseController {
         }
         View::share('columns', $columns);
         
-        View::share('sortable', false);
+        View::share('sortable', true);
     }
 
     /**
