@@ -49,9 +49,10 @@ HTML::macro('columnTitle', function($resource, $column, $name)
 
 HTML::macro('breadcrumb', function($breadcrumb)
 {
-    $last = array_pop($breadcrumb);
+    $last = key(array_slice($breadcrumb, -1, 1));
+    array_pop($breadcrumb);
     $html = '<ol class="breadcrumb">';
-    foreach ($breadcrumb as $crumb_link => $crumb)
+    foreach ($breadcrumb as $crumb => $crumb_link)
     {
         $html .= '<li><a href="'.$crumb_link.'">'.$crumb.'</a></li>';
     }

@@ -3,7 +3,7 @@
 <div class="container master">
 
     @section('breadcrumb')
-    @if ($breadcrumb)
+    @if (isset($breadcrumb) && $breadcrumb)
         {{ HTML::breadcrumb($breadcrumb) }}
     @endif
     @show

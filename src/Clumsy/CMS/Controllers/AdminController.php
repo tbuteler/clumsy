@@ -130,27 +130,32 @@ class AdminController extends \BaseController {
             if (!$model::isNested())
             {
                 $data['breadcrumb'] = array(
-                    url($this->admin_prefix) => trans('clumsy::buttons.home'),
-                    URL::route("{$this->admin_prefix}.{$this->resource}.index") => $this->displayNamePlural(),
-                    '' => trans('clumsy::buttons.add'),
+                    trans('clumsy::buttons.home') => URL::to($this->admin_prefix),
+                    $this->displayNamePlural()    => URL::route("{$this->admin_prefix}.{$this->resource}.index"),
+                    trans('clumsy::buttons.add')  => '',
                 );
             }
             else
             {
                 $parent_resource = $model::parentResource();
                 $parent_model = $model::parentModel();
-                $parent_display_name = $parent_model::displayNamePlural();
+                $parent_display_name = $parent_model::displayName();
                 if (!$parent_display_name)
                 {
-                    $parent_display_name = $this->displayNamePlural($parent_model);
+                    $parent_display_name = $this->displayName($parent_model);
+                }
+                $parent_display_name_plural = $parent_model::displayNamePlural();
+                if (!$parent_display_name_plural)
+                {
+                    $parent_display_name_plural = $this->displayNamePlural($parent_model);
                 }
 
                 $data['breadcrumb'] = array(
-                    url($this->admin_prefix) => trans('clumsy::buttons.home'),
-                    URL::route("{$this->admin_prefix}.$parent_resource".'.index') => $parent_display_name,
-                    URL::route("{$this->admin_prefix}.$parent_resource".'.edit', Input::get('parent')) => trans('clumsy::buttons.edit'),
-                    URL::route("{$this->admin_prefix}.$parent_resource".'.edit', Input::get('parent')).'/' => $this->displayNamePlural(),
-                    '' => trans('clumsy::buttons.add'),
+                    trans('clumsy::buttons.home') => URL::to($this->admin_prefix),
+                    $parent_display_name_plural => URL::route("{$this->admin_prefix}.$parent_resource".'.index'),
+                    trans('clumsy::titles.edit_item', array('resource' => $parent_display_name)) => URL::route("{$this->admin_prefix}.$parent_resource".'.edit', Input::get('parent')),
+                    $this->displayNamePlural() => URL::route("{$this->admin_prefix}.$parent_resource".'.edit', Input::get('parent')),
+                    trans('clumsy::buttons.add') => '',
                 );
             }
         }
@@ -233,9 +238,9 @@ class AdminController extends \BaseController {
             if (!$model::isNested())
             {
                 $data['breadcrumb'] = array(
-                    url($this->admin_prefix) => trans('clumsy::buttons.home'),
-                    URL::route("{$this->admin_prefix}.{$this->resource}.index") => $this->displayNamePlural(),
-                    '' => trans('clumsy::buttons.edit'),
+                    trans('clumsy::buttons.home') => URL::to($this->admin_prefix),
+                    $this->displayNamePlural()    => URL::route("{$this->admin_prefix}.{$this->resource}.index"),
+                    trans('clumsy::buttons.edit') => '',
                 );
             }
             else
@@ -243,18 +248,23 @@ class AdminController extends \BaseController {
                 $parent_resource = $model::parentResource();
                 $parent_model = $model::parentModel();
                 $parent_id = $model::parentItemId($id);
-                $parent_display_name = $parent_model::displayNamePlural();
+                $parent_display_name = $parent_model::displayName();
                 if (!$parent_display_name)
                 {
-                    $parent_display_name = $this->displayNamePlural($parent_model);
+                    $parent_display_name = $this->displayName($parent_model);
+                }
+                $parent_display_name_plural = $parent_model::displayNamePlural();
+                if (!$parent_display_name_plural)
+                {
+                    $parent_display_name_plural = $this->displayNamePlural($parent_model);
                 }
 
                 $data['breadcrumb'] = array(
-                    url($this->admin_prefix) => trans('clumsy::buttons.home'),
-                    URL::route("{$this->admin_prefix}.$parent_resource".'.index') => $parent_display_name,
-                    URL::route("{$this->admin_prefix}.$parent_resource".'.edit', $parent_id) => trans('clumsy::buttons.edit'),
-                    URL::route("{$this->admin_prefix}.$parent_resource".'.edit', $parent_id).'/' => $this->displayNamePlural(),
-                    '' => trans('clumsy::buttons.edit'),
+                    trans('clumsy::buttons.home') => URL::to($this->admin_prefix),
+                    $parent_display_name_plural => URL::route("{$this->admin_prefix}.$parent_resource".'.index'),
+                    trans('clumsy::titles.edit_item', array('resource' => $parent_display_name)) => URL::route("{$this->admin_prefix}.$parent_resource".'.edit', $parent_id),
+                    $this->displayNamePlural() => URL::route("{$this->admin_prefix}.$parent_resource".'.edit', $parent_id),
+                    trans('clumsy::buttons.edit') => '',
                 );
             }
         }
