@@ -117,11 +117,18 @@ class BaseModel extends \Eloquent {
         return !self::requiredBy()->isEmpty();
     }
 
-    public function scopeOrderSortable($query)
+    public function scopeOrderSortable($query, $column = null, $direction = null)
     {
         if (Session::has("clumsy.order.{$this->resource_name}"))
         {
             list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
+        }
+        elseif ($column)
+        {
+            if (!$direction)
+            {
+                $direction = 'asc';
+            }
         }
         else
         {
