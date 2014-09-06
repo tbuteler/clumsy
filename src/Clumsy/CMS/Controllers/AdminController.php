@@ -1,5 +1,6 @@
 <?php namespace Clumsy\CMS\Controllers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Input;
@@ -55,6 +56,7 @@ class AdminController extends \BaseController {
         View::share('display_name', $this->displayName());
         View::share('display_name_plural', $this->displayNamePlural());
         View::share('id', $route->getParameter($this->resource));
+        View::share('breadcrumb', '');
         View::share('pagination', '');
 
         if ($model = $this->model())
@@ -67,7 +69,7 @@ class AdminController extends \BaseController {
         }
         View::share('columns', $columns);
         
-        View::share('sortable', true);
+        View::share('sortable', false);
     }
 
     /**
@@ -81,7 +83,9 @@ class AdminController extends \BaseController {
 
         if (!isset($data['items']))
         {
-            $query = $model::select('*')->orderAuto();
+            $query = $model::select('*')->orderSortable();
+            $data['sortable'] = true;
+            
             $per_page = property_exists($model, 'admin_per_page') ? $model::$admin_per_page : Config::get('clumsy::per_page');
 
             if ($per_page)
@@ -119,6 +123,43 @@ class AdminController extends \BaseController {
      */
     public function create($data = array())
     {
+        $model = $this->model();
+
+        if (!isset($data['breadcrumb']))
+        {
+            if (!$model::isNested())
+            {
+                $data['breadcrumb'] = array(
+                    url($this->admin_prefix) => trans('clumsy::buttons.home'),
+                    URL::route("{$this->admin_prefix}.{$this->resource}.index") => $this->displayNamePlural(),
+                    '' => trans('clumsy::buttons.add'),
+                );
+            }
+            else
+            {
+                $parent_resource = $model::parentResource();
+                $parent_model = $model::parentModel();
+                $parent_display_name = $parent_model::displayNamePlural();
+                if (!$parent_display_name)
+                {
+                    $parent_display_name = $this->displayNamePlural($parent_model);
+                }
+
+                $data['breadcrumb'] = array(
+                    url($this->admin_prefix) => trans('clumsy::buttons.home'),
+                    URL::route("{$this->admin_prefix}.$parent_resource".'.index') => $parent_display_name,
+                    URL::route("{$this->admin_prefix}.$parent_resource".'.edit', Input::get('parent')) => trans('clumsy::buttons.edit'),
+                    URL::route("{$this->admin_prefix}.$parent_resource".'.edit', Input::get('parent')).'/' => $this->displayNamePlural(),
+                    '' => trans('clumsy::buttons.add'),
+                );
+            }
+        }
+
+        if (!isset($data['title']))
+        {
+            $data['title'] = trans('clumsy::titles.new_item', array('resource' => $this->displayName()));
+        }
+
         return $this->edit($id = null, $data);
     }
 
@@ -187,6 +228,37 @@ class AdminController extends \BaseController {
             $data['item'] = $model::find($id);
         }
 
+        if (!isset($data['breadcrumb']))
+        {
+            if (!$model::isNested())
+            {
+                $data['breadcrumb'] = array(
+                    url($this->admin_prefix) => trans('clumsy::buttons.home'),
+                    URL::route("{$this->admin_prefix}.{$this->resource}.index") => $this->displayNamePlural(),
+                    '' => trans('clumsy::buttons.edit'),
+                );
+            }
+            else
+            {
+                $parent_resource = $model::parentResource();
+                $parent_model = $model::parentModel();
+                $parent_id = $model::parentItemId($id);
+                $parent_display_name = $parent_model::displayNamePlural();
+                if (!$parent_display_name)
+                {
+                    $parent_display_name = $this->displayNamePlural($parent_model);
+                }
+
+                $data['breadcrumb'] = array(
+                    url($this->admin_prefix) => trans('clumsy::buttons.home'),
+                    URL::route("{$this->admin_prefix}.$parent_resource".'.index') => $parent_display_name,
+                    URL::route("{$this->admin_prefix}.$parent_resource".'.edit', $parent_id) => trans('clumsy::buttons.edit'),
+                    URL::route("{$this->admin_prefix}.$parent_resource".'.edit', $parent_id).'/' => $this->displayNamePlural(),
+                    '' => trans('clumsy::buttons.edit'),
+                );
+            }
+        }
+
         if (!isset($data['title']))
         {
             $data['title'] = trans('clumsy::titles.edit_item', array('resource' => $this->displayName()));
@@ -225,7 +297,9 @@ class AdminController extends \BaseController {
 
             if (!isset($data['children']))
             {
-                $query = $child_model::select('*')->where($child_model::parentIdColumn(), $id)->orderAuto();
+                $query = $child_model::select('*')->where($child_model::parentIdColumn(), $id)->orderSortable();
+                $data['sortable'] = true;
+
                 $per_page = property_exists($child_model, 'admin_per_page') ? $child_model::$admin_per_page : Config::get('clumsy::per_page');
 
                 if ($per_page)

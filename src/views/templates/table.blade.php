@@ -3,7 +3,7 @@
 @if (count($items))
 
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table">
             <thead>
             @foreach ($columns as $column => $name)
                 <th>{{ $sortable ? HTML::columnTitle($resource, $column, $name) : $name }}</th>

@@ -26,9 +26,9 @@ class BaseModel extends \Eloquent {
     public static $parent_id_column = null;
     public static $child_resource = null;
 
-    public function __construct()
+    public function __construct(array $attributes = array())
     {
-        parent::__construct();
+        parent::__construct($attributes);
 
         $this->resource_name = snake_case(class_basename(get_class($this)));
     }
@@ -117,7 +117,7 @@ class BaseModel extends \Eloquent {
         return !self::requiredBy()->isEmpty();
     }
 
-    public function scopeOrderAuto($query)
+    public function scopeOrderSortable($query)
     {
         if (Session::has("clumsy.order.{$this->resource_name}"))
         {
@@ -141,21 +141,25 @@ class BaseModel extends \Eloquent {
             }
         }
 
-        return $query->orderBy($column, $direction);
+        if ($column && $direction)
+        {
+            return $query->orderBy($column, $direction);
+        }
+
+        Session::forget("clumsy.order.{$this->resource_name}");
+        return $query;
     }
 
     public function columnValue($column)
     {
         $value = $this->$column;
         
-        $mutator = 'get'.studly_case($column).'Attribute';
-        if (method_exists($this, $mutator))
+        if (!$this->hasGetMutator($column))
         {
-            return $this->$mutator();
-        }
-        elseif (in_array($column, (array)static::$booleans))
-        {
-            return $this->booleanColumnValue($column);
+            if (in_array($column, (array)static::$booleans))
+            {
+                $value = $this->booleanColumnValue($column);
+            }
         }
 
         $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);

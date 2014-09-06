@@ -2,11 +2,15 @@
 
 return array(
 
+    'home'   => 'Home',
+
     'login'  => 'Login',
 
     'logout' => 'Log out',
 
 	'add'    => 'Add new',
+
+    'edit'   => 'Edit',
 
 	'save'   => 'Save changes',
 

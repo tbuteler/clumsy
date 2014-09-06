@@ -26,6 +26,15 @@ class CMSServiceProvider extends ServiceProvider {
 		$this->app->register('Clumsy\Assets\AssetsServiceProvider');
 		$this->app->register('Clumsy\Utils\UtilsServiceProvider');
 		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
+
+        $this->app['command.clumsy.publish'] = $this->app->share(function($app)
+            {
+                // Make sure the asset publisher is registered.
+                $app->register('Illuminate\Foundation\Providers\PublisherServiceProvider');
+                return new Console\PublishCommand($app['asset.publisher']);
+            });
+
+        $this->commands(array('command.clumsy.publish'));
 	}
 
 	/**
