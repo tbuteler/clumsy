@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Lang;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
@@ -33,6 +34,18 @@ Route::filter('admin_assets', function()
         'delete_confirm'      => trans('clumsy::alerts.delete_confirm'),
         'delete_confirm_user' => trans('clumsy::alerts.user.delete_confirm'),
     ));
+
+    if (Config::get('clumsy::ie8'))
+    {
+        Event::listen('Print scripts', function()
+        {
+            return '
+            <!--[if lt IE 9]>
+                <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+                <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+            <![endif]-->';
+        });
+    }
 
     View::share('admin_prefix', Config::get('clumsy::admin_prefix'));
 
