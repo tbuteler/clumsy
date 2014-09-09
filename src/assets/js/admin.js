@@ -1,4 +1,7 @@
 $(function(){
+    $('.delete').click(function(e){
+        $(this).closest('form').next('.delete-form').submit();
+    });
     $('.delete-form').submit(function(e){
         return $(this).hasClass('user') ? confirm(handover.admin.delete_confirm_user) : confirm(handover.admin.delete_confirm);
     });

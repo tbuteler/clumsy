@@ -22,7 +22,5 @@ Form::macro('delete', function($resource_type, $id) {
         'class'  => "delete-form btn-outside pull-left $resource_type",
     );
  
-    return Form::open($form_parameters)
-            . Form::button('', array('type' => 'submit', 'title' => trans('clumsy::buttons.delete'), 'class' => 'btn btn-lg btn-danger glyphicon glyphicon-trash'))
-            . Form::close();
+    return Form::open($form_parameters).Form::close();
 });

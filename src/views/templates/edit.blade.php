@@ -17,7 +17,10 @@
     {{ $parent_field or '' }}
 
     <div class="bottom-buttons">
-        {{ Form::submit(isset($item) ? trans('clumsy::buttons.save') : trans('clumsy::buttons.create'), array('class' => 'btn btn-lg btn-primary pull-left')) }}
+        {{ Form::button(isset($item) ? trans('clumsy::buttons.save') : trans('clumsy::buttons.create'), array('type' => 'submit', 'class' => 'btn btn-lg btn-primary')) }}
+        @if (isset($item) && !isset($supress_delete))
+            {{ Form::button('', array('type' => 'button', 'title' => trans('clumsy::buttons.delete'), 'class' => 'delete btn btn-lg btn-danger glyphicon glyphicon-trash')) }}
+        @endif
     </div>
 
     {{ Form::close() }}
