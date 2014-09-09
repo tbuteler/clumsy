@@ -33,7 +33,7 @@ class AdminController extends \BaseController {
 
     protected function model()
     {
-        return "{$this->namespace}\\{$this->model}";
+        return $this->model ? "{$this->namespace}\\{$this->model}" : $this->model;
     }
 
     /**
