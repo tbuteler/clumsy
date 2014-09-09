@@ -78,17 +78,4 @@ return array(
 
     'per_page' => 50,
 
-    /*
-     |--------------------------------------------------------------------------
-     | Internet Explorer 8 support
-     |--------------------------------------------------------------------------
-     |
-     | Bootstrap's support for Internet Explorer 8 browser is limited and
-     | requires additional scripts. If you wish to support this browser and
-     | version, set this to 'true'.
-     |
-     */
-
-    'ie8' => false,
-
 );

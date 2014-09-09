@@ -75,7 +75,7 @@ class PublishCommand extends Command {
     }
 
     protected function vendorPath(){
-        return __DIR__.'/../../../vendor';
+        return base_path().'/vendor';
     }
 
 }
