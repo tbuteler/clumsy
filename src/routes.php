@@ -38,7 +38,7 @@ Route::group(
             'as'   => Config::get('clumsy::admin_prefix').'.home',
             function()
             {
-                return View::make('clumsy::admin.index');
+                return View::make('clumsy::index');
             }
         ));
 
