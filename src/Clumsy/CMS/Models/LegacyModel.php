@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\HTML;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -150,20 +151,25 @@ class LegacyModel extends \Eloquent {
         return !self::requiredBy()->isEmpty();
     }
 
-    public function scopeOrderSortable($query, $column = null, $direction = null)
+    public function scopeOrderSortable($query, $column = null, $direction = 'asc')
     {
+        $sorted = false;
+
         if (Session::has("clumsy.order.{$this->resource_name}"))
         {
             list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
-        }
-        elseif ($column)
-        {
-            if (!$direction)
+        
+            if (!in_array($column, Schema::getColumnListing($this->getTable())))
             {
-                $direction = 'asc';
+                Session::forget("clumsy.order.{$this->resource_name}");
+            }
+            else
+            {
+                $sorted = true;
             }
         }
-        else
+        
+        if (!$sorted)
         {
             if (sizeof(static::$default_order) > 1)
             {
@@ -172,7 +178,6 @@ class LegacyModel extends \Eloquent {
             elseif (sizeof(static::$default_order) === 1)
             {
                 $column = head(static::$default_order);
-                $direction = 'asc';
             }
             else
             {
@@ -185,8 +190,7 @@ class LegacyModel extends \Eloquent {
         {
             return $query->orderBy($column, $direction);
         }
-
-        Session::forget("clumsy.order.{$this->resource_name}");
+        
         return $query;
     }
 

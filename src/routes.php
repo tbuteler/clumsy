@@ -42,13 +42,13 @@ Route::group(
             }
         ));
 
-        Route::get('import/{resource?}', array(
-            'as'   => 'import',
+        Route::get('_import/{resource?}', array(
+            'as'   => '_import',
             'uses' => 'ExternalResourceController@import',
         ));
 
-        Route::get('sort/{resource}', array(
-            'as'   => 'sort',
+        Route::get('_reorder/{resource}', array(
+            'as'   => '_reorder',
             function($resource)
             {
                 if (Input::get('reset') !== null)

@@ -3,7 +3,7 @@
 @section('after-title')
 
     @if (isset($importer) && $importer)
-        <a href="{{ route('import', $resource) }}">
+        <a href="{{ route('_import', $resource) }}">
             <button type="button" class="btn btn-primary add-new">{{ trans('clumsy::buttons.import', array('resources' => $display_name_plural)) }}</button>
         </a>
     @else
