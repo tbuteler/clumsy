@@ -14,7 +14,7 @@
 
         {{ Form::field('password', trans('clumsy::fields.password'), 'password') }}
 
-        {{ Form::field('confirm_password', trans('clumsy::fields.password'), 'password') }}
+        {{ Form::field('confirm_password', trans('clumsy::fields.confirm_password'), 'password') }}
 
     @endif
 
@@ -31,6 +31,6 @@
 
     {{ Form::field('new_password', trans('clumsy::fields.new_password'), 'password') }}
 
-    {{ Form::field('confirm_new_password', trans('clumsy::fields.confirm_password'), 'password') }}
+    {{ Form::field('confirm_new_password', trans('clumsy::fields.confirm_new_password'), 'password') }}
 
 @endif

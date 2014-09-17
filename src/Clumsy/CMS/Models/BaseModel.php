@@ -22,6 +22,7 @@ class BaseModel extends \Eloquent {
     public static $booleans = array();
 
     public static $default_order = array();
+    public static $order_equivalence = array();
 
     public static $parent_resource = null;
     public static $parent_id_column = null;

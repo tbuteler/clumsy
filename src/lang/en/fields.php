@@ -18,6 +18,8 @@ return array(
 
 	'password'         => 'Password',
 
+	'confirm_password' => 'Confirm password',
+
 	'role'			   => 'Role',
 
 	'current_role'     => 'Current role',
@@ -26,7 +28,7 @@ return array(
 
 	'new_password'     => 'New password',
 
-	'confirm_password' => 'Confirm new password',
+	'confirm_new_password' => 'Confirm new password',
 
 	'roles' => array(
 

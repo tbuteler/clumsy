@@ -67,12 +67,15 @@ class AdminController extends \BaseController {
         if ($model = $this->model())
         {
             $columns = $model::columns();
+            $order_equivalence = $model::$order_equivalence;
         }
         else
         {
             $columns = Config::get('clumsy::default_columns');
+            $order_equivalence = array();
         }
         View::share('columns', $columns);
+        View::share('order_equivalence', $order_equivalence);
         
         View::share('sortable', false);
     }

@@ -18,6 +18,8 @@ return array(
 
 	'password'         => 'Password',
 
+	'confirm_password' => 'Confirmar password',
+
 	'role'			   => 'Função',
 
 	'current_role'     => 'Função actual',
@@ -26,7 +28,7 @@ return array(
 
 	'new_password'     => 'Nova password',
 
-	'confirm_password' => 'Confirmar nova password',
+	'confirm_new_password' => 'Confirmar nova password',
 
 	'roles' => array(
 

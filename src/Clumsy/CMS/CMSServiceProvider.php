@@ -44,20 +44,18 @@ class CMSServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		View::addNamespace('clumsy', $this->guessPackagePath() . '/views');
-		Lang::addNamespace('clumsy', $this->guessPackagePath() . '/lang');
+		$path = __DIR__.'/../..';
 
-        $this->package('clumsy/cms', 'clumsy');
-        $this->app['config']->package('clumsy/cms', $this->guessPackagePath() . '/config');
+        $this->package('clumsy/cms', 'clumsy', $path);
 
-        $admin_assets = include($this->guessPackagePath() . '/assets/assets.php');
+        $admin_assets = include($path.'/assets/assets.php');
 		Asset::batchRegister($admin_assets);
 		
-		require $this->guessPackagePath().'/macros/html.php';
-		require $this->guessPackagePath().'/macros/form.php';
-		require $this->guessPackagePath().'/filters.php';
-		require $this->guessPackagePath().'/routes.php';
-		require $this->guessPackagePath().'/errors.php';
+		require $path.'/macros/html.php';
+		require $path.'/macros/form.php';
+		require $path.'/filters.php';
+		require $path.'/routes.php';
+		require $path.'/errors.php';
 	}
 
 	/**

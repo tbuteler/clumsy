@@ -7,7 +7,7 @@ use Clumsy\Utils\Facades\HTTP;
 
 HTML::macro('columnTitle', function($resource, $column, $name)
 {
-    $url = URL::route('sort', $resource);
+    $url = URL::route('_reorder', $resource);
     $attributes = array();
     $html = '';
 

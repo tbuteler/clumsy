@@ -6,6 +6,7 @@
         <table class="table">
             <thead>
             @foreach ($columns as $column => $name)
+                <?php if (array_key_exists($column, $order_equivalence)) $column = $order_equivalence[$column]; ?>
                 <th>{{ $sortable ? HTML::columnTitle($resource, $column, $name) : $name }}</th>
             @endforeach
             </thead>
