@@ -232,17 +232,22 @@ class LegacyModel extends \Eloquent {
         return false;
     }
 
-    public function images()
+    public function media()
     {
         return $this->morphToMany('\Clumsy\Eminem\Models\Media', 'media_association')->select(array('media.*', 'position'));
     }
 
-    public function hasImages()
+    public function mediaSlots()
+    {
+        return $this->media_slots;
+    }
+
+    public function hasMedia()
     {
         return (bool)sizeof($this->images);
     }
     
-    public function image($position = null, $offset = 0)
+    public function mediaPath($position = null, $offset = 0)
     {
         if ($this->hasImages())
         {
@@ -271,13 +276,8 @@ class LegacyModel extends \Eloquent {
         return $this->imagePlaceholder($position);
     }
 
-    public function imagePlaceholder($position = null)
+    public function mediaPlaceholder($position = null)
     {
         return '';
-    }
-
-    public function mediaSlots()
-    {
-        return $this->media_slots;
     }
 }
