@@ -12,25 +12,25 @@ use Illuminate\Support\Str;
 
 class LegacyModel extends \Eloquent {
 
-    public $resource_name;
+    public static $has_slug = false;
 
     protected $guarded = array('id');
 
+    public $resource_name;
+
     public $required_by = array();
-
-    public static $has_slug = false;
     
-    public static $rules = array();
-    public static $booleans = array();
+    public $rules = array();
+    public $booleans = array();
 
-    public static $default_order = array();
-    public static $order_equivalence = array();
+    public $default_order = array();
+    public $order_equivalence = array();
 
-    public static $parent_resource = null;
-    public static $parent_id_column = null;
-    public static $child_resource = null;
+    public $parent_resource = null;
+    public $parent_id_column = null;
+    public $child_resource = null;
 
-    public static $media = array();
+    public $media_slots = array();
 
     public function __construct(array $attributes = array())
     {
@@ -81,56 +81,56 @@ class LegacyModel extends \Eloquent {
         });
     }
 
-    public static function columns()
+    public function columns()
     {
         return Config::get('clumsy::default_columns');
     }
 
-    public static function isNested()
+    public function isNested()
     {
-        return (bool)static::parentResource();
+        return (bool)$this->parentResource();
     }
 
-    public static function parentResource()
+    public function parentResource()
     {
-        return (string)static::$parent_resource;
+        return (string)$this->parent_resource;
     }
 
-    public static function parentModel()
+    public function parentModel()
     {
-        return (string)studly_case(static::$parent_resource);
+        return (string)studly_case($this->parent_resource);
     }
 
-    public static function parentIdColumn()
+    public function parentIdColumn()
     {
-        return static::$parent_id_column === null ? static::$parent_resource.'_id' : static::$parent_id_column;
+        return $this->parent_id_column === null ? $this->parent_resource.'_id' : $this->parent_id_column;
     }
 
-    public static function parentItemId($id)
+    public function parentItemId($id)
     {
-        $id_column = self::parentIdColumn();
-        return self::find($id)->$id_column;
+        $id_column = $this->parentIdColumn();
+        return $this->find($id)->$id_column;
     }
 
-    public static function parentItem($id)
+    public function parentItem($id)
     {
-        $parent_model = static::parentModel();
-        return $parent_model::find(static::parentItemId($id));
+        $parent_model = $this->parentModel();
+        return $parent_model::find($this->parentItemId($id));
     }
 
-    public static function hasChildren()
+    public function hasChildren()
     {
-        return (bool)static::childResource();
+        return (bool)$this->childResource();
     }
 
-    public static function childResource()
+    public function childResource()
     {
-        return (string)static::$child_resource;
+        return (string)$this->child_resource;
     }
 
-    public static function childModel()
+    public function childModel()
     {
-        return (string)studly_case(static::$child_resource);
+        return (string)studly_case($this->child_resource);
     }
 
     public function requiredBy()
@@ -149,7 +149,12 @@ class LegacyModel extends \Eloquent {
 
     public function isRequiredByOthers()
     {
-        return !self::requiredBy()->isEmpty();
+        return !$this->requiredBy()->isEmpty();
+    }
+
+    public function orderEquivalence()
+    {
+        return $this->order_equivalence;
     }
 
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
@@ -172,13 +177,13 @@ class LegacyModel extends \Eloquent {
         
         if (!$sorted)
         {
-            if (sizeof(static::$default_order) > 1)
+            if (sizeof($this->default_order) > 1)
             {
-                list($column, $direction) = static::$default_order;
+                list($column, $direction) = $this->default_order;
             }
-            elseif (sizeof(static::$default_order) === 1)
+            elseif (sizeof($this->default_order) === 1)
             {
-                $column = head(static::$default_order);
+                $column = head($this->default_order);
             }
             else
             {
@@ -201,7 +206,7 @@ class LegacyModel extends \Eloquent {
         
         if (!$this->hasGetMutator($column))
         {
-            if (in_array($column, (array)static::$booleans))
+            if (in_array($column, (array)$this->booleans))
             {
                 $value = $this->booleanColumnValue($column);
             }
@@ -217,12 +222,12 @@ class LegacyModel extends \Eloquent {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }
 
-    public static function displayName()
+    public function displayName()
     {
         return false;
     }
 
-    public static function displayNamePlural()
+    public function displayNamePlural()
     {
         return false;
     }
@@ -271,8 +276,8 @@ class LegacyModel extends \Eloquent {
         return '';
     }
 
-    public static function mediaSlots()
+    public function mediaSlots()
     {
-        return static::$media;
+        return $this->media_slots;
     }
 }

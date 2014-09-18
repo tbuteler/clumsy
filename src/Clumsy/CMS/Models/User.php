@@ -5,13 +5,13 @@ use Illuminate\Support\Str;
 
 class User extends BaseModel {
 
-    public static $rules = array(
+    public $rules = array(
         'first_name' => 'required|max:255',
         'last_name'  => 'max:255',
         'email'      => 'required|email|max:255',
     );
 
-    public static function columns()
+    public function columns()
     {
         return array(
             'first_name' => trans('clumsy::fields.first_name'),

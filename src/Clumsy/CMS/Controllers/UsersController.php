@@ -72,10 +72,8 @@ class UsersController extends AdminController {
 	 */
 	public function store()
 	{
-		$model = $this->model();
-
 		$rules = array_merge(
-			$model::$rules,
+			$this->model->rules,
 			array(
 				'password' => 'required|min:6|max:255',
 				'confirm_password' => 'required|same:password',
@@ -172,9 +170,7 @@ class UsersController extends AdminController {
 	 */
 	public function update($id)
 	{
-		$model = $this->model();
-
-		$rules = $model::$rules;
+		$rules = $this->model->rules;
 
 		if ($new_password = (Input::has('new_password') && Input::get('new_password') != '')) {
 
