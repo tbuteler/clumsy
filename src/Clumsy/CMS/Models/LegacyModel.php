@@ -253,27 +253,27 @@ class LegacyModel extends \Eloquent {
         {
             if ($position)
             {
-                $image = $this->images->filter(function($image) use ($position)
+                $media = $this->media->filter(function($media) use ($position)
                     {
-                        return $image->position === $position;
+                        return $media->position === $position;
                     })
                     ->values();
 
-                $image = $image->offsetExists($offset) ? $image->offsetGet($offset) : null;
+                $media = $media->offsetExists($offset) ? $media->offsetGet($offset) : null;
 
             }
             else
             {    
-                $image = $this->images->offsetExists($offset) ? $this->images->offsetGet($offset) : null;
+                $media = $this->media->offsetExists($offset) ? $this->media->offsetGet($offset) : null;
             }
 
-            if ($image)
+            if ($media)
             {
-                return $image->path();
+                return $media->path();
             }
         }
 
-        return $this->imagePlaceholder($position);
+        return $this->mediaPlaceholder($position);
     }
 
     public function mediaPlaceholder($position = null)
