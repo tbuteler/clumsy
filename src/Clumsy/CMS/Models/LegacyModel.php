@@ -249,7 +249,7 @@ class LegacyModel extends \Eloquent {
     
     public function mediaPath($position = null, $offset = 0)
     {
-        if ($this->hasImages())
+        if ($this->hasMedia())
         {
             if ($position)
             {
