@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,9 @@ Route::filter('admin_auth', function()
 
 Route::filter('admin_assets', function()
 {
-    Config::set('app.locale', Config::get('clumsy::admin_locale'));
+    $admin_locale = Config::get('clumsy::admin_locale');
+    App::setLocale($admin_locale);
+    Config::set('app.locale', $admin_locale);
 
     Asset::enqueue('admin.css');
     Asset::enqueue('admin.js');
