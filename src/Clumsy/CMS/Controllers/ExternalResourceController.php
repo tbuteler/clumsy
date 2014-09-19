@@ -44,8 +44,6 @@ class ExternalResourceController extends AdminController {
      */
     public function create($data = array())
     {
-        $model = $this->model;
-
         return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
             'alert_status' => 'warning',
             'alert'        => trans('clumsy::alerts.import.required', array('resources' => $this->displayNamePlural())),
@@ -60,7 +58,7 @@ class ExternalResourceController extends AdminController {
      */
     public function update($id)
     {
-        $model = $this->model;
+        $model = $this->modelClass();
         $resource = $this->resource;
 
         $model::updating(function($item) use($resource)

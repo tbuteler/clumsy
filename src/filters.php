@@ -27,6 +27,8 @@ Route::filter('admin_auth', function()
 
 Route::filter('admin_assets', function()
 {
+    Config::set('app.locale', Config::get('clumsy::admin_locale'));
+
     Asset::enqueue('admin.css');
     Asset::enqueue('admin.js');
     Asset::json('admin', array(
