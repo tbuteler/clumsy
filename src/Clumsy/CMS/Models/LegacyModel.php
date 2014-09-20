@@ -177,13 +177,21 @@ class LegacyModel extends \Eloquent {
         
         if (!$sorted)
         {
-            if (sizeof($this->default_order) > 1)
+            if (sizeof($this->default_order))
             {
-                list($column, $direction) = $this->default_order;
-            }
-            elseif (sizeof($this->default_order) === 1)
-            {
-                $column = head($this->default_order);
+                foreach ($this->default_order as $column => $direction)
+                {
+                    // If current row is not associative, rebuild variables
+                    if (is_int($column))
+                    {
+                        $column = $direction;
+                        $direction = 'asc';
+                    }
+                    
+                    $query->orderBy($column, $direction);
+                }
+
+                return $query;
             }
             else
             {
