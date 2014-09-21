@@ -151,7 +151,7 @@ class BaseModel extends \Eloquent {
                 foreach ($this->default_order as $column => $direction)
                 {
                     // If current row is not associative, rebuild variables
-                    if (is_int($column))
+                    if (is_numeric($column))
                     {
                         $column = $direction;
                         $direction = 'asc';

@@ -1,4 +1,4 @@
-@include('clumsy::templates.header')
+@include('clumsy::templates.head')
 
 <div class="container master">
 
