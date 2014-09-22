@@ -2,7 +2,9 @@
 
 return array(
 
-	'count'          => '{0} No :resources found|[1,Inf]:count :resources found',
+	'items'          => 'item|items',
+
+	'count'          => '{0} No :resources found|{1}:count :resource found|[2,Inf]:count :resources found',
 
 	'item_added'     => 'New item added successfully.',
 	

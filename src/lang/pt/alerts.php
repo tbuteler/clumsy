@@ -1,8 +1,10 @@
 <?php
 
 return array(
+	
+	'items'          => 'item|items',
 
-	'count'          => '{0} Nenhum :resource encontrado|[1,Inf]:count :resources encontrados',
+	'count'          => '{0} Nenhum :resource encontrado|{1}:count :resource encontrado|[2,Inf]:count :resources encontrados',
 
 	'item_added'     => 'Novo item adicionado com sucesso.',
 	
