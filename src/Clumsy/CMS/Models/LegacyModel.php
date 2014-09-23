@@ -252,7 +252,7 @@ class LegacyModel extends \Eloquent {
 
     public function hasMedia()
     {
-        return (bool)sizeof($this->images);
+        return (bool)sizeof($this->media);
     }
     
     public function mediaPath($position = null, $offset = 0)
