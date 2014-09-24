@@ -143,6 +143,10 @@ class BaseModel extends \Eloquent {
                 $sorted = true;
             }
         }
+        elseif ($column)
+        {
+            $sorted = true;
+        }
         
         if (!$sorted)
         {

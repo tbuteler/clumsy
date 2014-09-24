@@ -174,6 +174,10 @@ class LegacyModel extends \Eloquent {
                 $sorted = true;
             }
         }
+        elseif ($column)
+        {
+            $sorted = true;
+        }
         
         if (!$sorted)
         {

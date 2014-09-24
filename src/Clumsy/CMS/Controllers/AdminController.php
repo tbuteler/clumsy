@@ -452,37 +452,45 @@ class AdminController extends \BaseController {
         ));
     }
 
-    public function displayName($string = false)
+    public function displayName($model = false)
     {
-        if (!$string)
+        if (!$model)
         {
-            $string = $this->model ? $this->model->displayName() : false;
+            $model = $this->model ? $this->model->displayName() : false;
             
-            if (!$string)
+            if (!$model)
             {
-                $string = $this->resource;
+                $model = $this->resource;
             }
         }
+        elseif (is_object($model))
+        {
+            $model = $model->displayNamePlural();
+        }
 
-        return Str::title(str_replace('_', ' ', $string));
+        return Str::title(str_replace('_', ' ', $model));
     }
 
-    public function displayNamePlural($string = false)
+    public function displayNamePlural($model = false)
     {
-        if (!$string)
+        if (!$model)
         {
-            $string = $this->model ? $this->model->displayNamePlural() : false;
+            $model = $this->model ? $this->model->displayNamePlural() : false;
             
-            if (!$string)
+            if (!$model)
             {
-                $string = $this->resource_plural;
+                $model = $this->resource_plural;
             }
+        }
+        elseif (is_object($model))
+        {
+            $model = $model->displayNamePlural();
         }
         else
         {
-            $string = str_plural($string);
+            $model = str_plural($model);
         }
 
-        return Str::title(str_replace('_', ' ', $string));
+        return Str::title(str_replace('_', ' ', $model));
     }
 }
