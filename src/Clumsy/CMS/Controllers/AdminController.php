@@ -465,7 +465,7 @@ class AdminController extends \BaseController {
         }
         elseif (is_object($model))
         {
-            $model = $model->displayNamePlural();
+            $model = $model->displayName() ? $model->displayName() : class_basename($model);
         }
 
         return Str::title(str_replace('_', ' ', $model));
@@ -484,7 +484,7 @@ class AdminController extends \BaseController {
         }
         elseif (is_object($model))
         {
-            $model = $model->displayNamePlural();
+            $model = $model->displayNamePlural() ? $model->displayNamePlural() : str_plural(class_basename($model));
         }
         else
         {
