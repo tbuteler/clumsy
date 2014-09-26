@@ -68,6 +68,8 @@ Route::filter('admin_assets', function()
 
     View::share('alert', $alert);
     View::share('alert_status', $alert_status);
+
+    View::share('body_class', str_replace('.', '-', Route::currentRouteName()));
 });
 
 Route::filter('admin_user', function()

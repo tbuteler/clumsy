@@ -90,11 +90,13 @@ class ExternalResourceController extends AdminController {
             return Redirect::route("{$this->admin_prefix}.home");
         }
 
-        $model = studly_case($resource_type);
+        $model_name = studly_case($resource_type);
 
-        if ($this->hasImporter($model))
+        $model = new $model_name;
+
+        if ($this->hasImporter($model_name))
         {
-            $import = call_user_func(self::importer($model));
+            $import = call_user_func(self::importer($model_name));
             
             if ($import !== false)
             {
@@ -118,21 +120,21 @@ class ExternalResourceController extends AdminController {
                 // General success
                 return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
                     'alert_status' => 'success',
-                    'alert'        => trans('clumsy::alerts.import.success', array('resources' => $this->displayNamePlural($resource_type))),
+                    'alert'        => trans('clumsy::alerts.import.success', array('resources' => $this->displayNamePlural($model))),
                 ));
             }
 
             // General failure message
             return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
                 'alert_status' => 'warning',
-                'alert'        => trans('clumsy::alerts.import.fail', array('resources' => $this->displayNamePlural($resource_type))),
+                'alert'        => trans('clumsy::alerts.import.fail', array('resources' => $this->displayNamePlural($model))),
             ));
         }
         else
         {
             return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
                 'alert_status' => 'warning',
-                'alert'        => trans('clumsy::alerts.import.undefined', array('resources' => $this->displayNamePlural($resource_type))),
+                'alert'        => trans('clumsy::alerts.import.undefined', array('resources' => $this->displayNamePlural($model))),
             ));
         }
     }

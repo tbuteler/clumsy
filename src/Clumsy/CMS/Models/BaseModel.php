@@ -143,6 +143,10 @@ class BaseModel extends \Eloquent {
                 $sorted = true;
             }
         }
+        elseif ($column)
+        {
+            $sorted = true;
+        }
         
         if (!$sorted)
         {
@@ -189,9 +193,16 @@ class BaseModel extends \Eloquent {
             }
         }
 
+        if (!$value) $value = $this->columnValuePlaceHolder();
+
         $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);
 
         return HTML::link($url, $value);
+    }
+
+    public function columnValuePlaceHolder()
+    {
+        return '&nbsp;';
     }
 
     public function booleanColumnValue($column)

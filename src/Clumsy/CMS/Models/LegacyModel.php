@@ -174,6 +174,10 @@ class LegacyModel extends \Eloquent {
                 $sorted = true;
             }
         }
+        elseif ($column)
+        {
+            $sorted = true;
+        }
         
         if (!$sorted)
         {
@@ -220,9 +224,16 @@ class LegacyModel extends \Eloquent {
             }
         }
 
+        if (!$value) $value = $this->columnValuePlaceHolder();
+
         $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);
 
         return HTML::link($url, $value);
+    }
+
+    public function columnValuePlaceHolder()
+    {
+        return '&nbsp;';
     }
 
     public function booleanColumnValue($column)
@@ -252,7 +263,7 @@ class LegacyModel extends \Eloquent {
 
     public function hasMedia()
     {
-        return (bool)sizeof($this->images);
+        return (bool)sizeof($this->media);
     }
     
     public function mediaPath($position = null, $offset = 0)
