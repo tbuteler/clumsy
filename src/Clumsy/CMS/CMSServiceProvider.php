@@ -22,7 +22,6 @@ class CMSServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
-		$this->app->register('Clumsy\Locale\LocaleServiceProvider');
 		$this->app->register('Clumsy\Assets\AssetsServiceProvider');
 		$this->app->register('Clumsy\Utils\UtilsServiceProvider');
 		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
