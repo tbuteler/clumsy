@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
+use Clumsy\Assets\Facade as Asset;
 use Clumsy\Eminem\Facade as MediaManager;
 use Clumsy\Utils\Facades\HTTP;
 
@@ -20,7 +21,7 @@ class AdminController extends \BaseController {
 
     protected $resource = '';
     protected $resource_plural = '';
-    protected $namespace = '';
+    protected $model_namespace = '';
     protected $model_base_name = '';
     protected $model = '';
     protected $display_name = '';
@@ -46,9 +47,9 @@ class AdminController extends \BaseController {
 
     protected function modelClass()
     {
-        if ($this->namespace && $this->model_base_name)
+        if ($this->model_namespace && $this->model_base_name)
         {
-            return "{$this->namespace}\\{$this->model_base_name}";
+            return "{$this->model_namespace}\\{$this->model_base_name}";
         }
 
         return $this->model_base_name;
@@ -161,6 +162,10 @@ class AdminController extends \BaseController {
         {
             $view = 'clumsy::templates.index';
         }
+
+        Asset::json('admin', array(
+            'update_url' => URL::route('_update', urlencode($this->modelClass())),
+        ));
 
         return View::make($view, $data);
     }

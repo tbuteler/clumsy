@@ -181,6 +181,23 @@ class BaseModel extends \Eloquent {
         return $query;
     }
 
+    public function rowClass()
+    {
+        return '';
+    }
+
+    public function cellClass($column)
+    {
+        $classes[] = 'cell-'.$column;
+
+        if (in_array($column, (array)$this->booleans))
+        {
+            $classes[] = 'cell-boolean';
+        }
+
+        return implode(' ', $classes);
+    }
+
     public function columnValue($column)
     {
         $value = $this->$column;
@@ -189,7 +206,7 @@ class BaseModel extends \Eloquent {
         {
             if (in_array($column, (array)$this->booleans))
             {
-                $value = $this->booleanColumnValue($column);
+                return $this->booleanColumnValue($column);
             }
         }
 
@@ -207,7 +224,12 @@ class BaseModel extends \Eloquent {
 
     public function booleanColumnValue($column)
     {
-        return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+        return Form::checkbox($column, '1', $this->$column, array(
+            'id'          => 'ab-'.$this->id,
+            'class'       => 'active-boolean',
+            'data-id'     => $this->id,
+            'data-column' => $column,
+        ));
     }
 
     public function displayName()

@@ -27,4 +27,22 @@ $(function(){
             .find('.fileupload')
             .mediaBox('update');
     });
+
+    if ($('.active-boolean').length) {
+        $booleans = $('.active-boolean');
+        $booleans.click(function(e){
+            e.stopPropagation();
+            $.post(handover.admin.update_url,
+            {
+                _token: $('input[name="_token"]').val(),
+                id: $(this).data('id'),
+                column: $(this).data('column'),
+                column_type: 'boolean',
+                value: $(this).prop('checked')
+            });
+        });
+        $booleans.closest('td').click(function(){
+            $(this).find('.active-boolean').click();
+        });
+    }
 });

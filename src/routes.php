@@ -49,19 +49,13 @@ Route::group(
 
         Route::get('_reorder/{resource}', array(
             'as'   => '_reorder',
-            function($resource)
-            {
-                if (Input::get('reset') !== null)
-                {
-                    Session::forget("clumsy.order.$resource");
-                }
-                else
-                {
-                    Session::put("clumsy.order.$resource", array(Input::get('column'), Input::get('direction')));
-                }
+            'uses' => 'BackEndController@reorder',
+        ));
 
-                return Redirect::back();
-            }
+        Route::post('_update/{model}', array(
+            'as'     => '_update',
+            'before' => 'csrf',
+            'uses'   => 'BackEndController@update',
         ));
 
         Route::resource('user', 'UsersController');

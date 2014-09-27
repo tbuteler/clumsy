@@ -3,6 +3,7 @@
 use Clumsy\Eminem\Models\Media;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\HTML;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Schema;
@@ -212,6 +213,23 @@ class LegacyModel extends \Eloquent {
         return $query;
     }
 
+    public function rowClass()
+    {
+        return '';
+    }
+
+    public function cellClass($column)
+    {
+        $classes[] = 'cell-'.$column;
+
+        if (in_array($column, (array)$this->booleans))
+        {
+            $classes[] = 'cell-boolean';
+        }
+
+        return implode(' ', $classes);
+    }
+
     public function columnValue($column)
     {
         $value = $this->$column;
@@ -220,7 +238,7 @@ class LegacyModel extends \Eloquent {
         {
             if (in_array($column, (array)$this->booleans))
             {
-                $value = $this->booleanColumnValue($column);
+                return $this->booleanColumnValue($column);
             }
         }
 
@@ -238,7 +256,12 @@ class LegacyModel extends \Eloquent {
 
     public function booleanColumnValue($column)
     {
-        return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+        return Form::checkbox($column, '1', $this->$column, array(
+            'id'          => 'ab-'.$this->id,
+            'class'       => 'active-boolean',
+            'data-id'     => $this->id,
+            'data-column' => $column,
+        ));
     }
 
     public function displayName()

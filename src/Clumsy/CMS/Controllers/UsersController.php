@@ -19,7 +19,7 @@ class UsersController extends AdminController {
     {
 		$this->beforeFilter('@checkPermissions');
 
-        $this->namespace = '\Clumsy\CMS\Models';
+        $this->model_namespace = '\Clumsy\CMS\Models';
         
         parent::__construct();
     }
