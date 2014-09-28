@@ -20,12 +20,11 @@ class BackEndController extends \BaseController {
         return Redirect::back();
     }
 
-    public function update($model_class)
+    public function update()
     {
-        $model_class = urldecode($model_class);
-        $model = new $model_class;
-
         extract(Input::all(), EXTR_SKIP);
+
+        $model = new $model;
 
         $entry = $model::findOrFail($id);
 

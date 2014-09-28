@@ -52,7 +52,7 @@ Route::group(
             'uses' => 'BackEndController@reorder',
         ));
 
-        Route::post('_update/{model}', array(
+        Route::post('_update', array(
             'as'     => '_update',
             'before' => 'csrf',
             'uses'   => 'BackEndController@update',

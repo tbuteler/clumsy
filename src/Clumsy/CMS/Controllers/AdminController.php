@@ -122,6 +122,12 @@ class AdminController extends \BaseController {
         View::share('order_equivalence', $order_equivalence);
         
         View::share('sortable', false);
+
+        Asset::json('admin', array(
+            'prefix'   => $this->admin_prefix,
+            'resource' => $this->resource,
+            'model'    => $this->modelClass(),
+        ));
     }
 
     /**
@@ -162,10 +168,6 @@ class AdminController extends \BaseController {
         {
             $view = 'clumsy::templates.index';
         }
-
-        Asset::json('admin', array(
-            'update_url' => URL::route('_update', urlencode($this->modelClass())),
-        ));
 
         return View::make($view, $data);
     }

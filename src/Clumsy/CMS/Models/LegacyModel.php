@@ -256,7 +256,7 @@ class LegacyModel extends \Eloquent {
 
     public function booleanColumnValue($column)
     {
-        return Form::checkbox($column, '1', $this->$column, array(
+        return HTML::booleanCell($column, $this->$column, array(
             'id'          => 'ab-'.$this->id,
             'class'       => 'active-boolean',
             'data-id'     => $this->id,
@@ -302,7 +302,6 @@ class LegacyModel extends \Eloquent {
                     ->values();
 
                 $media = $media->offsetExists($offset) ? $media->offsetGet($offset) : null;
-
             }
             else
             {    

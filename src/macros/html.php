@@ -47,6 +47,11 @@ HTML::macro('columnTitle', function($resource, $column, $name)
     return $html;
 });
 
+HTML::macro('booleanCell', function($name, $checked, $attributes)
+{
+    return Form::checkbox($name, 1, $checked, $attributes);
+});
+
 HTML::macro('breadcrumb', function($breadcrumb)
 {
     $last = key(array_slice($breadcrumb, -1, 1));

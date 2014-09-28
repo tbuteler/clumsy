@@ -3,14 +3,14 @@ $(function(){
         $(this).closest('form').next('.delete-form').submit();
     });
     $('.delete-form').submit(function(e){
-        return $(this).hasClass('user') ? confirm(handover.admin.delete_confirm_user) : confirm(handover.admin.delete_confirm);
+        return $(this).hasClass('user') ? confirm(handover.admin.strings.delete_confirm_user) : confirm(handover.admin.strings.delete_confirm);
     });
 
     if ($('.rich-text').length) {
         tinymce.init($.extend(
         {
             selector: ".rich-text",
-            content_css: handover.admin.base_url+'/../packages/clumsy/cms/css/tinymce.css',
+            content_css: handover.admin.urls.base+'/../packages/clumsy/cms/css/tinymce.css',
             menubar : false,
             toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist",
             statusbar : false,
@@ -28,13 +28,14 @@ $(function(){
             .mediaBox('update');
     });
 
-    if ($('.active-boolean').length) {
-        $booleans = $('.active-boolean');
+    $booleans = $('.active-boolean');
+    if ($booleans.length) {
         $booleans.click(function(e){
             e.stopPropagation();
-            $.post(handover.admin.update_url,
+            $.post(handover.admin.urls.update,
             {
                 _token: $('input[name="_token"]').val(),
+                model: handover.admin.model,
                 id: $(this).data('id'),
                 column: $(this).data('column'),
                 column_type: 'boolean',

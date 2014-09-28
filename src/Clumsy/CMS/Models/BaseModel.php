@@ -224,7 +224,7 @@ class BaseModel extends \Eloquent {
 
     public function booleanColumnValue($column)
     {
-        return Form::checkbox($column, '1', $this->$column, array(
+        return HTML::booleanCell($column, $this->$column, array(
             'id'          => 'ab-'.$this->id,
             'class'       => 'active-boolean',
             'data-id'     => $this->id,
