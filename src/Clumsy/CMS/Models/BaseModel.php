@@ -196,9 +196,9 @@ class BaseModel extends \Eloquent {
     {
         $classes[] = 'cell-'.$column;
 
-        if (in_array($column, (array)$this->booleans))
+        if (in_array($column, (array)$this->active_booleans))
         {
-            $classes[] = 'cell-boolean';
+            $classes[] = 'cell-active-boolean';
         }
 
         return implode(' ', $classes);
