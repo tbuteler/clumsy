@@ -20,6 +20,7 @@ class BaseModel extends \Eloquent {
     
     public $rules = array();
     public $booleans = array();
+    public $active_booleans = array();
 
     public $default_order = array();
     public $order_equivalence = array();
@@ -53,6 +54,11 @@ class BaseModel extends \Eloquent {
     public function columns()
     {
         return Config::get('clumsy::default_columns');
+    }
+
+    public function booleans()
+    {
+        return $this->booleans + $this->active_booleans;
     }
 
     public function isNested()
@@ -204,6 +210,11 @@ class BaseModel extends \Eloquent {
         
         if (!$this->hasGetMutator($column))
         {
+            if (in_array($column, (array)$this->active_booleans))
+            {
+                return $this->activeBooleanColumnValue($column);
+            }
+
             if (in_array($column, (array)$this->booleans))
             {
                 return $this->booleanColumnValue($column);
@@ -222,7 +233,7 @@ class BaseModel extends \Eloquent {
         return '&nbsp;';
     }
 
-    public function booleanColumnValue($column)
+    public function activeBooleanColumnValue($column)
     {
         return HTML::booleanCell($column, $this->$column, array(
             'id'          => 'ab-'.$this->id,
@@ -230,6 +241,11 @@ class BaseModel extends \Eloquent {
             'data-id'     => $this->id,
             'data-column' => $column,
         ));
+    }
+
+    public function booleanColumnValue($column)
+    {
+        return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }
 
     public function displayName()

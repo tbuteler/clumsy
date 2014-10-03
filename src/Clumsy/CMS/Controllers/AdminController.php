@@ -229,7 +229,7 @@ class AdminController extends \BaseController {
                 ));
         }
 
-        foreach ((array)$this->model->booleans as $check)
+        foreach ((array)$this->model->booleans() as $check)
         {
             if (!Input::has($check))
             {
@@ -403,7 +403,7 @@ class AdminController extends \BaseController {
                 ));
         }
 
-        foreach ((array)$this->model->booleans as $check)
+        foreach ((array)$this->model->booleans() as $check)
         {
             if (!Input::has($check))
             {

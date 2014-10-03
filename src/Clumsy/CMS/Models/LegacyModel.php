@@ -23,6 +23,7 @@ class LegacyModel extends \Eloquent {
     
     public $rules = array();
     public $booleans = array();
+    public $active_booleans = array();
 
     public $default_order = array();
     public $order_equivalence = array();
@@ -87,6 +88,11 @@ class LegacyModel extends \Eloquent {
         return Config::get('clumsy::default_columns');
     }
 
+    public function booleans()
+    {
+        return $this->booleans + $this->active_booleans;
+    }
+    
     public function isNested()
     {
         return (bool)$this->parentResource();
@@ -236,6 +242,11 @@ class LegacyModel extends \Eloquent {
         
         if (!$this->hasGetMutator($column))
         {
+            if (in_array($column, (array)$this->active_booleans))
+            {
+                return $this->activeBooleanColumnValue($column);
+            }
+
             if (in_array($column, (array)$this->booleans))
             {
                 return $this->booleanColumnValue($column);
@@ -254,7 +265,7 @@ class LegacyModel extends \Eloquent {
         return '&nbsp;';
     }
 
-    public function booleanColumnValue($column)
+    public function activeBooleanColumnValue($column)
     {
         return HTML::booleanCell($column, $this->$column, array(
             'id'          => 'ab-'.$this->id,
@@ -262,6 +273,11 @@ class LegacyModel extends \Eloquent {
             'data-id'     => $this->id,
             'data-column' => $column,
         ));
+    }
+
+    public function booleanColumnValue($column)
+    {
+        return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }
 
     public function displayName()
