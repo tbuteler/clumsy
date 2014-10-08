@@ -475,7 +475,7 @@ class AdminController extends \BaseController {
             $model = $model->displayName() ? $model->displayName() : class_basename($model);
         }
 
-        return Str::title(str_replace('_', ' ', $model));
+        return Str::title(str_replace('_', ' ', snake_case($model)));
     }
 
     public function displayNamePlural($model = false)
@@ -498,6 +498,6 @@ class AdminController extends \BaseController {
             $model = str_plural($model);
         }
 
-        return Str::title(str_replace('_', ' ', $model));
+        return Str::title(str_replace('_', ' ', snake_case($model)));
     }
 }
