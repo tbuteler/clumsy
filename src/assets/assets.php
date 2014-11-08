@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -6,13 +6,13 @@ return array(
         'set'   => 'styles',
         'path'  => 'packages/clumsy/cms/css/admin.css',
         'req'   => 'bootstrap',
-        'v'     => '0.9.2',
+        'v'     => '0.9.3',
     ),
-    
+
     'admin.js' => array(
         'set'   => 'footer',
         'path'  => 'packages/clumsy/cms/js/admin.min.js',
         'req'   => 'bootstrap.js',
-        'v'     => '0.9.2',
+        'v'     => '0.9.3',
     ),
 );

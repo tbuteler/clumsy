@@ -8,30 +8,44 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{ url("$admin_prefix") }}">{{ $admin_title or '<span class="glyphicon glyphicon-home"></span>' }}</a>
+      <a class="navbar-brand" href="{{ url("$admin_prefix") }}">{{ $admin_title or '<span class="visible-xs">Home</span><span class="glyphicon glyphicon-home hidden-xs"></span>' }}</a>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
      {{ $navbar or '' }}
-     
+
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-          <a href="#" class="glyphicon glyphicon-user dropdown-toggle" data-toggle="dropdown"><b class="caret"></b></a>
+          <a href="#" class="glyphicon glyphicon-user dropdown-toggle hidden-xs" data-toggle="dropdown"></a>
+          <a href="#" class="dropdown-toggle visible-xs" data-toggle="dropdown">
+            {{ trans('clumsy::buttons.session') }} <b class="caret"></b>
+          </a>
           <ul class="dropdown-menu">
             <li role="presentation" class="dropdown-header">{{ $usergroup }}</li>
-            <li role="presentation"><a href="{{ route("$admin_prefix.user.edit", $user->id) }}">{{ $username }}</a></li>
-            
-            @if ($user->hasAccess('users'))
-              <li role="presentation" class="divider"></li>
-              <li role="presentation"><a href="{{ route("$admin_prefix.user.index") }}">{{ trans('clumsy::buttons.manage_users') }}</a></li>
-            @endif
-
+            <li role="presentation">
+              <a href="{{ route("$admin_prefix.user.edit", $user->id) }}">{{ $username }}</a>
+            </li>
             <li role="presentation" class="divider"></li>
             <li><a href="{{ route('logout') }}">@lang('clumsy::buttons.logout')</a></li>
           </ul>
         </li>
       </ul>
+
+      @if ($user->hasAccess('users'))
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="glyphicon glyphicon-cog dropdown-toggle hidden-xs" data-toggle="dropdown"></a>
+          <a href="#" class="dropdown-toggle visible-xs" data-toggle="dropdown">
+            {{ trans('clumsy::buttons.manage_site') }} <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li role="presentation"><a href="{{ route("$admin_prefix.user.index") }}">{{ trans('clumsy::buttons.manage_users') }}</a></li>
+          </ul>
+        </li>
+      </ul>
+      @endif
+
     </div>
   </div>
 </nav>

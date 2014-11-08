@@ -20,7 +20,7 @@ class UsersController extends AdminController {
 		$this->beforeFilter('@checkPermissions');
 
         $this->model_namespace = '\Clumsy\CMS\Models';
-        
+
         parent::__construct();
     }
 
@@ -130,9 +130,14 @@ class UsersController extends AdminController {
 		if ($id)
 		{
 			$data['item'] = Sentry::findUserById($id);
+			$data['throttle'] = Sentry::getThrottleProvider();
+			if ($data['throttle'])
+			{
+				$data['item_status'] = Sentry::findThrottlerByUserId($id);
+			}
 
 			if ($self = (Sentry::getUser()->id == $id)) {
-				
+
 				$data['supress_delete'] = true;
 			}
 
@@ -245,7 +250,7 @@ class UsersController extends AdminController {
 			$message = trans('clumsy::alerts.user.suicide');
 
 		} else {
-			
+
 			$user = Sentry::findUserById($id);
 
 		    $user->delete();

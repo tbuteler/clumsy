@@ -7,7 +7,7 @@ return array(
 	'count'          => '{0} No :resources found|{1}:count :resource found|[2,Inf]:count :resources found',
 
 	'item_added'     => 'New item added successfully.',
-	
+
 	'item_updated'   => 'Item was successfully updated.',
 
 	'item_deleted'   => 'Item deleted.',
@@ -21,7 +21,7 @@ return array(
 	'user'   => array(
 
 		'added'     => 'New user added successfully.',
-		
+
 		'updated'   => 'User was successfully updated.',
 
 		'deleted'   => 'User deleted.',
@@ -36,15 +36,19 @@ return array(
 	'auth'   => array(
 
         'login_required'    => 'Login field is required.',
-        
+
         'password_required' => 'Password field is required.',
-        
+
         'wrong_password'    => 'Wrong password, try again.',
-        
+
         'unknown_user'      => 'User was not found.',
-        
+
         'inactive_user'     => 'User is not activated.',
-        
+
+        'suspended_user'    => 'User has been suspended due to repeated failed login attempts.',
+
+        'banned_user'       => 'User is banned.',
+
         'logged_out'	    => 'You have logged out.',
 	),
 

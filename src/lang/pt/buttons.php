@@ -3,7 +3,7 @@
 return array(
 
     'home'   => 'Home',
-    
+
     'login'  => 'Login',
 
     'logout' => 'Terminar sessão',
@@ -22,5 +22,9 @@ return array(
 
 	'toggle_navbar' => 'Mostrar menu de navegação',
 
+    'manage_site'   => 'Gerenciar site',
+
     'manage_users'  => 'Gerenciar usuários',
+
+    'session'       => 'Sessão',
 );

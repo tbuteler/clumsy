@@ -38,4 +38,16 @@ return array(
 
 		'user'			=> 'Usuário',
 	),
+
+	'last_login'        => 'Último login: ',
+
+	'never'             => 'Nunca',
+
+	'user_is_active'    => 'O usuário está ativado.',
+
+	'user_is_inactive'  => 'O usuário ainda não ativou a conta.',
+
+	'user_is_suspended' => 'O usuário está suspenso.',
+
+	'user_is_banned'    => 'O usuário foi banido.',
 );

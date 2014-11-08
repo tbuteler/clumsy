@@ -2,17 +2,19 @@
 
 return array(
 
-    'login'      => 'Login',
+    'login'        => 'Login',
 
-	'new_item'   => 'Novo :resource',
+	'new_item'     => 'Adicionar :resource',
 
-	'edit_item'  => 'Editar :resource',
+	'edit_item'    => 'Editar :resource',
 
-	'users'      => 'Usuários',
+	'users'        => 'Usuários',
 
-	'profile'    => 'Perfil',
+	'profile'      => 'Perfil',
 
-	'new_user'   => 'Novo usuário',
+	'new_user'     => 'Novo usuário',
 
-	'edit_user'  => 'Editar usuário',
+	'edit_user'    => 'Editar usuário',
+
+    'user_control' => 'Controlo de login',
 );

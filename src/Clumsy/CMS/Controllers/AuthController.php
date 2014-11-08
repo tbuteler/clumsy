@@ -38,32 +38,47 @@ class AuthController extends \BaseController {
             );
 
             $user = Sentry::authenticate($credentials, Input::has('remember'));
-            
+
             return Redirect::intended(URL::route("$admin_prefix.home"));
+        }
 
-        } catch (\Cartalyst\Sentry\Users\LoginRequiredException $e) {
-            
+        catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
+        {
             $alert = trans('clumsy::alerts.auth.login_required');
+        }
 
-        } catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e) {
-            
+        catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e)
+        {
             $alert = trans('clumsy::alerts.auth.password_required');
+        }
 
-        } catch (\Cartalyst\Sentry\Users\WrongPasswordException $e) {
-            
+        catch (\Cartalyst\Sentry\Users\WrongPasswordException $e)
+        {
             $alert = trans('clumsy::alerts.auth.wrong_password');
-
-        } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-            
+        }
+        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+        {
             $alert = trans('clumsy::alerts.auth.unknown_user');
+        }
 
-        } catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e) {
-            
+        catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e)
+        {
             $alert = trans('clumsy::alerts.auth.inactive_user');
         }
 
+        catch (\Cartalyst\Sentry\Throttling\UserSuspendedException $e)
+        {
+            $alert = trans('clumsy::alerts.auth.suspended_user');
+        }
+
+        catch (\Cartalyst\Sentry\Throttling\UserBannedException $e)
+        {
+            $alert = trans('clumsy::alerts.auth.banned_user');
+            $alert_status = 'danger';
+        }
+
         return Redirect::back()->withInput()->with(array(
-            'alert_status' => 'warning',
+            'alert_status' => isset($alert_status) ? $alert_status : 'warning',
             'alert'        => $alert,
         ));
     }

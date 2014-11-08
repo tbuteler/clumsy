@@ -1,13 +1,13 @@
 <?php
 
 return array(
-	
+
 	'items'          => 'item|items',
 
-	'count'          => '{0} Nenhum :resource encontrado|{1}:count :resource encontrado|[2,Inf]:count :resources encontrados',
+	'count'          => '{0} Nenhum item encontrado|{1}:count item encontrado|[2,Inf]:count itens encontrados',
 
 	'item_added'     => 'Novo item adicionado com sucesso.',
-	
+
 	'item_updated'   => 'O item foi actualizado com sucesso.',
 
 	'item_deleted'   => 'O item foi removido.',
@@ -21,7 +21,7 @@ return array(
 	'user'   => array(
 
 		'added'     => 'Novo usuário adicionado com sucesso.',
-		
+
 		'updated'   => 'O usuário foi actualizado com sucesso.',
 
 		'deleted'   => 'O usuário foi removido.',
@@ -36,15 +36,19 @@ return array(
 	'auth'   => array(
 
         'login_required'    => 'O campo login é requerido.',
-        
+
         'password_required' => 'O campo password é requerido.',
-        
+
         'wrong_password'    => 'Password inválida, tente novamente.',
-        
+
         'unknown_user'      => 'Usuário desconhecido.',
-        
+
         'inactive_user'     => 'Usuário inativo.',
-        
+
+        'suspended_user'    => 'Usuário foi suspenso por repetidas tentativas de login sem sucesso.',
+
+        'banned_user'       => 'Usuário foi banido.',
+
         'logged_out'	    => 'A sessão foi terminada.',
 	),
 
@@ -52,7 +56,7 @@ return array(
 
 		'required'  => 'Para adicionar :resources por favor utilize o website principal e ative as rotinas de actualização automática.',
 
-		'success'   => ':resources importados com sucesso.',
+		'success'   => 'A importação de :resources foi realizada com sucesso.',
 
 		'fail'      => 'A importação falhou. Verifique a fonte e tente novamente.',
 

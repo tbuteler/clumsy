@@ -20,7 +20,7 @@ class LegacyModel extends \Eloquent {
     public $resource_name;
 
     public $required_by = array();
-    
+
     public $rules = array();
     public $booleans = array();
     public $active_booleans = array();
@@ -52,12 +52,12 @@ class LegacyModel extends \Eloquent {
                 $model->slug = Str::slug($model->title);
             });
         }
-        
+
         self::creating(function($model)
         {
             if (isset($model->media_bind)) unset($model->media_bind);
         });
-        
+
         self::created(function($model)
         {
             if (Input::has('media_bind'))
@@ -92,7 +92,7 @@ class LegacyModel extends \Eloquent {
     {
         return $this->booleans + $this->active_booleans;
     }
-    
+
     public function isNested()
     {
         return (bool)$this->parentResource();
@@ -171,7 +171,7 @@ class LegacyModel extends \Eloquent {
         if (Session::has("clumsy.order.{$this->resource_name}"))
         {
             list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
-        
+
             if (!in_array($column, Schema::getColumnListing($this->getTable())))
             {
                 Session::forget("clumsy.order.{$this->resource_name}");
@@ -185,7 +185,7 @@ class LegacyModel extends \Eloquent {
         {
             $sorted = true;
         }
-        
+
         if (!$sorted)
         {
             if (sizeof($this->default_order))
@@ -198,7 +198,7 @@ class LegacyModel extends \Eloquent {
                         $column = $direction;
                         $direction = 'asc';
                     }
-                    
+
                     $query->orderBy($column, $direction);
                 }
 
@@ -215,7 +215,7 @@ class LegacyModel extends \Eloquent {
         {
             return $query->orderBy($column, $direction);
         }
-        
+
         return $query;
     }
 
@@ -239,7 +239,7 @@ class LegacyModel extends \Eloquent {
     public function columnValue($column)
     {
         $value = $this->$column;
-        
+
         if (!$this->hasGetMutator($column))
         {
             if (in_array($column, (array)$this->active_booleans))
@@ -304,7 +304,7 @@ class LegacyModel extends \Eloquent {
     {
         return (bool)sizeof($this->media);
     }
-    
+
     public function mediaPath($position = null, $offset = 0)
     {
         if ($this->hasMedia())
@@ -320,7 +320,7 @@ class LegacyModel extends \Eloquent {
                 $media = $media->offsetExists($offset) ? $media->offsetGet($offset) : null;
             }
             else
-            {    
+            {
                 $media = $this->media->offsetExists($offset) ? $this->media->offsetGet($offset) : null;
             }
 

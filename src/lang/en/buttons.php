@@ -22,6 +22,9 @@ return array(
 
 	'toggle_navbar' => 'Toggle navigation',
 
+    'manage_site'   => 'Manage site',
+
     'manage_users'  => 'Manage users',
 
+    'session'       => 'Session',
 );

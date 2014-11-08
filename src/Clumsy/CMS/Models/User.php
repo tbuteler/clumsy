@@ -19,5 +19,4 @@ class User extends BaseModel {
             'email'      => trans('clumsy::fields.email'),
         );
     }
-
 }

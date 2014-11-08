@@ -1,36 +1,64 @@
-{{ Form::field('first_name', trans('clumsy::fields.first_name')) }}
+<div class="row">
 
-{{ Form::field('last_name', trans('clumsy::fields.last_name')) }}
+    <div class="col-md-8">
 
-{{ Form::field('email', trans('clumsy::fields.email')) }}
+        {{ Form::field('first_name', trans('clumsy::fields.first_name')) }}
 
-@if ($edited_user_id == 'new' || $edited_user_id != $user->id)
+        {{ Form::field('last_name', trans('clumsy::fields.last_name')) }}
 
-    {{ Form::dropdown('group', trans('clumsy::fields.role'), $groups, $edited_user_group) }}
+        {{ Form::field('email', trans('clumsy::fields.email')) }}
 
-    @if ($edited_user_id == 'new')
+        @if ($edited_user_id == 'new' || $edited_user_id != $user->id)
 
-    <h3 class="page-header">{{ trans('clumsy::fields.password') }}</h3>
+            {{ Form::dropdown('group', trans('clumsy::fields.role'), $groups, $edited_user_group) }}
 
-        {{ Form::field('password', trans('clumsy::fields.password'), 'password') }}
+            @if ($edited_user_id == 'new')
 
-        {{ Form::field('confirm_password', trans('clumsy::fields.confirm_password'), 'password') }}
+            <h3 class="page-header">{{ trans('clumsy::fields.password') }}</h3>
 
-    @endif
+                {{ Form::field('password', trans('clumsy::fields.password'), 'password') }}
 
-@endif
+                {{ Form::field('confirm_password', trans('clumsy::fields.confirm_password'), 'password') }}
 
-@if ($edited_user_id == $user->id)
+            @endif
 
-<h3 class="page-header">{{ trans('clumsy::fields.current_role') }}</h3>
-    <ul>
-        <li>{{ $usergroup }}</li>
-    </ul>
+        @endif
 
-<h3 class="page-header">{{ trans('clumsy::fields.change_password') }}</h3>
+        @if ($edited_user_id == $user->id)
 
-    {{ Form::field('new_password', trans('clumsy::fields.new_password'), 'password') }}
+        <h3 class="page-header">{{ trans('clumsy::fields.current_role') }}</h3>
+            <ul>
+                <li>{{ $usergroup }}</li>
+            </ul>
 
-    {{ Form::field('confirm_new_password', trans('clumsy::fields.confirm_new_password'), 'password') }}
+        <h3 class="page-header">{{ trans('clumsy::fields.change_password') }}</h3>
 
-@endif
+            {{ Form::field('new_password', trans('clumsy::fields.new_password'), 'password') }}
+
+            {{ Form::field('confirm_new_password', trans('clumsy::fields.confirm_new_password'), 'password') }}
+
+        @endif
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h4 class="page-header lead section-header">{{ trans('clumsy::titles.user_control') }}</h4>
+
+        @if ($throttle->isEnabled())
+            @if ($item_status->isBanned())
+                <p>{{ trans('clumsy::fields.user_is_banned') }}</p>
+            @elseif ($item_status->isSuspended())
+                <p>{{ trans('clumsy::fields.user_is_suspended') }}</p>
+            @elseif ($item->activated)
+                <p>{{ trans('clumsy::fields.user_is_active') }}</p>
+            @else
+                <p>{{ trans('clumsy::fields.user_is_inactive') }}</p>
+            @endif
+        @endif
+
+        <p>{{ trans('clumsy::fields.last_login') }}<strong>{{ $item->last_login ? display_date($user->last_login, 'long with time') : trans('clumsy::fields.never') }}</strong></p>
+
+    </div>
+
+</div>
