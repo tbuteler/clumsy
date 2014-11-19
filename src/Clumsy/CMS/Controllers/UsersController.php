@@ -127,10 +127,11 @@ class UsersController extends AdminController {
 
 	public function edit($id, $data = array())
 	{
+		$data['throttle'] = Sentry::getThrottleProvider();
+		
 		if ($id)
 		{
 			$data['item'] = Sentry::findUserById($id);
-			$data['throttle'] = Sentry::getThrottleProvider();
 			if ($data['throttle'])
 			{
 				$data['item_status'] = Sentry::findThrottlerByUserId($id);

@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-{{ $item ? '8' : '12' }}">
 
         {{ Form::field('first_name', trans('clumsy::fields.first_name')) }}
 
@@ -41,24 +41,26 @@
 
     </div>
 
-    <div class="col-md-4">
+    @if ($item)
+        <div class="col-md-4">
 
-        <h4 class="page-header lead section-header">{{ trans('clumsy::titles.user_control') }}</h4>
+            <h4 class="page-header lead section-header">{{ trans('clumsy::titles.user_control') }}</h4>
 
-        @if ($throttle->isEnabled())
-            @if ($item_status->isBanned())
-                <p>{{ trans('clumsy::fields.user_is_banned') }}</p>
-            @elseif ($item_status->isSuspended())
-                <p>{{ trans('clumsy::fields.user_is_suspended') }}</p>
-            @elseif ($item->activated)
-                <p>{{ trans('clumsy::fields.user_is_active') }}</p>
-            @else
-                <p>{{ trans('clumsy::fields.user_is_inactive') }}</p>
+            @if ($throttle->isEnabled())
+                @if ($item_status->isBanned())
+                    <p>{{ trans('clumsy::fields.user_is_banned') }}</p>
+                @elseif ($item_status->isSuspended())
+                    <p>{{ trans('clumsy::fields.user_is_suspended') }}</p>
+                @elseif ($item->activated)
+                    <p>{{ trans('clumsy::fields.user_is_active') }}</p>
+                @else
+                    <p>{{ trans('clumsy::fields.user_is_inactive') }}</p>
+                @endif
             @endif
-        @endif
 
-        <p>{{ trans('clumsy::fields.last_login') }}<strong>{{ $item->last_login ? display_date($user->last_login, 'long with time') : trans('clumsy::fields.never') }}</strong></p>
+            <p>{{ trans('clumsy::fields.last_login') }}<strong>{{ $item->last_login ? display_date($user->last_login, 'long with time') : trans('clumsy::fields.never') }}</strong></p>
 
-    </div>
+        </div>
+    @endif
 
 </div>
