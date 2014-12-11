@@ -1,10 +1,11 @@
 <?php namespace Clumsy\CMS\Controllers;
 
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
-class BackEndController extends \BaseController {
+class BackEndController extends Controller {
 
     public function reorder($resource)
     {

@@ -1,5 +1,6 @@
 <?php namespace Clumsy\CMS\Controllers;
 
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
@@ -17,7 +18,7 @@ use Clumsy\Assets\Facade as Asset;
 use Clumsy\Eminem\Facade as MediaManager;
 use Clumsy\Utils\Facades\HTTP;
 
-class AdminController extends \BaseController {
+class AdminController extends Controller {
 
     protected $resource = '';
     protected $resource_plural = '';
