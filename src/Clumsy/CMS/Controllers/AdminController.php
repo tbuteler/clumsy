@@ -140,8 +140,13 @@ class AdminController extends Controller {
     {
         if (!isset($data['items']))
         {
-            $query = $this->model->select('*')->orderSortable();
-            $data['sortable'] = true;
+            $query = !isset($data['query']) ? $this->model->select('*')->orderSortable() : $data['query'];
+            
+            if (!isset($data['sortable']) || $data['sortable'])
+            {
+                $query->orderSortable();
+                $data['sortable'] = true;
+            }
             
             $per_page = property_exists($this->model, 'admin_per_page') ? $this->model->admin_per_page : Config::get('clumsy::per_page');
 

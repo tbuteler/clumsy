@@ -253,7 +253,7 @@ class LegacyModel extends \Eloquent {
             }
         }
 
-        if (!$value) $value = $this->columnValuePlaceHolder();
+        if ($value === false || $value === null) $value = $this->columnValuePlaceHolder();
 
         $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);
 
