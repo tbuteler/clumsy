@@ -140,7 +140,7 @@ class AdminController extends Controller {
     {
         if (!isset($data['items']))
         {
-            $query = !isset($data['query']) ? $this->model->select('*')->orderSortable() : $data['query'];
+            $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
             
             if (!isset($data['sortable']) || $data['sortable'])
             {
