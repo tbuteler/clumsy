@@ -258,6 +258,28 @@ table {
 
 /*
 |--------------------------------------------------------------------------
+| Date and time pickers
+|--------------------------------------------------------------------------
+|
+*/
+
+.ui-datepicker {
+
+    table tr th,
+    table tr td {
+        min-width: 0;
+    }
+}
+
+.form-control[readonly].datepicker,
+.form-control[readonly].datetimepicker,
+.form-control[readonly].timepicker {
+    cursor: pointer;
+    background-color: #fff;
+}
+
+/*
+|--------------------------------------------------------------------------
 | Misc elements
 |--------------------------------------------------------------------------
 |

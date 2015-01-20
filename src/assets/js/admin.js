@@ -20,13 +20,24 @@ $(function(){
         ));
     }
 
-    $('#is_video_radio input').change(function(){
-        var id = '#'+($(this).val() === '1' ? 'is_video' : 'is_not_video');
-        $('.tab-pane').removeClass('active');
-        $(id).addClass('active')
-            .find('.fileupload')
-            .mediaBox('update');
-    });
+    if ($('.datepicker').length) {
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    }
+
+    if ($('.datetimepicker').length) {
+        $('.datetimepicker').datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: 'HH:mm:ss'
+        });
+    }
+
+    if ($('.timepicker').length) {
+        $('.timepicker').timepicker({
+            timeFormat: 'HH:mm:ss'
+        });
+    }
 
     $booleans = $('.active-boolean');
     if ($booleans.length) {
