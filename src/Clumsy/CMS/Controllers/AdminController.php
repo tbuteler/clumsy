@@ -18,98 +18,14 @@ use Clumsy\Assets\Facade as Asset;
 use Clumsy\Eminem\Facade as MediaManager;
 use Clumsy\Utils\Facades\HTTP;
 
-class AdminController extends Controller {
-
-    protected $resource = '';
-    protected $resource_plural = '';
-    protected $model_namespace = '';
-    protected $model_base_name = '';
-    protected $model = '';
-    protected $display_name = '';
-    protected $display_name_plural = '';
-
-    protected $parent_resource = '';
-    protected $parent_model_base_name = '';
-    protected $parent_model = '';
-    protected $parent_display_name = '';
-    protected $parent_display_name_plural = '';
-
-    protected $child_resource = '';
-    protected $child_model_base_name = '';
-    protected $child_model = '';
-    protected $child_display_name = '';
-
-    public function __construct()
-    {
-        $this->beforeFilter('@setupResource');
-
-        $this->beforeFilter('csrf', array('only' => array('store', 'update', 'destroy')));
-    }
-
-    protected function modelClass()
-    {
-        if ($this->model_namespace && $this->model_base_name)
-        {
-            return "{$this->model_namespace}\\{$this->model_base_name}";
-        }
-
-        return $this->model_base_name;
-    }
+class AdminController extends APIController {
 
     /**
      * Prepare generic processing of resources base on current route
      */
     public function setupResource(Route $route, Request $request)
     {
-        $this->admin_prefix = Config::get('clumsy::admin_prefix');
-
-        $columns = Config::get('clumsy::default_columns');
-        $order_equivalence = array();
-
-        if (strpos($route->getName(), '.'))
-        {
-            $resource_arr = explode('.', $route->getName());
-            $this->resource = $resource_arr[1];
-            $this->resource_plural = str_plural($this->resource);
-            $this->model_base_name = studly_case($this->resource);
-
-            if ($this->modelClass())
-            {
-                $model_name = $this->modelClass();
-                $this->model = new $model_name;
-                $columns = $this->model->columns();
-                $order_equivalence = $this->model->orderEquivalence();
-            }
-        }
-
-        if ($this->model && $this->model->isNested())
-        {
-            $this->parent_resource = $this->model->parentResource();
-            $parent_model_base_name = $this->model->parentModel();
-            $this->parent_model_base_name = $parent_model_base_name;
-            $this->parent_model = new $parent_model_base_name;
-            
-            $this->parent_display_name = $this->parent_model->displayName();
-            if (!$this->parent_display_name)
-            {
-                $this->parent_display_name = $this->displayName($this->parent_model_base_name);
-            }
-            
-            $this->parent_display_name_plural = $this->parent_model->displayNamePlural();
-            if (!$this->parent_display_name_plural)
-            {
-                $this->parent_display_name_plural = $this->displayNamePlural($this->parent_model_base_name);
-            }
-        }
-
-        if ($this->model && $this->model->hasChildren())
-        {
-            $this->child_resource = $this->model->childResource();
-            $child_model_base_name = $this->model->childModel();
-            $this->child_model_base_name = $child_model_base_name;
-            $this->child_model = new $child_model_base_name;
-            $this->child_display_name = $this->child_model->displayNamePlural();
-        }
+        parent::setupResource($route, $request);
 
         View::share('admin_prefix', $this->admin_prefix);
         View::share('resource', $this->resource);
@@ -119,8 +35,8 @@ class AdminController extends Controller {
         View::share('breadcrumb', '');
         View::share('pagination', '');
 
-        View::share('columns', $columns);
-        View::share('order_equivalence', $order_equivalence);
+        View::share('columns', $this->columns);
+        View::share('order_equivalence', $this->order_equivalence);
         
         View::share('sortable', false);
 
@@ -140,25 +56,10 @@ class AdminController extends Controller {
     {
         if (!isset($data['items']))
         {
-            $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
-            
-            if (!isset($data['sortable']) || $data['sortable'])
-            {
-                $query->orderSortable();
-                $data['sortable'] = true;
-            }
-            
-            $per_page = property_exists($this->model, 'admin_per_page') ? $this->model->admin_per_page : Config::get('clumsy::per_page');
+            $response = parent::index($data);
+            if ($this->request->ajax()) return $response;
 
-            if ($per_page)
-            {
-                $data['items'] = $query->paginate($per_page);
-                $data['pagination'] = $data['items']->links();
-            }
-            else
-            {
-                $data['items'] = $query->get();
-            }
+            $data['items'] = $response->getOriginalContent();
         }
 
         if (!isset($data['title']))
@@ -222,12 +123,13 @@ class AdminController extends Controller {
      */
     public function store()
     {
-        $validator = Validator::make($data = Input::all(), $this->model->rules);
+        $response = parent::store();
+        if ($this->request->ajax()) return $response;
 
-        if ($validator->fails())
+        if ($response->getStatusCode() === 400)
         {
             return Redirect::back()
-                ->withErrors($validator)
+                ->withErrors($response->getOriginalContent())
                 ->withInput()
                 ->with(array(
                     'alert_status' => 'warning',
@@ -235,21 +137,13 @@ class AdminController extends Controller {
                 ));
         }
 
-        foreach ((array)$this->model->booleans() as $check)
-        {
-            if (!Input::has($check))
-            {
-                $data[$check] = 0;
-            }
-        }
-
-        $item = $this->model->create($data);
-
         $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
 
         if ($this->model->isNested())
         {
-            $url = URL::route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($item->id));
+            $id = $response->getOriginalContent();
+
+            $url = URL::route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($id));
         }
 
         return Redirect::to($url)->with(array(
@@ -260,6 +154,8 @@ class AdminController extends Controller {
 
     public function show($id)
     {
+        if ($this->request->ajax()) return parent::show($id);
+
         return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $id);
     }
 
@@ -394,30 +290,19 @@ class AdminController extends Controller {
      */
     public function update($id)
     {
-        $item = $this->model->findOrFail($id);
+        $response = parent::update($id);
+        if ($this->request->ajax()) return $response;
 
-        $validator = Validator::make($data = Input::all(), $this->model->rules);
-
-        if ($validator->fails())
+        if ($response->getStatusCode() === 400)
         {
             return Redirect::back()
-                ->withErrors($validator)
+                ->withErrors($response->getOriginalContent())
                 ->withInput()
                 ->with(array(
                     'alert_status' => 'warning',
                     'alert'        => trans('clumsy::alerts.invalid'),
                 ));
         }
-
-        foreach ((array)$this->model->booleans() as $check)
-        {
-            if (!Input::has($check))
-            {
-                $data[$check] = 0;
-            }
-        }
-
-        $item->update($data);
 
         $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
 
@@ -440,15 +325,7 @@ class AdminController extends Controller {
      */
     public function destroy($id)
     {
-        $item = $this->model->find($id);
-
-        if ($item->isRequiredByOthers())
-        {
-            return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $id)->with(array(
-               'alert_status' => 'warning',
-               'alert'        => trans('clumsy::alerts.required_by'),
-            ));
-        }
+        $item = $this->model->findOrFail($id);
 
         $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
 
@@ -457,7 +334,16 @@ class AdminController extends Controller {
             $url = URL::route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($id));
         }
 
-        $this->model->destroy($id);
+        $response = parent::destroy($id);
+        if ($this->request->ajax()) return $response;
+
+        if ($response->getStatusCode() === 400)
+        {
+            return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $id)->with(array(
+               'alert_status' => 'warning',
+               'alert'        => trans('clumsy::alerts.required_by'),
+            ));
+        }
 
         return Redirect::to($url)->with(array(
            'alert_status' => 'success',

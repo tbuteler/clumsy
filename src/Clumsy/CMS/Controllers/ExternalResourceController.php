@@ -86,7 +86,6 @@ class ExternalResourceController extends AdminController {
     {
         if ($resource_type === null)
         {
-            // TODO?: update all
             return Redirect::route("{$this->admin_prefix}.home");
         }
 
