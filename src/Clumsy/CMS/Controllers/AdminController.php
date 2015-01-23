@@ -56,10 +56,27 @@ class AdminController extends APIController {
     {
         if (!isset($data['items']))
         {
-            $response = parent::index($data);
-            if ($this->request->ajax()) return $response;
+            if ($this->request->ajax()) return parent::index($data);
 
-            $data['items'] = $response->getOriginalContent();
+            $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
+            
+            if (!isset($data['sortable']) || $data['sortable'])
+            {
+                $query->orderSortable();
+                $data['sortable'] = true;
+            }
+            
+            $per_page = property_exists($this->model, 'admin_per_page') ? $this->model->admin_per_page : Config::get('clumsy::per_page');
+
+            if ($per_page)
+            {
+                $data['items'] = $query->paginate($per_page);
+                $data['pagination'] = $data['items']->links();
+            }
+            else
+            {
+                $data['items'] = $query->get();
+            }
         }
 
         if (!isset($data['title']))

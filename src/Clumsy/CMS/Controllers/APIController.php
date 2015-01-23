@@ -139,7 +139,7 @@ class APIController extends Controller {
 		return $item;
 	}
 
-	public function index()
+	public function index($data = array())
 	{
         if (!isset($data['items']))
         {
@@ -147,16 +147,13 @@ class APIController extends Controller {
             
             if (!isset($data['sortable']) || $data['sortable'])
             {
-                $query->orderSortable();
-                $data['sortable'] = true;
-            }
+                $query->orderSortable();            }
             
             $per_page = property_exists($this->model, 'admin_per_page') ? $this->model->admin_per_page : Config::get('clumsy::per_page');
 
             if ($per_page)
             {
                 $data['items'] = $query->paginate($per_page);
-                $data['pagination'] = $data['items']->links();
             }
             else
             {
