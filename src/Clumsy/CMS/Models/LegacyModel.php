@@ -21,6 +21,7 @@ class LegacyModel extends \Eloquent {
 
     public $required_by = array();
 
+    public $columns;
     public $rules = array();
     public $booleans = array();
     public $active_booleans = array();
@@ -85,7 +86,7 @@ class LegacyModel extends \Eloquent {
 
     public function columns()
     {
-        return Config::get('clumsy::default_columns');
+        return $this->columns ? $this->columns : Config::get('clumsy::default_columns');
     }
 
     public function booleans()
