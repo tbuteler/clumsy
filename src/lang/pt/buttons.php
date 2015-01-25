@@ -2,25 +2,27 @@
 
 return array(
 
-    'home'   => 'Home',
+    'home'          => 'Home',
 
-    'login'  => 'Login',
+    'login'         => 'Login',
 
-    'logout' => 'Terminar sessão',
+    'logout'        => 'Terminar sessão',
 
-	'add'    => 'Adicionar',
+    'reset'         => 'Redefinir',
 
-    'edit'   => 'Editar',
+    'add'           => 'Adicionar',
 
-	'save'   => 'Salvar',
+    'edit'          => 'Editar',
 
-	'create' => 'Criar item',
+    'save'          => 'Salvar',
 
-	'delete' => 'Remover',
+    'create'        => 'Criar item',
 
-	'import' => 'Actualizar :resources',
+    'delete'        => 'Remover',
 
-	'toggle_navbar' => 'Mostrar menu de navegação',
+    'import'        => 'Actualizar :resources',
+
+    'toggle_navbar' => 'Mostrar menu de navegação',
 
     'manage_site'   => 'Gerenciar site',
 

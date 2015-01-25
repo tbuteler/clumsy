@@ -2,25 +2,27 @@
 
 return array(
 
-    'home'   => 'Home',
+    'home'          => 'Home',
 
-    'login'  => 'Login',
+    'login'         => 'Login',
 
-    'logout' => 'Log out',
+    'logout'        => 'Log out',
 
-	'add'    => 'Add new',
+    'reset'         => 'Reset',
 
-    'edit'   => 'Edit',
+    'add'           => 'Add new',
 
-	'save'   => 'Save changes',
+    'edit'          => 'Edit',
 
-	'create' => 'Create item',
+    'save'          => 'Save changes',
 
-	'delete' => 'Delete',
+    'create'        => 'Create item',
 
-	'import' => 'Update :resources',
+    'delete'        => 'Delete',
 
-	'toggle_navbar' => 'Toggle navigation',
+    'import'        => 'Update :resources',
+
+    'toggle_navbar' => 'Toggle navigation',
 
     'manage_site'   => 'Manage site',
 

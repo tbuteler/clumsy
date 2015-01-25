@@ -3,24 +3,32 @@
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
 class AuthController extends Controller {
 
-    public function login()
+    public function __construct()
     {
-        $admin_prefix = Config::get('clumsy::admin_prefix');
+        $this->beforeFilter('@loggedInFilter', array('only' => array('login', 'reset', 'doReset')));
+    }
 
+    public function loggedInFilter()
+    {
         if (Sentry::check())
         {
-            return Redirect::to($admin_prefix);
+            return Redirect::to(Config::get('clumsy::admin_prefix'));
         }
+    }
 
-        $data['admin_prefix'] = $admin_prefix;
+    public function login()
+    {
+        $data['admin_prefix'] = Config::get('clumsy::admin_prefix');
         $data['intended'] = Session::get('intended');
         $data['body_class'] = 'login';
 
@@ -79,6 +87,107 @@ class AuthController extends Controller {
         }
 
         return Redirect::back()->withInput()->with(array(
+            'alert_status' => isset($alert_status) ? $alert_status : 'warning',
+            'alert'        => $alert,
+        ));
+    }
+
+    public function reset()
+    {
+        $data['body_class'] = 'login';
+
+        return View::make('clumsy::reset', $data);
+    }
+ 
+    public function postReset()
+    {
+        if (!Input::get('email'))
+        {
+            $alert = trans('clumsy::alerts.auth.login_required');
+        }
+        else
+        {
+            try
+            {
+                $user = Sentry::findUserByLogin(Input::get('email'));
+
+                $resetCode = $user->getResetPasswordCode();
+
+                $url = URL::route('do-reset-password', array('user_id' => $user->id, 'code' => $resetCode));
+
+                Mail::send('clumsy::emails.auth.reset', compact('url'), function($message) use($user)
+                {
+                    $message
+                        ->to($user->email, $user->first_name.' '.$user->last_name)
+                        ->subject(trans('clumsy::titles.reset-password'));
+                });
+
+                if (sizeof(Mail::failures()))
+                {
+                    $alert = trans('clumsy::alerts.email-error');
+                }
+                else
+                {
+                    $alert_status = 'success';
+                    $alert = trans('clumsy::alerts.auth.reset-email-sent');
+                }
+            }
+            catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+            {
+                $alert = trans('clumsy::alerts.auth.unknown_user');
+            }
+        }
+
+        return Redirect::back()->withInput()->with(array(
+            'alert_status' => isset($alert_status) ? $alert_status : 'warning',
+            'alert' => $alert,
+        ));
+    }
+
+    public function doReset($user_id, $code)
+    {
+        $body_class = 'login';
+
+        return View::make('clumsy::do-reset', compact('body_class', 'user_id', 'code'));
+    }
+ 
+    public function postDoReset()
+    {
+        $validator = Validator::make(Input::all(), array(
+            'password' => 'required|confirmed',
+        ));
+
+        if ($validator->fails())
+        {
+            $alert = trans('clumsy::alerts.invalid');
+        }
+        else
+        {
+            try
+            {
+                $user = Sentry::findUserById(Input::get('user_id'));
+
+                if ($user->checkResetPasswordCode(Input::get('code')) && $user->attemptResetPassword(Input::get('code'), Input::get('password')))
+                {
+                    Sentry::login($user);
+
+                    $admin_prefix = Config::get('clumsy::admin_prefix');
+
+                    return Redirect::route("$admin_prefix.home")->with(array(
+                        'alert_status' => 'success',
+                        'alert'        => trans('clumsy::alerts.auth.password-changed'),
+                    ));
+                }
+
+                $alert = trans('clumsy::alerts.auth.reset-error');
+            }
+            catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+            {
+                $alert = trans('clumsy::alerts.auth.unknown_user');
+            }
+        }
+
+        return Redirect::back()->withInput()->withErrors($validator)->with(array(
             'alert_status' => isset($alert_status) ? $alert_status : 'warning',
             'alert'        => $alert,
         ));

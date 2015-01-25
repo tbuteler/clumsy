@@ -20,6 +20,8 @@ return array(
 
 	'confirm_password' => 'Confirm password',
 
+	'reset-password'   => 'Reset password',
+
 	'role'			   => 'Role',
 
 	'current_role'     => 'Current role',

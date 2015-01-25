@@ -18,7 +18,31 @@ Route::get(Config::get('clumsy::admin_prefix').'/login', array(
 ));
 
 Route::post(Config::get('clumsy::admin_prefix').'/login', array(
+    'before'   => 'csrf',
     'uses'     => 'Clumsy\CMS\Controllers\AuthController@postLogin',
+));
+
+Route::get(Config::get('clumsy::admin_prefix').'/reset', array(
+    'as'       => 'reset-password',
+    'before'   => 'admin_assets',
+    'uses'     => 'Clumsy\CMS\Controllers\AuthController@reset',
+));
+
+Route::post(Config::get('clumsy::admin_prefix').'/reset', array(
+    'before'   => 'csrf',
+    'uses'     => 'Clumsy\CMS\Controllers\AuthController@postReset',
+));
+
+Route::get(Config::get('clumsy::admin_prefix').'/do-reset/{user_id}/{code}', array(
+    'as'       => 'do-reset-password',
+    'before'   => 'admin_assets',
+    'uses'     => 'Clumsy\CMS\Controllers\AuthController@doReset',
+));
+
+Route::post(Config::get('clumsy::admin_prefix').'/do-reset', array(
+    'as'       => 'post-do-reset-password',
+    'before'   => 'csrf',
+    'uses'     => 'Clumsy\CMS\Controllers\AuthController@postDoReset',
 ));
 
 Route::get(Config::get('clumsy::admin_prefix').'/logout', array(

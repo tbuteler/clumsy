@@ -16,19 +16,21 @@ return array(
 
 	'email'            => 'Email',
 
-	'password'         => 'Password',
+	'password'         => 'Palavra-passe',
 
-	'confirm_password' => 'Confirmar password',
+	'confirm_password' => 'Confirmar palavra-passe',
+
+	'reset-password'   => 'Redefinir palavra-passe',
 
 	'role'			   => 'Função',
 
 	'current_role'     => 'Função actual',
 
-	'change_password'  => 'Mudar password',
+	'change_password'  => 'Mudar palavra-passe',
 
-	'new_password'     => 'Nova password',
+	'new_password'     => 'Nova palavra-passe',
 
-	'confirm_new_password' => 'Confirmar nova password',
+	'confirm_new_password' => 'Confirmar nova palavra-passe',
 
 	'roles' => array(
 

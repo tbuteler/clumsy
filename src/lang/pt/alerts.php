@@ -35,11 +35,11 @@ return array(
 
 	'auth'   => array(
 
-        'login_required'    => 'O campo login é requerido.',
+        'login_required'    => 'O campo email é requerido.',
 
-        'password_required' => 'O campo password é requerido.',
+        'password_required' => 'O campo palavra-passe é requerido.',
 
-        'wrong_password'    => 'Password inválida, tente novamente.',
+        'wrong_password'    => 'Palavra-passe inválida, tente novamente.',
 
         'unknown_user'      => 'Usuário desconhecido.',
 
@@ -50,6 +50,12 @@ return array(
         'banned_user'       => 'Usuário foi banido.',
 
         'logged_out'	    => 'A sessão foi terminada.',
+
+		'reset-email-sent'  => 'Instruções para redefinir sua palavra-passe foram enviadas para o seu email.',
+
+		'password-changed'  => 'Sua palavra-passe foi alterada com sucesso.',
+
+		'reset-error'       => 'Ocorreu um erro ao redefinir sua palavra-passe. Por favor entre em contacto com o administrador do sistema.',
 	),
 
 	'import' => array(
@@ -62,6 +68,8 @@ return array(
 
 		'undefined' => 'A importação falhou. Não foi encontrado um importador para :resources',
 	),
+
+	'email-error'    => 'Ocorreu um erro ao enviar o seu email. Por favor tente novamente mais tarde.',
 
 	'token_mismatch' => 'Sua sessão expirou antes que pudesse salvar as mudanças. Se acredita que isto é um erro, por favor entre em contacto com o administrador do sistema.'
 

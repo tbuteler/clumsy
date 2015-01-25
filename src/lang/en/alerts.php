@@ -35,7 +35,7 @@ return array(
 
 	'auth'   => array(
 
-        'login_required'    => 'Login field is required.',
+        'login_required'    => 'Email field is required.',
 
         'password_required' => 'Password field is required.',
 
@@ -50,6 +50,12 @@ return array(
         'banned_user'       => 'User is banned.',
 
         'logged_out'	    => 'You have logged out.',
+
+		'reset-email-sent'  => 'Reset password instructions have been sent to your email.',
+
+		'password-changed'  => 'Your password was successfully changed.',
+
+		'reset-error'       => 'An error occurred while resetting your password. Please contact the website administrator.',
 	),
 
 	'import' => array(
@@ -62,6 +68,8 @@ return array(
 
 		'undefined' => 'Import failed. No importer defined for :resources.',
 	),
+
+	'email-error'    => 'An error occurred while sending your email. Please try again later.',
 
 	'token_mismatch' => 'Your session expired before submitting changes. If you believe this is an error, please contact the website administrator.',
 
