@@ -32,7 +32,7 @@ class AuthController extends Controller {
         $data['intended'] = Session::get('intended');
         $data['body_class'] = 'login';
 
-        return View::make('clumsy::login', $data);
+        return View::make('clumsy::auth.login', $data);
     }
 
     public function postLogin()
@@ -96,7 +96,7 @@ class AuthController extends Controller {
     {
         $data['body_class'] = 'login';
 
-        return View::make('clumsy::reset', $data);
+        return View::make('clumsy::auth.reset', $data);
     }
  
     public function postReset()
@@ -148,7 +148,7 @@ class AuthController extends Controller {
     {
         $body_class = 'login';
 
-        return View::make('clumsy::do-reset', compact('body_class', 'user_id', 'code'));
+        return View::make('clumsy::auth.do-reset', compact('body_class', 'user_id', 'code'));
     }
  
     public function postDoReset()
