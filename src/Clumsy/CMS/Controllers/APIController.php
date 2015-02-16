@@ -126,7 +126,7 @@ class APIController extends Controller {
 
 	protected function code($status_code = 200)
 	{
-		return $this->content([], $status_code);
+		return $this->content(array(), $status_code);
 	}
 
 	protected function getItem($id)
