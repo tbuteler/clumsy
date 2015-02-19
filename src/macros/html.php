@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\HTML;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Clumsy\Utils\Facades\HTTP;
+use Clumsy\CMS\Facades\International;
 
 HTML::macro('columnTitle', function($resource, $column, $name)
 {
@@ -65,4 +67,16 @@ HTML::macro('breadcrumb', function($breadcrumb)
     $html .= '</ol>';
 
     return $html;
+});
+
+HTML::macro('translatable', function($fields)
+{
+    $locales = International::getSupportedLocales();
+    
+    krsort($locales); // PT first?
+    
+    reset($locales);
+    $first = key($locales);
+
+    return View::make('clumsy::templates.translatable', compact('locales', 'first', 'fields'))->render();
 });
