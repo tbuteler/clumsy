@@ -12,12 +12,23 @@ $(function(){
             selector: ".rich-text",
             content_css: handover.admin.urls.base+'/../packages/clumsy/cms/css/tinymce.css',
             menubar : false,
-            toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist",
+            toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist | removeformat",
             statusbar : false,
             plugins: "autoresize"
         },
         typeof handover.admin.tinymce === 'undefined' ? {} : handover.admin.tinymce
         ));
+    }
+
+    // If a translatable panel pane has an error that prevents saving, switch to it
+    if ($('.panel-translatable').length && $('.panel-translatable .has-error').length) {
+        $('.tab-pane').each(function(i,el){
+            if ($('.has-error', el).length) {
+                var target = $(el).attr('id');
+                $('a[href="#'+target+'"], a[data-target="'+target+'"]').tab('show');
+                return false;
+            }
+        });
     }
 
     if ($('.datepicker').length) {

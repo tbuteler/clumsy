@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default panel-translatable">
 
 	<div class="panel-heading">
 		<ul class="nav nav-pills" role="tablist">
