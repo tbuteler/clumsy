@@ -239,7 +239,8 @@ class AdminController extends APIController {
         {
             $view = "clumsy::{$this->resource_plural}.edit";
         }
-        elseif ($id && $this->model->hasChildren())
+        
+        if ($id && $this->model->hasChildren())
         {    
             $data['add_child'] = HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$this->child_resource}.create"), 'parent', $id);
             $data['child_resource'] = $this->child_resource;
@@ -268,9 +269,9 @@ class AdminController extends APIController {
                 $data['child_columns'] = $this->child_model->columns();
             }
 
-            $view = 'clumsy::templates.edit-nested';
+            $view = isset($view) ? $view : 'clumsy::templates.edit-nested';
         }
-        else
+        elseif (!isset($view))
         {
             $view = 'clumsy::templates.edit';
         }

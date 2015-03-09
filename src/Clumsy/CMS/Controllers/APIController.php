@@ -107,6 +107,9 @@ class APIController extends Controller {
             {
                 $this->parent_display_name_plural = $this->displayNamePlural($this->parent_model_base_name);
             }
+
+            $this->parent_display_name = studly_case($this->parent_display_name);
+            $this->parent_display_name_plural = studly_case($this->parent_display_name_plural);
         }
 
         if ($this->model && $this->model->hasChildren())
