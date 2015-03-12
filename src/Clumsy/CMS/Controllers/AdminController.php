@@ -17,8 +17,18 @@ use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\Assets\Facade as Asset;
 use Clumsy\Eminem\Facade as MediaManager;
 use Clumsy\Utils\Facades\HTTP;
+use Clumsy\CMS\Support\ViewResolver;
 
 class AdminController extends APIController {
+
+    protected $view;
+
+    public function __construct(ViewResolver $view)
+    {
+        parent::__construct();
+
+        $this->view = $view;
+    }
 
     /**
      * Prepare generic processing of resources base on current route
@@ -26,6 +36,8 @@ class AdminController extends APIController {
     public function setupResource(Route $route, Request $request)
     {
         parent::setupResource($route, $request);
+
+        $this->view->domain = $this->displayNamePlural();
 
         View::share('admin_prefix', $this->admin_prefix);
         View::share('resource', $this->resource);
@@ -84,16 +96,7 @@ class AdminController extends APIController {
             $data['title'] = $this->displayNamePlural();
         }
 
-        if (View::exists("admin.{$this->resource_plural}.index"))
-        {
-            $view = "admin.{$this->resource_plural}.index";
-        }
-        else
-        {
-            $view = 'clumsy::templates.index';
-        }
-
-        return View::make($view, $data);
+        return View::make($this->view->resolve('index'), $data);
     }
 
     /**
@@ -218,27 +221,9 @@ class AdminController extends APIController {
             $data['title'] = trans('clumsy::titles.edit_item', array('resource' => $this->displayName()));
         }
 
-        if (View::exists("admin.{$this->resource_plural}.fields"))
-        {
-            $data['form_fields'] = "admin.{$this->resource_plural}.fields";
-        }
-        elseif (View::exists("clumsy::{$this->resource_plural}.fields"))
-        {
-            $data['form_fields'] = "clumsy::{$this->resource_plural}.fields";
-        }
-        else
-        {
-            $data['form_fields'] = 'clumsy::templates.fields';
-        }
+        $data['form_fields'] = $this->view->resolve('fields');
         
-        if (View::exists("admin.{$this->resource_plural}.edit"))
-        {
-            $view = "admin.{$this->resource_plural}.edit";
-        }
-        elseif (View::exists("clumsy::{$this->resource_plural}.edit"))
-        {
-            $view = "clumsy::{$this->resource_plural}.edit";
-        }
+        $view = $this->view->resolve('edit');
         
         if ($id && $this->model->hasChildren())
         {    
@@ -269,11 +254,7 @@ class AdminController extends APIController {
                 $data['child_columns'] = $this->child_model->columns();
             }
 
-            $view = isset($view) ? $view : 'clumsy::templates.edit-nested';
-        }
-        elseif (!isset($view))
-        {
-            $view = 'clumsy::templates.edit';
+            $view = $this->view->resolve('edit-nested');
         }
 
         $data['media'] = MediaManager::slots($this->modelClass(), $id);
