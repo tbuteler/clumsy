@@ -50,6 +50,29 @@ $(function(){
         });
     }
 
+    if ($('.colorpicker').length) {
+        $('.colorpicker').iris(
+            $.extend(
+                {
+                    hide: true,
+                },
+                typeof handover.admin.colorpicker === 'undefined' ? {} : handover.admin.colorpicker
+            )
+        );
+
+        $(document).on('click',function(e){
+            if ($(e.target).attr('class') == 'form-control colorpicker') {
+                $(e.target).iris('show');
+            }
+            else{
+                var container = $('.iris-picker, .iris-picker-inner');
+                if (typeof e === 'undefined' || (!container.is(e.target) && container.has(e.target).length === 0)){
+                    $('.colorpicker').iris('hide');
+                }
+            }
+        });
+    }
+
     $booleans = $('.active-boolean');
     if ($booleans.length) {
         $booleans.click(function(e){
