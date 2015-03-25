@@ -249,6 +249,22 @@ class BaseModel extends \Eloquent {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }
 
+    /**
+     * Return a timestamp as DateTime object
+     * Doesn't output time when juggled as string, so can be used for date-only mutators
+     *
+     * @param  mixed  $value
+     * @return \Carbon\Carbon
+     */
+    protected function asDate($value)
+    {
+        $value = parent::asDateTime($value);
+
+        $value->setToStringFormat('Y-m-d');
+
+        return $value;
+    }
+
     public function displayName()
     {
         return false;
