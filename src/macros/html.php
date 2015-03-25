@@ -80,3 +80,10 @@ HTML::macro('translatable', function($fields)
 
     return View::make('clumsy::templates.translatable', compact('locales', 'first', 'fields'))->render();
 });
+
+HTML::macro('locator', function($lat,$lng)
+{
+    Asset::enqueue('google-maps');
+
+    return View::make('clumsy::templates.locator', compact('lat','lng'))->render();
+});
