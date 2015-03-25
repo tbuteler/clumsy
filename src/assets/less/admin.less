@@ -348,3 +348,85 @@ form {
         text-align: right;
     }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Filter Box
+|--------------------------------------------------------------------------
+|
+*/
+#header-filter-btn{
+    cursor: pointer;
+    color: #A3A3A3;
+    border: 3px solid #A3A3A3;
+     -webkit-border-radius: 20px; 
+    border-radius: 20px;
+    font-size: 15px;
+    padding: 6px;
+    padding-top: 6px;
+    top: -3px;
+
+    &.active{
+        color: #337ab7;
+        border-color: #337ab7;
+    }
+}
+
+.filter-wrapper{
+    display: inline;
+    position: relative;
+}
+
+i.filter{
+    cursor: pointer;
+
+    &.active{
+        color: #428bc8;
+    }
+}
+
+.filter-panel{
+    h3{
+        display: inline;
+    }
+
+    .panel-heading{
+        padding: 5px 15px;
+    }
+
+    .wrapper{
+        margin: 10px;
+        padding: 10px;
+        /*border: 1px #CCCCCC solid;*/
+    }
+
+    th{
+        width: 5%;
+        text-align: right;
+        vertical-align: middle !important;
+    }
+
+    .form-group{
+        margin: 5px 0;
+    }
+}
+
+.filter-box{
+    border-bottom: 1px #CCCCCC solid;
+}
+
+.filter-box .icon{
+    cursor: pointer;
+    display: block;
+    position: relative;
+    top: -31px;
+    left: -11px;
+    width: 17px;
+    height: 21px;
+    background-color: white;
+    border-top: 1px #CCCCCC solid;
+    border-left: 1px #CCCCCC solid;
+    border-right: 1px #CCCCCC solid;
+    border-radius: 3px 3px 0 0;
+    padding-top: 5px;
+}

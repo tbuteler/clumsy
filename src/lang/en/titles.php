@@ -19,4 +19,6 @@ return array(
 	'edit_user'      => 'Edit user',
 
 	'user_control'   => 'Login control',
+
+	'filters'        => 'Filters'
 );

@@ -21,6 +21,20 @@ class BackEndController extends Controller {
         return Redirect::back();
     }
 
+    public function filter($resource)
+    {
+        
+        $buffer = array();
+        foreach (Input::except('_token') as $column => $values) {
+            $buffer[$column] = $values;
+        }
+
+        Session::put("clumsy.filter.$resource",$buffer);
+        
+
+        return  Redirect::back();
+    }
+
     public function update()
     {
         extract(Input::all(), EXTR_SKIP);

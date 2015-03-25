@@ -12,7 +12,7 @@ return array(
     'admin.js' => array(
         'set'   => 'footer',
         'path'  => 'packages/clumsy/cms/js/admin.min.js',
-        'req'   => 'bootstrap.js',
+        'req'   => array('bootstrap.js','chosen'),
         'v'     => '0.9.3',
     ),
 );

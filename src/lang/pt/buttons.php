@@ -29,4 +29,8 @@ return array(
     'manage_users'  => 'Gerenciar usuários',
 
     'session'       => 'Sessão',
+
+    'clear'         => 'Limpar',
+    
+    'apply'         => 'Aplicar'
 );
