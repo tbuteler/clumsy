@@ -293,6 +293,44 @@ input+.iris-picker{
 
 /*
 |--------------------------------------------------------------------------
+| youtube
+|--------------------------------------------------------------------------
+|
+*/
+
+.youtube-wrapper{
+    input.has-error{
+        border-color: #ff0000;
+    }
+
+    .preview-box{
+        min-height: 200px;
+        position: relative;
+        padding: 3px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 0;
+        text-align: center;
+        color: #ccc;
+
+        .placeholders .glyphicon {
+            top: 74px;
+            font-size: 48px;
+        }
+        .placeholders .error {
+            display: none;
+            color: #ff0000;
+        }
+
+        iframe{
+            width: 100%;
+            min-height: 295px;
+        }
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
 | Misc elements
 |--------------------------------------------------------------------------
 |
