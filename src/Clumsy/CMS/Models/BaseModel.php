@@ -32,7 +32,7 @@ class BaseModel extends \Eloquent {
 
     public $media_slots = array();
     
-    public $filterables = array();
+    public $filters = array();
 
     public function __construct(array $attributes = array())
     {
@@ -62,6 +62,11 @@ class BaseModel extends \Eloquent {
     public function booleans()
     {
         return $this->booleans + $this->active_booleans;
+    }
+
+    public function filters()
+    {
+        return $this->filters;
     }
 
     public function isNested()

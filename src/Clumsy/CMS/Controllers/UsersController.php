@@ -12,16 +12,17 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Lang;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\CMS\Controllers\AdminController;
+use Clumsy\CMS\Support\ViewResolver;
 
 class UsersController extends AdminController {
 
-    public function __construct()
+    public function __construct(ViewResolver $view)
     {
 		$this->beforeFilter('@checkPermissions');
 
         $this->model_namespace = '\Clumsy\CMS\Models';
 
-        parent::__construct();
+        parent::__construct($view);
     }
 
 	public function checkPermissions(Route $route, Request $request)
@@ -29,10 +30,10 @@ class UsersController extends AdminController {
 		$user = Sentry::getUser();
 		$requested_user_id = $route->getParameter('user');
 
-		if (!$user->hasAccess('users')) {
-
-			if (!in_array($route->getName(), array("{$this->admin_prefix}.user.edit", "{$this->admin_prefix}.user.update")) || $requested_user_id != $user->id) {
-
+		if (!$user->hasAccess('users'))
+		{
+			if (!in_array($route->getName(), array("{$this->admin_prefix}.user.edit", "{$this->admin_prefix}.user.update")) || $requested_user_id != $user->id)
+			{
 				return Redirect::route('{$this->admin_prefix}.user.edit', $user->id)->with(array(
 					'alert_status' => 'warning',
 					'alert'        => trans('clumsy::alerts.users.forbidden'),
@@ -108,7 +109,7 @@ class UsersController extends AdminController {
 		$group = Sentry::findGroupByName(Input::get('group'));
 		$new_user->addGroup($group);
 
-		return Redirect::route("{$this->admin_prefix}.user.index")->with(array(
+		return Redirect::route("{$this->admin_prefix}.user.edit", $new_user->id)->with(array(
            'alert_status' => 'success',
            'alert'  	  => trans('clumsy::alerts.user.added'),
         ));
@@ -128,7 +129,7 @@ class UsersController extends AdminController {
 	public function edit($id, $data = array())
 	{
 		$data['throttle'] = Sentry::getThrottleProvider();
-		
+
 		if ($id)
 		{
 			$data['item'] = Sentry::findUserById($id);
@@ -224,14 +225,7 @@ class UsersController extends AdminController {
 
 		$user->update($data);
 
-        $url = URL::route("{$this->admin_prefix}.user.index");
-
-		if (!$user->hasAccess('users')) {
-
-			$url = URL::route("{$this->admin_prefix}.user.edit", $user->id);
-		}
-
-		return Redirect::to($url)->with(array(
+		return Redirect::route("{$this->admin_prefix}.user.edit", $user->id)->with(array(
            'alert_status' => 'success',
            'alert'  	  => trans('clumsy::alerts.user.updated'),
         ));

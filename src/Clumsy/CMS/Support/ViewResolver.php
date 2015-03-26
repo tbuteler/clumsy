@@ -44,7 +44,7 @@ class ViewResolver {
         // 3) Clumsy package: resources.slug
         if ($this->domain && $this->view->exists("clumsy::{$this->domain}.$slug"))
         {
-        	return "$prefix.templates.$slug";
+        	return "clumsy::{$this->domain}.$slug";
         }
 
         // 4) Clumsy package: templates.slug

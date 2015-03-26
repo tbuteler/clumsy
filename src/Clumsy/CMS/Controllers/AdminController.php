@@ -77,7 +77,7 @@ class AdminController extends APIController {
 
             $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
 
-            if ($this->model->filterables() != null) 
+            if ($this->model->filters())
             {
                 $query->customFilter();
 
@@ -85,24 +85,28 @@ class AdminController extends APIController {
                 $names = array();
                 $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
                 $hasFilters = false;
-                foreach ($this->model->filterables() as $column) {
-                    if ($activeFilters != null && array_key_exists($column,$activeFilters)) {
+                foreach ($this->model->filters() as $column)
+                {
+                    if ($activeFilters != null && array_key_exists($column,$activeFilters))
+                    {
                         $hasFilters = true;
                         $buffer[$column] = $activeFilters[$column];
                     }
-                    else{
+                    else
+                    {
                         $buffer[$column] = null;
                     }
 
                     // Names:
                     $names[$column] = isset($data['columns'][$column]) ? $data['columns'][$column] : $column;
                 }
+
                 $data['filtersData'] = array(
-                        'data' => $this->getFilterData($query,$this->model->filterables()), 
-                        'selected' => $buffer, 
-                        'hasFilters' => $hasFilters,
-                        'names' => $names
-                    );
+                    'data' => $this->getFilterData($query,$this->model->filters()), 
+                    'selected' => $buffer, 
+                    'hasFilters' => $hasFilters,
+                    'names' => $names
+                );
             }
             
             if (!isset($data['sortable']) || $data['sortable'])
@@ -246,9 +250,9 @@ class AdminController extends APIController {
         }
 
         $data['form_fields'] = $this->view->resolve('fields');
-        
+
         $view = $this->view->resolve('edit');
-        
+
         if ($id && $this->model->hasChildren())
         {    
             $data['add_child'] = HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$this->child_resource}.create"), 'parent', $id);
