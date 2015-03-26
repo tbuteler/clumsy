@@ -52,4 +52,8 @@ return array(
 	'user_is_suspended' => 'O usuário está suspenso.',
 
 	'user_is_banned'    => 'O usuário foi banido.',
+
+	'latitude'          => 'Latitude',
+	
+	'longitude'         => 'Longitude'
 );
