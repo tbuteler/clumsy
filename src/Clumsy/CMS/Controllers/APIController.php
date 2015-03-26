@@ -69,7 +69,7 @@ class APIController extends Controller {
     {
         $this->request = $request;
 
-        $this->admin_prefix = Config::get('clumsy::admin_prefix');
+        $this->admin_prefix = $route->getPrefix();
 
         $this->columns = Config::get('clumsy::default_columns');
 

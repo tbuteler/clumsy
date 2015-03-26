@@ -34,8 +34,8 @@ class UsersController extends AdminController {
 			if (!in_array($route->getName(), array("{$this->admin_prefix}.user.edit", "{$this->admin_prefix}.user.update")) || $requested_user_id != $user->id) {
 
 				return Redirect::route('{$this->admin_prefix}.user.edit', $user->id)->with(array(
-					'alert_status'  => 'warning',
-					'alert' => trans('clumsy::alerts.users.forbidden'),
+					'alert_status' => 'warning',
+					'alert'        => trans('clumsy::alerts.users.forbidden'),
 				));
 			}
 		}
