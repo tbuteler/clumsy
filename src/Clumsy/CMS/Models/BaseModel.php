@@ -31,6 +31,8 @@ class BaseModel extends \Eloquent {
     public $child_resource = null;
 
     public $media_slots = array();
+    
+    public $filterables = array();
 
     public function __construct(array $attributes = array())
     {

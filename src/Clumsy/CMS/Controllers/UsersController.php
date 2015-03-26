@@ -139,7 +139,7 @@ class UsersController extends AdminController {
 
 			if ($self = (Sentry::getUser()->id == $id)) {
 
-				$data['supress_delete'] = true;
+				$data['suppress_delete'] = true;
 			}
 
 	        $data['title'] = $self ? trans('clumsy::titles.profile') : trans('clumsy::titles.edit_user');

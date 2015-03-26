@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -66,11 +67,44 @@ class AdminController extends APIController {
      */
     public function index($data = array())
     {
+        if (!isset($data['columns']))
+        {
+            $data['columns'] = $this->columns;
+        }
+
         if (!isset($data['items']))
         {
             if ($this->request->ajax()) return parent::index($data);
 
             $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
+
+            if ($this->model->filterables() != null) 
+            {
+                $query->customFilter();
+
+                $buffer = array();
+                $names = array();
+                $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
+                $hasFilters = false;
+                foreach ($this->model->filterables() as $column) {
+                    if ($activeFilters != null && array_key_exists($column,$activeFilters)) {
+                        $hasFilters = true;
+                        $buffer[$column] = $activeFilters[$column];
+                    }
+                    else{
+                        $buffer[$column] = null;
+                    }
+
+                    // Names:
+                    $names[$column] = isset($data['columns'][$column]) ? $data['columns'][$column] : $column;
+                }
+                $data['filtersData'] = array(
+                        'data' => $this->getFilterData($query,$this->model->filterables()), 
+                        'selected' => $buffer, 
+                        'hasFilters' => $hasFilters,
+                        'names' => $names
+                    );
+            }
             
             if (!isset($data['sortable']) || $data['sortable'])
             {
@@ -157,16 +191,7 @@ class AdminController extends APIController {
                 ));
         }
 
-        $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
-
-        if ($this->model->isNested())
-        {
-            $id = $response->getOriginalContent();
-
-            $url = URL::route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($id));
-        }
-
-        return Redirect::to($url)->with(array(
+        return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $response->getOriginalContent())->with(array(
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_added'),
         ));
@@ -303,14 +328,7 @@ class AdminController extends APIController {
                 ));
         }
 
-        $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
-
-        if ($this->model->isNested())
-        {
-            $url = URL::route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($id));
-        }
-
-        return Redirect::to($url)->with(array(
+        return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $id)->with(array(
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_updated'),
         ));
@@ -390,5 +408,25 @@ class AdminController extends APIController {
         }
 
         return Str::title(str_replace('_', ' ', snake_case($model)));
+    }
+
+    public function getFilterData($query, $columns)
+    {
+        $data = array();
+        foreach ($columns as $column) {
+            if(in_array($column, Schema::getColumnListing($this->model->getTable())))
+            {
+                $data[$column] = $query->distinct()->lists($column,$column);
+            }
+            else{
+                $buffer = explode('.',$column);
+                $model = new $buffer[0]();
+                $newColumn = $buffer[1];
+
+                $data[$column] = $model->distinct()->lists($newColumn,$newColumn);
+            }
+        }
+
+        return $data;
     }
 }

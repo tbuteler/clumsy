@@ -10,7 +10,7 @@
 		        	{{ $children_title }}
 		        </div>
 				<div class="col-sm-3 after-title">
-		        	<a href="{{ $add_child }}"><button type="button" class="btn btn-success add-new">Add new</button></a>
+		        	<a href="{{ $add_child }}"><button type="button" class="btn btn-success add-new">{{ trans('clumsy::buttons.add') }}</button></a>
 				</div>
 	    	</div>
 	    </h1>

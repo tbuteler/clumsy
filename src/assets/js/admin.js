@@ -50,6 +50,80 @@ $(function(){
         });
     }
 
+    if ($('.colorpicker').length) {
+        $('.colorpicker').iris(
+            $.extend(
+                {
+                    hide: true,
+                },
+                typeof handover.admin.colorpicker === 'undefined' ? {} : handover.admin.colorpicker
+            )
+        );
+
+        $(document).on('click',function(e){
+            if ($(e.target).attr('class') == 'form-control colorpicker') {
+                $(e.target).iris('show');
+            }
+            else{
+                var container = $('.iris-picker, .iris-picker-inner');
+                if (typeof e === 'undefined' || (!container.is(e.target) && container.has(e.target).length === 0)){
+                    $('.colorpicker').iris('hide');
+                }
+            }
+        });
+    }
+
+    if($('#map').length){
+        // Google Maps
+
+        var map;
+        var marker = null;
+
+        var setMarker = function(lat, lng) {
+            if (marker === null) {
+                if (lat !== null && lng !== null) {
+                    marker = new google.maps.Marker({
+                        map: map,
+                        draggable: false,
+                        position: new google.maps.LatLng(parseFloat(lat), parseFloat(lng))
+                    });
+                    map.setZoom(16);
+                    map.panTo(marker.position);
+                }
+            }
+            else
+            {
+                marker.setPosition( new google.maps.LatLng(lat, lng) );
+                map.panTo(marker.position);
+            }
+        };
+
+        var initialize = function() {
+            var mapOptions = {
+                center: { lat: 38.709792, lng: -9.133609},
+                zoom: 14
+            };
+
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+            if (typeof handover.coordinates !== 'undefined')
+            {
+                setMarker(handover.coordinates.lat, handover.coordinates.lng);
+            }
+
+            google.maps.event.addListener(map, "rightclick", function(event) {
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+                
+                setMarker(lat,lng);
+                $('#lat').val(lat);
+                $('#lng').val(lng);
+            });
+        };
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    }
+
     $booleans = $('.active-boolean');
     if ($booleans.length) {
         $booleans.click(function(e){
@@ -68,4 +142,57 @@ $(function(){
             $(this).find('.active-boolean').click();
         });
     }
+
+    if ($('.filter-box').length) {
+        var chosen_op = {
+            width: '100%',
+            max_selected_options: 5,
+            no_results_text: "Nenhum resultado com "
+        };
+
+        $('.filter-box select').chosen(chosen_op);
+
+        $('.filter-box select').chosen().change(function(e,data){
+            $('#filter-submit-btn').removeAttr('disabled');
+
+            if (typeof data.selected != "undefined") {
+               $('form#filter-form').append('<input name="' + $(this).data('name') + '[]" value="' + data.selected + '">');
+               $(this).parents('.filter-box').find('button').removeAttr('disabled');
+            }
+            else{
+                $('input[value="' + data.deselected + '"]').remove();
+
+                if ($('input[name="' + $(this).data('name') + '[]"]').length === 0) {
+                    $(this).parents('.filter-box').find('button').attr('disabled','');
+                }
+            }
+        });
+
+        $('#header-filter-btn').on('click',function(){
+            $('.filter-panel').fadeIn();
+        });
+
+        $('i.filter').on('click',function(){
+            $(this).siblings('.filter-box').show();
+        });
+
+        $('.filter-box i').on('click',function(){
+            $(this).parent().hide();
+        });
+
+        $('#filter-submit-btn').on('click',function(){
+            $('form#filter-form').submit();
+        });
+        $('#filter-clear-btn').on('click',function(){
+            $('#filter-submit-btn').removeAttr('disabled');
+            $('form#filter-form input:not([name="_token"])').remove();
+            $('.filter-box select').val('').trigger('chosen:updated');
+            // $('form#filter-form').submit();
+        });
+    }
 });
+
+
+
+
+

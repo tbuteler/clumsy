@@ -76,6 +76,11 @@ Route::group(
             'uses' => 'BackEndController@reorder',
         ));
 
+        Route::post('_filter/{resource}', array(
+            'as'   => '_filter',
+            'uses' => 'BackEndController@filter',
+        ));
+
         Route::post('_update', array(
             'as'     => '_update',
             'before' => 'csrf',
