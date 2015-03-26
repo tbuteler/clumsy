@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,6 @@ use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\Assets\Facade as Asset;
 use Clumsy\Eminem\Facade as MediaManager;
 use Clumsy\Utils\Facades\HTTP;
-use Illuminate\Support\Facades\Schema;
 
 class AdminController extends APIController {
 

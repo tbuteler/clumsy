@@ -249,7 +249,7 @@ class LegacyModel extends \Eloquent {
                     });
                 }
                 else{
-                    $buffer = explode('_',$column);
+                    $buffer = explode('.',$column);
                     $model = $buffer[0];
                     $newColumn = $buffer[1];
                     
