@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Clumsy\Assets\Facade as Asset;
+use Clumsy\CMS\Clumsy;
 
 class CMSServiceProvider extends ServiceProvider {
 
@@ -26,6 +27,8 @@ class CMSServiceProvider extends ServiceProvider {
 		$this->app->register('Clumsy\Assets\AssetsServiceProvider');
 		$this->app->register('Clumsy\Utils\UtilsServiceProvider');
 		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
+
+        $this->app['clumsy'] = new Clumsy;
 
         $this->app['command.clumsy.publish'] = $this->app->share(function($app)
             {
@@ -69,7 +72,9 @@ class CMSServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array(
+			'clumsy',
+		);
 	}
 
 }

@@ -40,7 +40,6 @@ class AdminController extends APIController {
 
         $this->view->domain = $this->displayNamePlural();
 
-        View::share('admin_prefix', $this->admin_prefix);
         View::share('resource', $this->resource);
         View::share('display_name', $this->displayName());
         View::share('display_name_plural', $this->displayNamePlural());

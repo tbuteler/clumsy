@@ -11,44 +11,53 @@ use Illuminate\Support\Facades\View;
 |
 */
 
-Route::get(Config::get('clumsy::admin_prefix').'/login', array(
-    'as'       => 'login',
-    'before'   => 'admin_assets',
-    'uses'     => 'Clumsy\CMS\Controllers\AuthController@login',
-));
+Route::group(
+    array(
+        'namespace' => 'Clumsy\CMS\Controllers',
+        'prefix'    => Config::get('clumsy::admin_prefix'),
+    ),
+    function()
+    {
+        Route::get('login', array(
+            'as'       => 'login',
+            'before'   => 'admin_assets',
+            'uses'     => 'AuthController@login',
+        ));
 
-Route::post(Config::get('clumsy::admin_prefix').'/login', array(
-    'before'   => 'csrf',
-    'uses'     => 'Clumsy\CMS\Controllers\AuthController@postLogin',
-));
+        Route::post('login', array(
+            'before'   => 'csrf',
+            'uses'     => 'AuthController@postLogin',
+        ));
 
-Route::get(Config::get('clumsy::admin_prefix').'/reset', array(
-    'as'       => 'reset-password',
-    'before'   => 'admin_assets',
-    'uses'     => 'Clumsy\CMS\Controllers\AuthController@reset',
-));
+        Route::get('reset', array(
+            'as'       => 'reset-password',
+            'before'   => 'admin_assets',
+            'uses'     => 'AuthController@reset',
+        ));
 
-Route::post(Config::get('clumsy::admin_prefix').'/reset', array(
-    'before'   => 'csrf',
-    'uses'     => 'Clumsy\CMS\Controllers\AuthController@postReset',
-));
+        Route::post('reset', array(
+            'before'   => 'csrf',
+            'uses'     => 'AuthController@postReset',
+        ));
 
-Route::get(Config::get('clumsy::admin_prefix').'/do-reset/{user_id}/{code}', array(
-    'as'       => 'do-reset-password',
-    'before'   => 'admin_assets',
-    'uses'     => 'Clumsy\CMS\Controllers\AuthController@doReset',
-));
+        Route::get('do-reset/{user_id}/{code}', array(
+            'as'       => 'do-reset-password',
+            'before'   => 'admin_assets',
+            'uses'     => 'AuthController@doReset',
+        ));
 
-Route::post(Config::get('clumsy::admin_prefix').'/do-reset', array(
-    'as'       => 'post-do-reset-password',
-    'before'   => 'csrf',
-    'uses'     => 'Clumsy\CMS\Controllers\AuthController@postDoReset',
-));
+        Route::post('do-reset', array(
+            'as'       => 'post-do-reset-password',
+            'before'   => 'csrf',
+            'uses'     => 'AuthController@postDoReset',
+        ));
 
-Route::get(Config::get('clumsy::admin_prefix').'/logout', array(
-    'as'       => 'logout',
-    'uses'     => 'Clumsy\CMS\Controllers\AuthController@logout',
-));
+        Route::get('logout', array(
+            'as'       => 'logout',
+            'uses'     => 'AuthController@logout',
+        ));
+    }
+);
 
 Route::group(
     array(
