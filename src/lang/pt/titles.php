@@ -20,9 +20,9 @@ return array(
 	
 	'user_control'   => 'Controlo de login',
 
-	'filters'        => 'Filtros'
+	'filters'        => 'Filtros',
 	
 	'locator'        => 'Localizador',
 	
-	'map'            => 'Mapa'
+	'map'            => 'Mapa',
 );
