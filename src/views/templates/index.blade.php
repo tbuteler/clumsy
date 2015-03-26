@@ -16,6 +16,10 @@
 
 @section('master')
 
+    @if (isset($filtersData))
+        @include('clumsy::templates.filter')
+    @endif
+
     @include('clumsy::templates.table')
 
     @if ($pagination)
