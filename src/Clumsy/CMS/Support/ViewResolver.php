@@ -1,6 +1,6 @@
 <?php namespace Clumsy\CMS\Support;
 
-use Illuminate\View\Environment;
+use Illuminate\Foundation\Application;
 
 class ViewResolver {
 
@@ -8,9 +8,9 @@ class ViewResolver {
 
 	public $domain = null;
 
-	public function __construct(Environment $view)
+	public function __construct(Application $app)
 	{
-		$this->view = $view;
+		$this->view = $app->make('clumsy.view-resolver');
 	}
 
 	protected function getDomainPrefix()

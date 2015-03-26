@@ -38,7 +38,7 @@ class AdminController extends APIController {
     {
         parent::setupResource($route, $request);
 
-        $this->view->domain = $this->displayNamePlural();
+        $this->view->domain = str_plural($this->resource);
 
         View::share('resource', $this->resource);
         View::share('display_name', $this->displayName());
