@@ -55,6 +55,11 @@ class AdminController extends APIController {
      */
     public function index($data = array())
     {
+        if (!isset($data['columns']))
+        {
+            $data['columns'] = $this->columns;
+        }
+
         if (!isset($data['items']))
         {
             if ($this->request->ajax()) return parent::index($data);
@@ -183,16 +188,7 @@ class AdminController extends APIController {
                 ));
         }
 
-        $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
-
-        if ($this->model->isNested())
-        {
-            $id = $response->getOriginalContent();
-
-            $url = URL::route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($id));
-        }
-
-        return Redirect::to($url)->with(array(
+        return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $response->getOriginalContent())->with(array(
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_added'),
         ));
@@ -351,14 +347,7 @@ class AdminController extends APIController {
                 ));
         }
 
-        $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
-
-        if ($this->model->isNested())
-        {
-            $url = URL::route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($id));
-        }
-
-        return Redirect::to($url)->with(array(
+        return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $id)->with(array(
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_updated'),
         ));

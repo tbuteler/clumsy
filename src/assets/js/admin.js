@@ -50,6 +50,80 @@ $(function(){
         });
     }
 
+    if ($('.colorpicker').length) {
+        $('.colorpicker').iris(
+            $.extend(
+                {
+                    hide: true,
+                },
+                typeof handover.admin.colorpicker === 'undefined' ? {} : handover.admin.colorpicker
+            )
+        );
+
+        $(document).on('click',function(e){
+            if ($(e.target).attr('class') == 'form-control colorpicker') {
+                $(e.target).iris('show');
+            }
+            else{
+                var container = $('.iris-picker, .iris-picker-inner');
+                if (typeof e === 'undefined' || (!container.is(e.target) && container.has(e.target).length === 0)){
+                    $('.colorpicker').iris('hide');
+                }
+            }
+        });
+    }
+
+    if($('#map').length){
+        // Google Maps
+
+        var map;
+        var marker = null;
+
+        var setMarker = function(lat, lng) {
+            if (marker === null) {
+                if (lat !== null && lng !== null) {
+                    marker = new google.maps.Marker({
+                        map: map,
+                        draggable: false,
+                        position: new google.maps.LatLng(parseFloat(lat), parseFloat(lng))
+                    });
+                    map.setZoom(16);
+                    map.panTo(marker.position);
+                }
+            }
+            else
+            {
+                marker.setPosition( new google.maps.LatLng(lat, lng) );
+                map.panTo(marker.position);
+            }
+        };
+
+        var initialize = function() {
+            var mapOptions = {
+                center: { lat: 38.709792, lng: -9.133609},
+                zoom: 14
+            };
+
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+            if (typeof handover.coordinates !== 'undefined')
+            {
+                setMarker(handover.coordinates.lat, handover.coordinates.lng);
+            }
+
+            google.maps.event.addListener(map, "rightclick", function(event) {
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+                
+                setMarker(lat,lng);
+                $('#lat').val(lat);
+                $('#lng').val(lng);
+            });
+        };
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    }
+
     $booleans = $('.active-boolean');
     if ($booleans.length) {
         $booleans.click(function(e){

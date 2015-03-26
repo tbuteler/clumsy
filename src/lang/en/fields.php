@@ -44,12 +44,16 @@ return array(
 	'last_login'        => 'Last login: ',
 
 	'never'             => 'Never',
-
+	
 	'user_is_active'    => 'User is active.',
-
+	
 	'user_is_inactive'  => 'User has not yet activated account.',
-
+	
 	'user_is_suspended' => 'User is suspended.',
-
+	
 	'user_is_banned'    => 'User has been banned.',
+	
+	'latitude'          => 'Latitude',
+	
+	'longitude'         => 'Longitude'
 );
