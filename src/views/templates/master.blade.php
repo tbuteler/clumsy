@@ -14,6 +14,9 @@
             @section('title')
                 {{ $title or '' }}
             @show
+            @if (isset($filtersData))
+                <i class="glyphicon glyphicon-filter {{ $filtersData['hasFilters'] ? 'active' : '' }}" id="header-filter-btn" data-toggle="collapse" data-target="#filter-colapse"></i>
+            @endif
             </div>
             <div class="col-sm-3 after-title">
                @yield('after-title')

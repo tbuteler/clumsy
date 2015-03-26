@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -64,6 +65,34 @@ class AdminController extends APIController {
             if ($this->request->ajax()) return parent::index($data);
 
             $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
+
+            if ($this->model->filterables() != null) 
+            {
+                $query->customFilter();
+
+                $buffer = array();
+                $names = array();
+                $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
+                $hasFilters = false;
+                foreach ($this->model->filterables() as $column) {
+                    if ($activeFilters != null && array_key_exists($column,$activeFilters)) {
+                        $hasFilters = true;
+                        $buffer[$column] = $activeFilters[$column];
+                    }
+                    else{
+                        $buffer[$column] = null;
+                    }
+
+                    // Names:
+                    $names[$column] = isset($data['columns'][$column]) ? $data['columns'][$column] : $column;
+                }
+                $data['filtersData'] = array(
+                        'data' => $this->getFilterData($query,$this->model->filterables()), 
+                        'selected' => $buffer, 
+                        'hasFilters' => $hasFilters,
+                        'names' => $names
+                    );
+            }
             
             if (!isset($data['sortable']) || $data['sortable'])
             {
@@ -398,5 +427,25 @@ class AdminController extends APIController {
         }
 
         return Str::title(str_replace('_', ' ', snake_case($model)));
+    }
+
+    public function getFilterData($query, $columns)
+    {
+        $data = array();
+        foreach ($columns as $column) {
+            if(in_array($column, Schema::getColumnListing($this->model->getTable())))
+            {
+                $data[$column] = $query->distinct()->lists($column,$column);
+            }
+            else{
+                $buffer = explode('.',$column);
+                $model = new $buffer[0]();
+                $newColumn = $buffer[1];
+
+                $data[$column] = $model->distinct()->lists($newColumn,$newColumn);
+            }
+        }
+
+        return $data;
     }
 }
