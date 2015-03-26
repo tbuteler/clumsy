@@ -438,7 +438,7 @@ class AdminController extends APIController {
                 $data[$column] = $query->distinct()->lists($column,$column);
             }
             else{
-                $buffer = explode('_',$column);
+                $buffer = explode('.',$column);
                 $model = new $buffer[0]();
                 $newColumn = $buffer[1];
 
