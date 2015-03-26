@@ -38,6 +38,10 @@ class AdminController extends APIController {
     {
         parent::setupResource($route, $request);
 
+        // Resolve navbar before setting the resource as domain
+        View::share('navbar_wrapper', $this->view->resolve('navbar-wrapper'));
+        View::share('navbar', $this->view->resolve('navbar'));
+
         $this->view->domain = str_plural($this->resource);
 
         View::share('resource', $this->resource);
@@ -304,6 +308,11 @@ class AdminController extends APIController {
         {
             $parent_id_column = $this->model->parentIdColumn();
             $data['parent_field'] = Form::hidden($parent_id_column, $id ? $data['item']->$parent_id_column : Input::get('parent'));
+        }
+
+        if (!isset($data['suppress_delete']))
+        {
+            $data['suppress_delete'] = $this->model->suppress_delete;
         }
 
         return View::make($view, $data);

@@ -30,6 +30,8 @@ class BaseModel extends \Eloquent {
     public $parent_id_column = null;
     public $child_resource = null;
 
+    public $suppress_delete = false;
+
     public $media_slots = array();
     
     public $filters = array();

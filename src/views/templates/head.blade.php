@@ -18,6 +18,6 @@
     
     @if (Cartalyst\Sentry\Facades\Laravel\Sentry::check())
 
-        @include('clumsy::templates.navbar')
+        @include($navbar_wrapper)
 
     @endif
