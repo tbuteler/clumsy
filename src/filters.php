@@ -28,6 +28,10 @@ Route::filter('admin_auth', function()
 
 Route::filter('admin_assets', function()
 {
+    $admin_locale = Config::get('clumsy::admin_locale');
+    App::setLocale($admin_locale);
+    Config::set('app.locale', $admin_locale);
+
     Asset::enqueue('admin.css');
     Asset::enqueue('admin.js');
     Asset::json('admin', array(

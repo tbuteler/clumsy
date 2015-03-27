@@ -61,10 +61,6 @@ class CMSServiceProvider extends ServiceProvider {
         $admin_assets = include($path.'/assets/assets.php');
 		Asset::batchRegister($admin_assets);
 
-	    $admin_locale = Config::get('clumsy::admin_locale');
-	    $this->app->setLocale($admin_locale);
-	    Config::set('app.locale', $admin_locale);
-
 		require $path.'/macros/html.php';
 		require $path.'/macros/form.php';
 		require $path.'/filters.php';
