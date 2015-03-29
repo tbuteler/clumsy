@@ -9,6 +9,8 @@ return array(
 	'new_item'       => 'Adicionar :resource',
 	
 	'edit_item'      => 'Editar :resource',
+
+	'user'           => 'Usuário',
 	
 	'users'          => 'Usuários',
 	

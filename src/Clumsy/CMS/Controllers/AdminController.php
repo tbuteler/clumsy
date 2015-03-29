@@ -11,24 +11,31 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Str;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\Assets\Facade as Asset;
 use Clumsy\Eminem\Facade as MediaManager;
 use Clumsy\Utils\Facades\HTTP;
+use Clumsy\CMS\Support\Bakery;
+use Clumsy\CMS\Support\ResourceNameResolver;
 use Clumsy\CMS\Support\ViewResolver;
 
 class AdminController extends APIController {
 
+    protected $resource_plural;
+
     protected $view;
 
-    public function __construct(ViewResolver $view)
+    public function __construct(ViewResolver $view, Bakery $bakery, ResourceNameResolver $labeler)
     {
         parent::__construct();
 
         $this->view = $view;
+
+        $this->bakery = $bakery;
+
+        $this->labeler = $labeler;
     }
 
     /**
@@ -38,23 +45,28 @@ class AdminController extends APIController {
     {
         parent::setupResource($route, $request);
 
+        $this->resource_plural = str_plural($this->resource);
+
         // Resolve navbar before setting the resource as domain
         View::share('navbar_wrapper', $this->view->resolve('navbar-wrapper'));
         View::share('navbar', $this->view->resolve('navbar'));
 
-        $this->view->domain = str_plural($this->resource);
+        $this->view->setDomain(str_plural($this->resource));
+        $this->bakery->setPrefix($this->admin_prefix);
 
+        View::share('model', $this->model);
         View::share('resource', $this->resource);
-        View::share('display_name', $this->displayName());
-        View::share('display_name_plural', $this->displayNamePlural());
-        View::share('id', $route->getParameter($this->resource));
-        View::share('breadcrumb', '');
-        View::share('pagination', '');
+        
+        $id = $route->getParameter($this->resource);
+        View::share('id', $id);
+
+        View::share('breadcrumb', $this->bakery->breadcrumb($this->model_hierarchy, $this->action, $id));
 
         View::share('columns', $this->columns);
         View::share('order_equivalence', $this->order_equivalence);
         
         View::share('sortable', false);
+        View::share('pagination', '');
 
         Asset::json('admin', array(
             'prefix'   => $this->admin_prefix,
@@ -134,7 +146,7 @@ class AdminController extends APIController {
 
         if (!isset($data['title']))
         {
-            $data['title'] = $this->displayNamePlural();
+            $data['title'] = $this->labeler->displayNamePlural($this->model);
         }
 
         return View::make($this->view->resolve('index'), $data);
@@ -147,31 +159,9 @@ class AdminController extends APIController {
      */
     public function create($data = array())
     {
-        if (!isset($data['breadcrumb']))
-        {
-            if (!$this->model->isNested())
-            {
-                $data['breadcrumb'] = array(
-                    trans('clumsy::buttons.home') => URL::to($this->admin_prefix),
-                    $this->displayNamePlural()    => URL::route("{$this->admin_prefix}.{$this->resource}.index"),
-                    trans('clumsy::buttons.add')  => '',
-                );
-            }
-            else
-            {
-                $data['breadcrumb'] = array(
-                    trans('clumsy::buttons.home') => URL::to($this->admin_prefix),
-                    $this->parent_display_name_plural => URL::route("{$this->admin_prefix}.{$this->parent_resource}".'.index'),
-                    trans('clumsy::titles.edit_item', array('resource' => $this->parent_display_name)) => URL::route("{$this->admin_prefix}.{$this->parent_resource}".'.edit', Input::get('parent')),
-                    $this->displayNamePlural() => URL::route("{$this->admin_prefix}.{$this->parent_resource}".'.edit', Input::get('parent')),
-                    trans('clumsy::buttons.add') => '',
-                );
-            }
-        }
-
         if (!isset($data['title']))
         {
-            $data['title'] = trans('clumsy::titles.new_item', array('resource' => $this->displayName()));
+            $data['title'] = trans('clumsy::titles.new_item', array('resource' => $this->labeler->displayName($this->model)));
         }
 
         return $this->edit($id = null, $data);
@@ -224,33 +214,9 @@ class AdminController extends APIController {
             $data['item'] = $this->model->find($id);
         }
 
-        if (!isset($data['breadcrumb']))
-        {
-            if (!$this->model->isNested())
-            {
-                $data['breadcrumb'] = array(
-                    trans('clumsy::buttons.home') => URL::to($this->admin_prefix),
-                    $this->displayNamePlural()    => URL::route("{$this->admin_prefix}.{$this->resource}.index"),
-                    trans('clumsy::buttons.edit') => '',
-                );
-            }
-            else
-            {
-                $parent_id = $this->model->parentItemId($id);
-
-                $data['breadcrumb'] = array(
-                    trans('clumsy::buttons.home') => URL::to($this->admin_prefix),
-                    $this->parent_display_name_plural => URL::route("{$this->admin_prefix}.{$this->parent_resource}".'.index'),
-                    trans('clumsy::titles.edit_item', array('resource' => $this->parent_display_name)) => URL::route("{$this->admin_prefix}.{$this->parent_resource}".'.edit', $parent_id),
-                    $this->displayNamePlural() => URL::route("{$this->admin_prefix}.{$this->parent_resource}".'.edit', $parent_id),
-                    trans('clumsy::buttons.edit') => '',
-                );
-            }
-        }
-
         if (!isset($data['title']))
         {
-            $data['title'] = trans('clumsy::titles.edit_item', array('resource' => $this->displayName()));
+            $data['title'] = trans('clumsy::titles.edit_item', array('resource' => $this->labeler->displayName($this->model)));
         }
 
         $data['form_fields'] = $this->view->resolve('fields');
@@ -259,16 +225,18 @@ class AdminController extends APIController {
 
         if ($id && $this->model->hasChildren())
         {    
-            $data['add_child'] = HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$this->child_resource}.create"), 'parent', $id);
-            $data['child_resource'] = $this->child_resource;
-            $data['children_title'] = $this->child_display_name ? $this->displayNamePlural($this->child_display_name) : $this->displayNamePlural($this->child_resource);
+            $child = head($this->model_hierarchy['children']);
+
+            $data['add_child'] = HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child->resource_name}.create"), 'parent', $id);
+            $data['child_resource'] = $child->resource_name;
+            $data['children_title'] = $this->labeler->displayNamePlural($child);
 
             if (!isset($data['children']))
             {
-                $query = $this->child_model->select('*')->where($this->child_model->parentIdColumn(), $id)->orderSortable();
+                $query = $child->select('*')->where($child->parentIdColumn(), $id)->orderSortable();
                 $data['sortable'] = true;
 
-                $per_page = property_exists($this->child_model, 'admin_per_page') ? $this->child_model->admin_per_page : Config::get('clumsy::per_page');
+                $per_page = property_exists($child, 'admin_per_page') ? $child->admin_per_page : Config::get('clumsy::per_page');
 
                 if ($per_page)
                 {
@@ -283,7 +251,7 @@ class AdminController extends APIController {
 
             if (!isset($data['child_columns']))
             {
-                $data['child_columns'] = $this->child_model->columns();
+                $data['child_columns'] = $child->columns();
             }
 
             $view = $this->view->resolve('edit-nested');
@@ -378,48 +346,6 @@ class AdminController extends APIController {
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_deleted'),
         ));
-    }
-
-    public function displayName($model = false)
-    {
-        if (!$model)
-        {
-            $model = $this->model ? $this->model->displayName() : false;
-            
-            if (!$model)
-            {
-                $model = $this->resource;
-            }
-        }
-        elseif (is_object($model))
-        {
-            $model = $model->displayName() ? $model->displayName() : class_basename($model);
-        }
-
-        return Str::title(str_replace('_', ' ', snake_case($model)));
-    }
-
-    public function displayNamePlural($model = false)
-    {
-        if (!$model)
-        {
-            $model = $this->model ? $this->model->displayNamePlural() : false;
-            
-            if (!$model)
-            {
-                $model = $this->resource_plural;
-            }
-        }
-        elseif (is_object($model))
-        {
-            $model = $model->displayNamePlural() ? $model->displayNamePlural() : str_plural(class_basename($model));
-        }
-        else
-        {
-            $model = str_plural($model);
-        }
-
-        return Str::title(str_replace('_', ' ', snake_case($model)));
     }
 
     public function getFilterData($query, $columns)

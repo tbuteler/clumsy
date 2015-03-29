@@ -21,29 +21,23 @@ use Clumsy\Utils\Facades\HTTP;
 
 class APIController extends Controller {
 
+    protected $route;
 	protected $request;
+    protected $action;
 
-    protected $resource = '';
-    protected $resource_plural = '';
-    protected $model_namespace = '';
-    protected $model_base_name = '';
-    protected $model = '';
-    protected $display_name = '';
-    protected $display_name_plural = '';
-    
-    protected $columns = '';
-	protected $order_equivalence = array();
+    protected $resource;
+    protected $model_namespace;
+    protected $model_base_name;
+    protected $model;
 
-    protected $parent_resource = '';
-    protected $parent_model_base_name = '';
-    protected $parent_model = '';
-    protected $parent_display_name = '';
-    protected $parent_display_name_plural = '';
+    protected $columns;
+    protected $order_equivalence = array();
 
-    protected $child_resource = '';
-    protected $child_model_base_name = '';
-    protected $child_model = '';
-    protected $child_display_name = '';
+    protected $model_hierarchy = array(
+        'current'  => null,
+        'parents'  => array(),
+        'children' => array(),
+    );
 
     public function __construct()
     {
@@ -62,22 +56,50 @@ class APIController extends Controller {
         return $this->model_base_name;
     }
 
+    protected function parseParents($model)
+    {
+        if ($model->isNested())
+        {
+            $parent_model_base_name = $model->parentModel();
+
+            $parent_model = new $parent_model_base_name;
+
+            array_unshift($this->model_hierarchy['parents'], $parent_model);
+
+            $this->parseParents($parent_model);
+        }
+    }
+
+    protected function parseChildren($model)
+    {
+        if ($model->hasChildren())
+        {
+            $child_model_base_name = $model->childModel();
+
+            $this->model_hierarchy['children'][] = new $child_model_base_name;
+        }
+    }
+
     /**
      * Prepare generic processing of resources base on current route
      */
     public function setupResource(Route $route, Request $request)
     {        
+        $this->route = $route;
         $this->request = $request;
 
-        $this->admin_prefix = $route->getPrefix();
+        $this->admin_prefix = $this->route->getPrefix();
 
         $this->columns = Config::get('clumsy::default_columns');
 
-        if (strpos($route->getName(), '.'))
+        $route_name = $this->admin_prefix ? str_replace("{$this->admin_prefix}.", '', $this->route->getName()) : $this->route->getName();
+
+        if (str_contains($route_name, '.'))
         {
-            $resource_arr = explode('.', $route->getName());
-            $this->resource = $resource_arr[1];
-            $this->resource_plural = str_plural($this->resource);
+            $route_array = explode('.', $route_name);
+            $this->action = last($route_array);
+            $this->resource = head($route_array);
+
             $this->model_base_name = studly_case($this->resource);
 
             if ($this->modelClass())
@@ -86,39 +108,12 @@ class APIController extends Controller {
                 $this->model = new $model_name;
                 $this->columns = $this->model->columns();
                 $this->order_equivalence = $this->model->orderEquivalence();
-            }
-        }
 
-        if ($this->model && $this->model->isNested())
-        {
-            $this->parent_resource = $this->model->parentResource();
-            $parent_model_base_name = $this->model->parentModel();
-            $this->parent_model_base_name = $parent_model_base_name;
-            $this->parent_model = new $parent_model_base_name;
-            
-            $this->parent_display_name = $this->parent_model->displayName();
-            if (!$this->parent_display_name)
-            {
-                $this->parent_display_name = $this->displayName($this->parent_model_base_name);
-            }
-            
-            $this->parent_display_name_plural = $this->parent_model->displayNamePlural();
-            if (!$this->parent_display_name_plural)
-            {
-                $this->parent_display_name_plural = $this->displayNamePlural($this->parent_model_base_name);
-            }
+                $this->model_hierarchy['current'] = $this->model;
 
-            $this->parent_display_name = studly_case($this->parent_display_name);
-            $this->parent_display_name_plural = studly_case($this->parent_display_name_plural);
-        }
-
-        if ($this->model && $this->model->hasChildren())
-        {
-            $this->child_resource = $this->model->childResource();
-            $child_model_base_name = $this->model->childModel();
-            $this->child_model_base_name = $child_model_base_name;
-            $this->child_model = new $child_model_base_name;
-            $this->child_display_name = $this->child_model->displayNamePlural();
+                $this->parseParents($this->model);
+                $this->parseChildren($this->model);
+            }
         }
     }
 

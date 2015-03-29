@@ -46,7 +46,7 @@ class ExternalResourceController extends AdminController {
     {
         return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
             'alert_status' => 'warning',
-            'alert'        => trans('clumsy::alerts.import.required', array('resources' => $this->displayNamePlural())),
+            'alert'        => trans('clumsy::alerts.import.required', array('resources' => $this->labeler->displayNamePlural($this->model))),
         ));
     }
 
@@ -119,21 +119,21 @@ class ExternalResourceController extends AdminController {
                 // General success
                 return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
                     'alert_status' => 'success',
-                    'alert'        => trans('clumsy::alerts.import.success', array('resources' => $this->displayNamePlural($model))),
+                    'alert'        => trans('clumsy::alerts.import.success', array('resources' => $this->labeler->displayNamePlural($model))),
                 ));
             }
 
             // General failure message
             return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
                 'alert_status' => 'warning',
-                'alert'        => trans('clumsy::alerts.import.fail', array('resources' => $this->displayNamePlural($model))),
+                'alert'        => trans('clumsy::alerts.import.fail', array('resources' => $this->labeler->displayNamePlural($model))),
             ));
         }
         else
         {
             return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
                 'alert_status' => 'warning',
-                'alert'        => trans('clumsy::alerts.import.undefined', array('resources' => $this->displayNamePlural($model))),
+                'alert'        => trans('clumsy::alerts.import.undefined', array('resources' => $this->labeler->displayNamePlural($model))),
             ));
         }
     }

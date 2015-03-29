@@ -6,7 +6,7 @@ class ViewResolver {
 
 	protected $view;
 
-	public $domain = null;
+	protected $domain;
 
 	public function __construct(Application $app)
 	{
@@ -18,7 +18,17 @@ class ViewResolver {
 		return 'admin';
 	}
 
-	protected function getFullDomain()
+	public function setDomain($domain)
+	{
+		$this->domain = $domain;
+	}
+
+	public function getDomain()
+	{
+		return $this->domain;
+	}
+
+	public function getFullDomain()
 	{
 		$prefix = $this->getDomainPrefix();
 		

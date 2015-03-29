@@ -19,4 +19,14 @@ class User extends BaseModel {
             'email'      => trans('clumsy::fields.email'),
         );
     }
+
+    public function displayName()
+    {
+        return trans('clumsy::titles.user');
+    }
+
+    public function displayNamePlural()
+    {
+        return trans('clumsy::titles.users');
+    }
 }

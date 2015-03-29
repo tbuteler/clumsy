@@ -12,17 +12,19 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Lang;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\CMS\Controllers\AdminController;
+use Clumsy\CMS\Support\Bakery;
+use Clumsy\CMS\Support\ResourceNameResolver;
 use Clumsy\CMS\Support\ViewResolver;
 
 class UsersController extends AdminController {
 
-    public function __construct(ViewResolver $view)
+    public function __construct(ViewResolver $view, Bakery $bakery, ResourceNameResolver $labeler)
     {
 		$this->beforeFilter('@checkPermissions');
 
         $this->model_namespace = '\Clumsy\CMS\Models';
 
-        parent::__construct($view);
+        parent::__construct($view, $bakery, $labeler);
     }
 
 	public function checkPermissions(Route $route, Request $request)
@@ -76,8 +78,7 @@ class UsersController extends AdminController {
 		$rules = array_merge(
 			$this->model->rules,
 			array(
-				'password' => 'required|min:6|max:255',
-				'confirm_password' => 'required|same:password',
+				'password' => 'required|confirmed|min:6|max:255',
 			)
 		);
 
@@ -181,8 +182,7 @@ class UsersController extends AdminController {
 
 		if ($new_password = (Input::has('new_password') && Input::get('new_password') != '')) {
 
-			$rules['new_password'] = 'required|min:6|max:255';
-			$rules['confirm_new_password'] = 'required|same:new_password';
+			$rules['new_password'] = 'required|confirmed|min:6|max:255';
 		}
 
 		$validator = Validator::make($data = Input::all(), $rules);
@@ -203,7 +203,7 @@ class UsersController extends AdminController {
 			$data['password'] = $data['new_password'];
 		}
 		unset($data['new_password']);
-		unset($data['confirm_new_password']);
+		unset($data['new_password_confirmation']);
 
 		$user = Sentry::findUserById($id);
 

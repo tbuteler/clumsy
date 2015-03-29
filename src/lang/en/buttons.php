@@ -2,8 +2,6 @@
 
 return array(
 
-    'home'          => 'Home',
-
     'login'         => 'Login',
 
     'logout'        => 'Log out',

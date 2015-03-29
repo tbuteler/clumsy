@@ -10,6 +10,8 @@ return array(
 	
 	'edit_item'      => 'Edit :resource',
 	
+	'user'           => 'User',
+
 	'users'          => 'Users',
 	
 	'profile'        => 'Profile',

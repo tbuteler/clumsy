@@ -18,7 +18,7 @@ return array(
 
 	'password'         => 'Password',
 
-	'confirm_password' => 'Confirm password',
+	'password_confirmation' => 'Confirm password',
 
 	'reset-password'   => 'Reset password',
 
@@ -30,7 +30,7 @@ return array(
 
 	'new_password'     => 'New password',
 
-	'confirm_new_password' => 'Confirm new password',
+	'new_password_confirmation' => 'Confirm new password',
 
 	'roles' => array(
 
