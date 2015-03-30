@@ -96,7 +96,6 @@ class AdminController extends APIController {
             if ($this->model->filters())
             {
                 $query->customFilter();
-
                 $buffer = array();
                 $names = array();
                 $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
@@ -114,7 +113,15 @@ class AdminController extends APIController {
                     }
 
                     // Names:
-                    $names[$column] = isset($data['columns'][$column]) ? $data['columns'][$column] : $column;
+                    if (strpos($column,'.') !== false) {
+                        $otherBuffer = explode('.',$column);
+                        $modelName = studly_case($otherBuffer[0]);
+                        $model = new $modelName();
+                        $names[$column] = $model->columns[$otherBuffer[1]];
+                    }
+                    else{
+                        $names[$column] = isset($data['columns'][$column]) ? $data['columns'][$column] : $column;
+                    }
                 }
 
                 $data['filtersData'] = array(
