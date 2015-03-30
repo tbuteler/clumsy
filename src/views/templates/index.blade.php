@@ -4,7 +4,7 @@
 
     @if (isset($importer) && $importer)
         <a href="{{ route('_import', $resource) }}">
-            <button type="button" class="btn btn-primary add-new">{{ trans('clumsy::buttons.import', array('resources' => $display_name_plural)) }}</button>
+            <button type="button" class="btn btn-primary add-new">{{ trans('clumsy::buttons.import', array('resources' => $model->displayNamePlural())) }}</button>
         </a>
     @else
         <a href="{{ route("$admin_prefix.$resource.create") }}">

@@ -20,11 +20,11 @@ class UsersController extends AdminController {
 
     public function __construct(ViewResolver $view, Bakery $bakery, ResourceNameResolver $labeler)
     {
-		$this->beforeFilter('@checkPermissions');
-
         $this->model_namespace = '\Clumsy\CMS\Models';
 
         parent::__construct($view, $bakery, $labeler);
+
+		$this->beforeFilter('@checkPermissions');
     }
 
 	public function checkPermissions(Route $route, Request $request)

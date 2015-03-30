@@ -10,7 +10,7 @@ class ViewResolver {
 
 	public function __construct(Application $app)
 	{
-		$this->view = $app->make('clumsy.view-resolver');
+		$this->view = $app->make('clumsy.view-resolver-factory');
 	}
 
 	protected function getDomainPrefix()

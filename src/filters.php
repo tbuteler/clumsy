@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Lang;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\Assets\Facade as Asset;
+use Clumsy\CMS\Facades\ViewResolver;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,21 +48,8 @@ Route::filter('admin_assets', function()
 
     View::share('admin_prefix', Config::get('clumsy::admin_prefix'));
 
-    $navbar = false;
-
-    if (View::exists('admin.navbar'))
-    {
-        $navbar = 'admin.navbar';
-    }
-    elseif (View::exists('admin.templates.navbar'))
-    {
-        $navbar = 'admin.templates.navbar';
-    }
-
-    if ($navbar)
-    {
-        View::share('navbar', View::make($navbar)->render());
-    }
+    View::share('navbar_wrapper', ViewResolver::resolve('navbar-wrapper'));
+    View::share('navbar', ViewResolver::resolve('navbar'));
 
     $alert = $alert_status = false;
 

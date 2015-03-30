@@ -84,7 +84,7 @@ class APIController extends Controller {
      * Prepare generic processing of resources base on current route
      */
     public function setupResource(Route $route, Request $request)
-    {        
+    {
         $this->route = $route;
         $this->request = $request;
 

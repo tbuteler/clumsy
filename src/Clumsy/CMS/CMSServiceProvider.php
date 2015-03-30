@@ -31,11 +31,12 @@ class CMSServiceProvider extends ServiceProvider {
         $this->app['clumsy'] = new Clumsy;
 
 		// Bind view resolver conditionally so we can provide legacy support for Laravel 4.1
-		$this->app->bind('clumsy.view-resolver',
+		$this->app->bind('clumsy.view-resolver-factory',
 			class_exists('Illuminate\View\Environment')
 				? 'Illuminate\View\Environment' // Laravel 4.1
 				: 'Illuminate\View\Factory'		// Laravel 4.2+
 		);
+		$this->app['clumsy.view-resolver'] = $this->app->make('Clumsy\CMS\Support\ViewResolver');
 
         $this->app['command.clumsy.publish'] = $this->app->share(function($app)
             {
