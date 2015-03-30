@@ -69,7 +69,6 @@ class AdminController extends APIController {
             if ($this->model->filterables() != null) 
             {
                 $query->customFilter();
-
                 $buffer = array();
                 $names = array();
                 $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
