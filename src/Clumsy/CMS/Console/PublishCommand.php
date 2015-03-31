@@ -5,9 +5,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
 /**
- * Publish the Debugbar assets to the public directory
+ * Publish the Clumsy assets to the public directory
  *
- * @author Barry vd. Heuvel <barryvdh@gmail.com>
+ * @author Tomas Buteler <tbuteler@gmail.com>
  */
 class PublishCommand extends Command {
 
