@@ -1,7 +1,7 @@
-<h3 class="page-header clearfix">
-	{{ trans('clumsy::titles.locator') }}
-</h3>
 <div class="row">
+	<h3 class="page-header clearfix">
+		{{ trans('clumsy::titles.locator') }}
+	</h3>
 	<div class="col-sm-4">
 		{{ Form::field($lat, trans('clumsy::fields.latitude')) }}
 		{{ Form::field($lng, trans('clumsy::fields.longitude')) }}
