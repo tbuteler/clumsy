@@ -10,11 +10,11 @@
 						<tr>
 							<th>{{ $filtersData['names'][$column] }}</th>
 							<td>
-							{{	Form::dropdown('filter_'.$column, 
+							{{	Form::dropdown('filter_'.str_replace('.',':',$column), 
 			                                ' ', 
 			                                array(null => '') + $items,
 			                                $filtersData['selected'][$column],
-			                                array('field' => array('data-name' => $column, 'multiple' => 'multiple', 'data-placeholder' => 'Seleccionar...'))
+			                                array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => 'Seleccionar...'))
 			                            );
 		                    }}
 							</td>
@@ -35,7 +35,7 @@
 			        @foreach ($filtersData['selected'] as $column => $values)
 			            @if ($values != null) 
 			                @foreach ($values as $value)
-			                    {{ Form::text($column.'[]',$value) }}
+			                    {{ Form::text(str_replace('.',':',$column).'[]',$value) }}
 			                @endforeach
 			            @endif
 			        @endforeach
