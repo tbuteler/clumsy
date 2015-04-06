@@ -197,6 +197,49 @@ class BaseModel extends \Eloquent {
         return $query;
     }
 
+    public function scopeCustomFilter($query)
+    {
+        if (Session::has("clumsy.filter.{$this->resource_name}")){
+            $buffer = Session::get("clumsy.filter.{$this->resource_name}");
+            foreach ($buffer as $column => $values) {
+                if (in_array($column, Schema::getColumnListing($this->getTable())))
+                {
+                    $query->Where(function($query) use ($values, $column){
+                        $i = 0;
+                        foreach ($values as $item) {
+                            if ($i == 0) {
+                                $query->Where($column,$item);   
+                            }
+                            else{
+                                $query->orWhere($column,$item);
+                            }
+                            $i++;
+                        }
+                    });
+                }
+                else{
+                    $buffer = explode('.',$column);
+                    $model = $buffer[0];
+                    $newColumn = $buffer[1];
+                    $query->whereHas($model, function($query) use ($newColumn,$values){
+                        $query->Where(function($query) use ($values, $newColumn){
+                            $i = 0;
+                            foreach ($values as $item) {
+                                if ($i == 0) {
+                                    $query->Where($newColumn,$item);   
+                                }
+                                else{
+                                    $query->orWhere($newColumn,$item);
+                                }
+                                $i++;
+                            }
+                        });
+                    });
+                }
+            }
+        }
+    }
+
     public function rowClass()
     {
         return '';
