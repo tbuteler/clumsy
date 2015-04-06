@@ -23,9 +23,9 @@ class BackEndController extends Controller {
 
     public function filter($resource)
     {
-        
         $buffer = array();
         foreach (Input::except('_token') as $column => $values) {
+            $column = str_replace(':','.',$column);
             $buffer[$column] = $values;
         }
 
