@@ -238,7 +238,6 @@ class LegacyModel extends \Eloquent {
     {
         if (Session::has("clumsy.filter.{$this->resource_name}")){
             $buffer = Session::get("clumsy.filter.{$this->resource_name}");
-
             foreach ($buffer as $column => $values) {
                 if (in_array($column, Schema::getColumnListing($this->getTable())))
                 {
@@ -259,7 +258,6 @@ class LegacyModel extends \Eloquent {
                     $buffer = explode('.',$column);
                     $model = $buffer[0];
                     $newColumn = $buffer[1];
-                    
                     $query->whereHas($model, function($query) use ($newColumn,$values){
                         $query->Where(function($query) use ($values, $newColumn){
                             $i = 0;
