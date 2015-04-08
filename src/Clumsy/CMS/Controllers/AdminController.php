@@ -357,10 +357,10 @@ class AdminController extends APIController {
 
     public function getFilterData($query, $columns)
     {
-        $queryaux = clone $query;
         $data = array();
         foreach ($columns as $column)
         {
+            $queryaux = clone $query;
             if(in_array($column, Schema::getColumnListing($this->model->getTable())))
             {
                 $data[$column] = $queryaux->distinct()->lists($column,$column);
