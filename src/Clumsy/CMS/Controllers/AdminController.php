@@ -218,7 +218,7 @@ class AdminController extends APIController {
     {
         if (!isset($data['item']))
         {
-            $data['item'] = $this->model->find($id);
+            $data['item'] = $id ? $this->model->find($id) : $this->model;
         }
 
         if (!isset($data['title']))

@@ -2,15 +2,7 @@
 
 @section('master')
 
-    @if (isset($item))
-
-        {{ Form::model($item, array('method' => 'put', 'route' => array("$admin_prefix.$resource.update", $item->id), 'id' => 'main-form', 'autocomplete' => 'off')) }}
-
-    @else
-
-        {{ Form::open(array('url' => route("$admin_prefix.$resource.store"), 'id' => 'main-form')) }}
-
-    @endif
+    {{ Form::model($item, array('method' => ($item->exists ? 'put' : 'post'), 'route' => ($item->exists ? array("$admin_prefix.$resource.update", $item->id) : "$admin_prefix.$resource.store"), 'id' => 'main-form', 'autocomplete' => 'off')) }}
 
     @include($form_fields)
 
