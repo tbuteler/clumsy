@@ -3,9 +3,9 @@
 <div class="container master">
 
     @section('breadcrumb')
-    @if (isset($breadcrumb) && $breadcrumb)
-        {{ HTML::breadcrumb($breadcrumb) }}
-    @endif
+        @if (isset($breadcrumb) && $breadcrumb)
+            {{ HTML::breadcrumb($breadcrumb) }}
+        @endif
     @show
 
     <h1 class="page-header first">

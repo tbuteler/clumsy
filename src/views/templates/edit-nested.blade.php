@@ -2,7 +2,7 @@
 
 @section('after-content')
 
-    @if (isset($item))
+    @if ($item->exists)
 
 	    <h1 class="page-header">
 	        <div class="row">
@@ -10,7 +10,7 @@
 		        	{{ $children_title }}
 		        </div>
 				<div class="col-sm-3 after-title">
-		        	<a href="{{ $add_child }}"><button type="button" class="btn btn-success add-new">{{ trans('clumsy::buttons.add') }}</button></a>
+		        	<a href="{{ $add_child }}" class="btn btn-success add-new">{{ trans('clumsy::buttons.add') }}</a>
 				</div>
 	    	</div>
 	    </h1>
