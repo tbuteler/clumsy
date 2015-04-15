@@ -22,6 +22,10 @@ class LegacyModel extends \Eloquent {
     public $required_by = array();
 
     public $columns;
+    public $column_equivalence = array();
+
+    public $all_columns = array();
+
     public $rules = array();
     public $booleans = array();
     public $active_booleans = array();
@@ -38,6 +42,7 @@ class LegacyModel extends \Eloquent {
     public $media_slots = array();
 
     public $filters = array();
+    public $filter_equivalence = array();
 
     public function __construct(array $attributes = array())
     {
@@ -95,17 +100,53 @@ class LegacyModel extends \Eloquent {
 
     public function columns()
     {
-        return $this->columns ? $this->columns : Config::get('clumsy::default_columns');
+        return (array)($this->columns ? $this->columns : Config::get('clumsy::default_columns'));
+    }
+
+    public function columnEquivalence()
+    {
+        return (array)($this->column_equivalence);
+    }
+
+    public function allColumns()
+    {
+        return (array)($this->all_columns);
+    }
+
+    public function columnNames()
+    {
+        $columnNames = array();
+        $equivalences = array_flip($this->columnEquivalence());
+        $columns = $this->allColumns() + $this->columns();
+
+        foreach (array_merge(array_keys($equivalences), array_keys($columns)) as $column)
+        {
+            $original = $column;
+            
+            if (!isset($columns[$column]))
+            {
+                $column = $equivalences[$column];
+            }
+
+            $columnNames[$original] = $columns[$column];
+        }
+
+        return $columnNames;
     }
 
     public function booleans()
     {
-        return $this->booleans + $this->active_booleans;
+        return (array)($this->booleans + $this->active_booleans);
     }
 
     public function filters()
     {
-        return $this->filters;
+        return (array)$this->filters;
+    }
+
+    public function filterEquivalence()
+    {
+        return (array)($this->columnEquivalence() + $this->filter_equivalence);
     }
 
     public function isNested()
@@ -176,7 +217,7 @@ class LegacyModel extends \Eloquent {
 
     public function orderEquivalence()
     {
-        return $this->order_equivalence;
+        return (array)($this->columnEquivalence() + $this->order_equivalence);
     }
 
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
@@ -236,38 +277,42 @@ class LegacyModel extends \Eloquent {
 
     public function scopeCustomFilter($query)
     {
-        if (Session::has("clumsy.filter.{$this->resource_name}")){
+        if (Session::has("clumsy.filter.{$this->resource_name}"))
+        {
             $buffer = Session::get("clumsy.filter.{$this->resource_name}");
-            foreach ($buffer as $column => $values) {
+            foreach ($buffer as $column => $values)
+            {
+                $equivalence = $this->filterEquivalence();
+                $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
+
+                // If the column exists in the table, use it
                 if (in_array($column, Schema::getColumnListing($this->getTable())))
                 {
-                    $query->Where(function($query) use ($values, $column){
+                    $query->where(function($query) use($values, $column)
+                    {
                         $i = 0;
-                        foreach ($values as $item) {
-                            if ($i == 0) {
-                                $query->Where($column,$item);   
-                            }
-                            else{
-                                $query->orWhere($column,$item);
-                            }
+                        foreach ($values as $item)
+                        {
+                            $where = $i === 0 ? 'where' : 'orWhere';
+                            $query->$where($column, $item);
                             $i++;
                         }
                     });
                 }
-                else{
-                    $buffer = explode('.',$column);
-                    $model = $buffer[0];
-                    $newColumn = $buffer[1];
-                    $query->whereHas($model, function($query) use ($newColumn,$values){
-                        $query->Where(function($query) use ($values, $newColumn){
+                // Otherwise, assume it's a nested filter and
+                // look for the column in the child model
+                else
+                {
+                    list($model, $newColumn) = explode('.', $column);
+                    $query->whereHas($model, function($query) use($newColumn, $values)
+                    {
+                        $query->where(function($query) use($values, $newColumn)
+                        {
                             $i = 0;
-                            foreach ($values as $item) {
-                                if ($i == 0) {
-                                    $query->Where($newColumn,$item);   
-                                }
-                                else{
-                                    $query->orWhere($newColumn,$item);
-                                }
+                            foreach ($values as $item)
+                            {
+                                $where = $i === 0 ? 'where' : 'orWhere';
+                                $query->$where($newColumn, $item);
                                 $i++;
                             }
                         });
@@ -275,6 +320,57 @@ class LegacyModel extends \Eloquent {
                 }
             }
         }
+    }
+
+    public function getFilterData($query)
+    {
+        $data = array();
+        
+        foreach ($this->filters() as $column)
+        {
+            $values = array();
+
+            $queryaux = clone $query;
+
+            $filter_key = $column;
+
+            $equivalence = $this->filterEquivalence();
+            $column = array_key_exists($column, $equivalence) ? array_get($equivalence, $column) : $column;
+
+            // If the column exists in the table, use it
+            if(in_array($column, Schema::getColumnListing($this->getTable())))
+            {
+                $items = $queryaux->select($column)->distinct()->get();
+            }
+            // Otherwise, assume it's a nested filter and
+            // look for the column in the child model
+            else
+            {
+                list($model, $column) = explode('.', $column);
+                $items = $model->select($column)->distinct()->get();
+            }
+            
+            // If the column is a boolean, use 'yes' or 'no' values
+            if (in_array($filter_key, (array)$this->booleans()) && !$this->hasGetMutator($filter_key))
+            {
+                $items->each(function($item) use($column, $filter_key, &$values)
+                {
+                    $values[$item->getAttributeFromArray($column)] = $item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+                });
+            }
+            // Otherwise, use the default attribute (will use get mutator, if available)
+            else
+            {
+                $items->each(function($item) use($column, $filter_key, &$values)
+                {
+                    $values[$item->getAttributeFromArray($column)] = $item->$filter_key;
+                });
+            }
+
+            $data[$column] = $values;
+        }
+
+        return $data;
     }
 
     public function rowClass()

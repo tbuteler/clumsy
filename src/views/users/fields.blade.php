@@ -41,7 +41,8 @@
 
     </div>
 
-    @if ($item)
+    @if ($item->exists)
+
         <div class="col-md-4">
 
             <h4 class="page-header lead section-header">{{ trans('clumsy::titles.user_control') }}</h4>

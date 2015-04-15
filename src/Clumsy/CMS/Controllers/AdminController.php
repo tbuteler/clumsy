@@ -102,7 +102,12 @@ class AdminController extends APIController {
                 $hasFilters = false;
                 foreach ($this->model->filters() as $column)
                 {
-                    if ($activeFilters != null && array_key_exists($column,$activeFilters))
+                    $original = $column;
+                    
+                    $equivalence = $this->model->filterEquivalence();
+                    $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
+
+                    if ($activeFilters != null && array_key_exists($column, $activeFilters))
                     {
                         $hasFilters = true;
                         $buffer[$column] = $activeFilters[$column];
@@ -112,23 +117,28 @@ class AdminController extends APIController {
                         $buffer[$column] = null;
                     }
 
-                    // Names:
-                    if (strpos($column,'.') !== false) {
-                        $otherBuffer = explode('.',$column);
+                    // Names
+                    if (strpos($column, '.') !== false)
+                    {
+                        $otherBuffer = explode('.', $column);
                         $modelName = studly_case($otherBuffer[0]);
                         $model = new $modelName();
-                        $names[$column] = $model->columns[$otherBuffer[1]];
+                        $model_column_names = $model->columnNames();
+                        $names[$column] = $model_column_names[$otherBuffer[1]];
                     }
-                    else{
-                        $names[$column] = isset($data['columns'][$column]) ? $data['columns'][$column] : $column;
+                    else
+                    {
+                        $column_names = $this->model->columnNames() + $data['columns'];
+
+                        $names[$column] = isset($column_names[$column]) ? $column_names[$column] : $column;
                     }
                 }
 
                 $data['filtersData'] = array(
-                    'data' => $this->getFilterData($query,$this->model->filters()), 
-                    'selected' => $buffer, 
+                    'data'       => $this->model->getFilterData($query),
+                    'selected'   => $buffer,
                     'hasFilters' => $hasFilters,
-                    'names' => $names
+                    'names'      => $names,
                 );
             }
             
@@ -353,28 +363,5 @@ class AdminController extends APIController {
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_deleted'),
         ));
-    }
-
-    public function getFilterData($query, $columns)
-    {
-        $data = array();
-        foreach ($columns as $column)
-        {
-            $queryaux = clone $query;
-            if(in_array($column, Schema::getColumnListing($this->model->getTable())))
-            {
-                $data[$column] = $queryaux->distinct()->lists($column,$column);
-            }
-            else
-            {
-                $buffer = explode('.', $column);
-                $model = new $buffer[0];
-                $newColumn = $buffer[1];
-
-                $data[$column] = $model->distinct()->lists($newColumn,$newColumn);
-            }
-        }
-
-        return $data;
     }
 }
