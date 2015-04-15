@@ -38,20 +38,20 @@ return array(
 
 		'editor'		=> 'Editor',
 
-		'user'			=> 'Usuário',
+		'user'			=> 'Utilizador',
 	),
 
 	'last_login'        => 'Último login: ',
 
 	'never'             => 'Nunca',
 
-	'user_is_active'    => 'O usuário está ativado.',
+	'user_is_active'    => 'O utilizador está activo.',
 
-	'user_is_inactive'  => 'O usuário ainda não ativou a conta.',
+	'user_is_inactive'  => 'O utilizador ainda não activou a conta.',
 
-	'user_is_suspended' => 'O usuário está suspenso.',
+	'user_is_suspended' => 'O utilizador está suspenso.',
 
-	'user_is_banned'    => 'O usuário foi banido.',
+	'user_is_banned'    => 'O utilizador foi banido.',
 
 	'latitude'          => 'Latitude',
 	

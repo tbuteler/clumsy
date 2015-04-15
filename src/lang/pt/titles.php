@@ -10,15 +10,15 @@ return array(
 	
 	'edit_item'      => 'Editar :resource',
 
-	'user'           => 'Usuário',
+	'user'           => 'Utilizador',
 	
-	'users'          => 'Usuários',
+	'users'          => 'Utilizadores',
 	
 	'profile'        => 'Perfil',
 	
-	'new_user'       => 'Novo usuário',
+	'new_user'       => 'Novo utilizador',
 	
-	'edit_user'      => 'Editar usuário',
+	'edit_user'      => 'Editar utilizador',
 	
 	'user_control'   => 'Controlo de login',
 

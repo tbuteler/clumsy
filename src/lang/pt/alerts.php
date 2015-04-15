@@ -20,17 +20,17 @@ return array(
 
 	'user'   => array(
 
-		'added'     => 'Novo usuário adicionado com sucesso.',
+		'added'     => 'Novo utilizador adicionado com sucesso.',
 
-		'updated'   => 'O usuário foi actualizado com sucesso.',
+		'updated'   => 'O utilizador foi actualizado com sucesso.',
 
-		'deleted'   => 'O usuário foi removido.',
+		'deleted'   => 'O utilizador foi removido.',
 
-		'delete_confirm' => 'Tem certeza que deseja remover este usuário?',
+		'delete_confirm' => 'Tem certeza que deseja remover este utilizador?',
 
-		'suicide'   => 'Não é possível remover o seu próprio usuário.',
+		'suicide'   => 'Não é possível remover o seu próprio utilizador.',
 
-		'forbidden' => 'Não tem permissões para gerenciar usuários.',
+		'forbidden' => 'Não tem permissões para gerenciar utilizadores.',
 	),
 
 	'auth'   => array(
@@ -41,13 +41,13 @@ return array(
 
         'wrong_password'    => 'Palavra-passe inválida, tente novamente.',
 
-        'unknown_user'      => 'Usuário desconhecido.',
+        'unknown_user'      => 'Utilizador desconhecido.',
 
-        'inactive_user'     => 'Usuário inativo.',
+        'inactive_user'     => 'Utilizador inativo.',
 
-        'suspended_user'    => 'Usuário foi suspenso por repetidas tentativas de login sem sucesso.',
+        'suspended_user'    => 'O utilizador foi suspenso por repetidas tentativas de login sem sucesso.',
 
-        'banned_user'       => 'Usuário foi banido.',
+        'banned_user'       => 'O utilizador foi banido.',
 
         'logged_out'	    => 'A sessão foi terminada.',
 

@@ -24,7 +24,7 @@ return array(
 
     'manage_site'   => 'Gerenciar site',
 
-    'manage_users'  => 'Gerenciar usuários',
+    'manage_users'  => 'Gerenciar utilizadores',
 
     'session'       => 'Sessão',
 
