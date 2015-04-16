@@ -136,7 +136,7 @@ class LegacyModel extends \Eloquent {
 
     public function booleans()
     {
-        return (array)($this->booleans + $this->active_booleans);
+        return array_merge($this->booleans, $this->active_booleans);
     }
 
     public function filters()
@@ -146,7 +146,7 @@ class LegacyModel extends \Eloquent {
 
     public function filterEquivalence()
     {
-        return (array)($this->columnEquivalence() + $this->filter_equivalence);
+        return array_merge($this->columnEquivalence(), $this->filter_equivalence);
     }
 
     public function isNested()
@@ -217,7 +217,7 @@ class LegacyModel extends \Eloquent {
 
     public function orderEquivalence()
     {
-        return (array)($this->columnEquivalence() + $this->order_equivalence);
+        return array_merge($this->columnEquivalence(), $this->order_equivalence);
     }
 
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
