@@ -86,9 +86,16 @@ class BaseModel extends \Eloquent {
         {
             $original = $column;
             
+            // If we can't find the column name, look for an equivalence
             if (!isset($columns[$column]))
             {
                 $column = $equivalences[$column];
+            }
+
+            // If we still can't find it, it could have been added dynamically, so ignore
+            if (!isset($columns[$column]))
+            {
+                continue;
             }
 
             $columnNames[$original] = $columns[$column];
