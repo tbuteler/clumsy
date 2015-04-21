@@ -1,5 +1,6 @@
 <?php namespace Clumsy\CMS\Controllers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
