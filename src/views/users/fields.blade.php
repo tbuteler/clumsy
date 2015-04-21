@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="col-md-{{ $item ? '8' : '12' }}">
+    <div class="col-md-{{ $item->exists ? '8' : '12' }}">
 
         {{ Form::field('first_name', trans('clumsy::fields.first_name')) }}
 

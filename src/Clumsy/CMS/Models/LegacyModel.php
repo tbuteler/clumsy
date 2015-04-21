@@ -339,7 +339,8 @@ class LegacyModel extends \Eloquent {
 
             $queryaux = clone $query;
 
-            $filter_key = $column;
+            $index = $column;
+            $filter_key = str_contains($column, '.') ? last(explode('.', $column)) : $column;
 
             $equivalence = $this->filterEquivalence();
             $column = array_key_exists($column, $equivalence) ? array_get($equivalence, $column) : $column;
@@ -354,7 +355,7 @@ class LegacyModel extends \Eloquent {
             else
             {
                 list($model, $column) = explode('.', $column);
-                $items = $model->select($column)->distinct()->get();
+                $items = with(new $model)->select($column)->distinct()->get();
             }
             
             // If the column is a boolean, use 'yes' or 'no' values
@@ -374,7 +375,7 @@ class LegacyModel extends \Eloquent {
                 });
             }
 
-            $data[$column] = $values;
+            $data[$index] = $values;
         }
 
         return $data;
