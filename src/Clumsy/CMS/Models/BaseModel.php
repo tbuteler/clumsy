@@ -245,6 +245,13 @@ class BaseModel extends \Eloquent {
         return $query;
     }
 
+    public function scopeGetPaged($query)
+    {
+        $per_page = property_exists($this, 'admin_per_page') ? $this->admin_per_page : Config::get('clumsy::per_page');
+
+        return $per_page ? $query->paginate($per_page) : $query->get();
+    }
+
     public function scopeCustomFilter($query)
     {
         if (Session::has("clumsy.filter.{$this->resource_name}"))
@@ -302,11 +309,12 @@ class BaseModel extends \Eloquent {
 
             $queryaux = clone $query;
 
-            $index = $column;
             $filter_key = str_contains($column, '.') ? last(explode('.', $column)) : $column;
 
             $equivalence = $this->filterEquivalence();
             $column = array_key_exists($column, $equivalence) ? array_get($equivalence, $column) : $column;
+
+            $index = $column;
 
             // If the column exists in the table, use it
             if(in_array($column, Schema::getColumnListing($this->getTable())))

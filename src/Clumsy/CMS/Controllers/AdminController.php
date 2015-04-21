@@ -87,83 +87,78 @@ class AdminController extends APIController {
             $data['columns'] = $this->columns;
         }
 
+        $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
+
         if (!isset($data['items']))
         {
             if ($this->request->ajax()) return parent::index($data);
-
-            $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
-
-            if ($this->model->filters())
-            {
-                $query->customFilter();
-                $buffer = array();
-                $names = array();
-                $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
-                $hasFilters = false;
-                foreach ($this->model->filters() as $column)
-                {
-                    $original = $column;
-                    
-                    $equivalence = $this->model->filterEquivalence();
-                    $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
-
-                    if ($activeFilters != null && array_key_exists($column, $activeFilters))
-                    {
-                        $hasFilters = true;
-                        $buffer[$column] = $activeFilters[$column];
-                    }
-                    else
-                    {
-                        $buffer[$column] = null;
-                    }
-
-                    // Names
-                    if (strpos($column, '.') !== false)
-                    {
-                        $otherBuffer = explode('.', $column);
-                        $modelName = studly_case($otherBuffer[0]);
-                        $model = new $modelName();
-                        $model_column_names = $model->columnNames();
-                        $names[$column] = $model_column_names[$otherBuffer[1]];
-                    }
-                    else
-                    {
-                        $column_names = $this->model->columnNames() + $data['columns'];
-
-                        $names[$column] = isset($column_names[$column]) ? $column_names[$column] : $column;
-                    }
-                }
-
-                $data['filtersData'] = array(
-                    'data'       => $this->model->getFilterData($query),
-                    'selected'   => $buffer,
-                    'hasFilters' => $hasFilters,
-                    'names'      => $names,
-                );
-            }
             
             if (!isset($data['sortable']) || $data['sortable'])
             {
                 $query->orderSortable();
                 $data['sortable'] = true;
             }
-            
-            $per_page = property_exists($this->model, 'admin_per_page') ? $this->model->admin_per_page : Config::get('clumsy::per_page');
 
-            if ($per_page)
+            $data['items'] = $query->getPaged();
+        }
+
+        if ($this->model->filters())
+        {
+            $query->customFilter();
+            $buffer = array();
+            $names = array();
+            $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
+            $hasFilters = false;
+            foreach ($this->model->filters() as $column)
             {
-                $data['items'] = $query->paginate($per_page);
-                $data['pagination'] = $data['items']->links();
+                $original = $column;
+                
+                $equivalence = $this->model->filterEquivalence();
+                $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
+
+                if ($activeFilters != null && array_key_exists($column, $activeFilters))
+                {
+                    $hasFilters = true;
+                    $buffer[$column] = $activeFilters[$column];
+                }
+                else
+                {
+                    $buffer[$column] = null;
+                }
+
+                // Names
+                if (strpos($column, '.') !== false)
+                {
+                    $otherBuffer = explode('.', $column);
+                    $modelName = studly_case($otherBuffer[0]);
+                    $model = new $modelName();
+                    $model_column_names = $model->columnNames();
+                    $names[$column] = $model_column_names[$otherBuffer[1]];
+                }
+                else
+                {
+                    $column_names = $this->model->columnNames() + $data['columns'];
+
+                    $names[$column] = isset($column_names[$column]) ? $column_names[$column] : $column;
+                }
             }
-            else
-            {
-                $data['items'] = $query->get();
-            }
+
+            $data['filtersData'] = array(
+                'data'       => $this->model->getFilterData($query),
+                'selected'   => $buffer,
+                'hasFilters' => $hasFilters,
+                'names'      => $names,
+            );
         }
 
         if (!isset($data['title']))
         {
             $data['title'] = $this->labeler->displayNamePlural($this->model);
+        }
+
+        if (!isset($data['pagination']) && $data['items'] instanceof Paginator)
+        {
+            $data['pagination'] = $data['items']->links();
         }
 
         return View::make($this->view->resolve('index'), $data);
