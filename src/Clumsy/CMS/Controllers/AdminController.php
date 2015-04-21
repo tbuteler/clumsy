@@ -90,19 +90,6 @@ class AdminController extends APIController {
 
         $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
 
-        if (!isset($data['items']))
-        {
-            if ($this->request->ajax()) return parent::index($data);
-            
-            if (!isset($data['sortable']) || $data['sortable'])
-            {
-                $query->orderSortable();
-                $data['sortable'] = true;
-            }
-
-            $data['items'] = $query->getPaged();
-        }
-
         if ($this->model->filters())
         {
             $query->customFilter();
@@ -152,14 +139,27 @@ class AdminController extends APIController {
             );
         }
 
-        if (!isset($data['title']))
+        if (!isset($data['items']))
         {
-            $data['title'] = $this->labeler->displayNamePlural($this->model);
+            if ($this->request->ajax()) return parent::index($data);
+            
+            if (!isset($data['sortable']) || $data['sortable'])
+            {
+                $query->orderSortable();
+                $data['sortable'] = true;
+            }
+
+            $data['items'] = $query->getPaged();
         }
 
         if (!isset($data['pagination']) && $data['items'] instanceof Paginator)
         {
             $data['pagination'] = $data['items']->links();
+        }
+
+        if (!isset($data['title']))
+        {
+            $data['title'] = $this->labeler->displayNamePlural($this->model);
         }
 
         return View::make($this->view->resolve('index'), $data);
