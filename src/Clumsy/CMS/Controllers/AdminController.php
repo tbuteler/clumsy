@@ -84,6 +84,11 @@ class AdminController extends APIController {
         
         foreach ($this->model->toggleFilters() as $filter => $filter_label)
         {
+            if ($filter === 'all')
+            {
+                continue;
+            }
+
             $counts[$filter] = $this->model->managed()->ofType($filter)->count();
         }
 
