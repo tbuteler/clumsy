@@ -1,3 +1,5 @@
+@if (isset($filtersData))
+
 <div class="panel panel-primary filter-panel" {{ $filtersData['hasFilters'] ? '' : 'style="display:none;"' }}>
 	<div class="panel-heading" data-toggle="collapse" data-target="#filter-colapse">
 		<h3 class="panel-title">{{ trans('clumsy::titles.filters') }}</h3>
@@ -44,3 +46,5 @@
 	    </div>
 	</div>
 </div>
+
+@endif

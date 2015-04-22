@@ -30,5 +30,7 @@ return array(
 
     'clear'         => 'Limpar',
     
-    'apply'         => 'Aplicar'
+    'apply'         => 'Aplicar',
+
+    'all_resources' => 'Todos',
 );

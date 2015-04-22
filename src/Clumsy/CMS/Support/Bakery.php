@@ -72,6 +72,8 @@ class Bakery {
 				
 				break;
 
+			case 'index-of-type' :
+				// Fall through
 			case 'index' :
 		    	$this->breadcrumb[$this->labeler->displayNamePlural($current)] = '';
 				break;

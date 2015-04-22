@@ -69,11 +69,25 @@ class AdminController extends APIController {
         View::share('sortable', false);
         View::share('pagination', '');
 
+        View::share('toggle_filters', false);
+
         Asset::json('admin', array(
             'prefix'   => $this->admin_prefix,
             'resource' => $this->resource,
             'model'    => $this->modelClass(),
         ));
+    }
+
+    protected function typeCounts()
+    {
+        $counts['all'] = $this->model->managed()->count();
+        
+        foreach ($this->model->toggleFilters() as $filter => $filter_label)
+        {
+            $counts[$filter] = $this->model->managed()->ofType($filter)->count();
+        }
+
+        return $counts;
     }
 
     /**
@@ -92,7 +106,8 @@ class AdminController extends APIController {
 
         if ($this->model->filters())
         {
-            $query->customFilter();
+            $query->filtered();
+            
             $buffer = array();
             $names = array();
             $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
@@ -162,7 +177,51 @@ class AdminController extends APIController {
             $data['title'] = $this->labeler->displayNamePlural($this->model);
         }
 
+        if ($this->model->toggleFilters())
+        {
+            $data['index_type'] = isset($data['index_type']) ? $data['index_type'] : false;
+            $data['item_count'] = $this->typeCounts();
+
+            $data['toggle_filters'] = $this->model->toggleFilters();
+        }
+
         return View::make($this->view->resolve('index'), $data);
+    }
+
+    public function indexOfType($type, $data = array())
+    {
+        $data['index_type'] = $type;
+        $data['item_count'] = $this->typeCounts();
+
+        if (!isset($data['query']))
+        {
+            $data['query'] = $this->model->select('*');
+        }
+
+        if (!isset($data['columns']))
+        {
+            $data['columns'] = $this->columns;
+
+            if (sizeof($this->model->suppressWhenToggled()))
+            {
+                foreach ($this->model->suppressWhenToggled() as $suppress)
+                {
+                    unset($data['columns'][$suppress]);
+                }
+            }
+
+            if (sizeof($this->model->appendWhenToggled()))
+            {
+                foreach ($this->model->appendWhenToggled() as $append => $append_label)
+                {
+                    $data['columns'][$append] = $append_label;
+                }
+            }
+        }
+
+        $data['query']->ofType($type);
+
+        return $this->index($data);
     }
 
     /**

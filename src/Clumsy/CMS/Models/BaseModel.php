@@ -41,6 +41,10 @@ class BaseModel extends \Eloquent {
     public $filters = array();
     public $filter_equivalence = array();
 
+    public $toggle_filters = array();
+    public $suppress_when_toggled = array();
+    public $append_when_toggled = array();
+    
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);
@@ -119,6 +123,21 @@ class BaseModel extends \Eloquent {
         return array_merge($this->columnEquivalence(), $this->filter_equivalence);
     }
 
+    public function toggleFilters()
+    {
+        return (array)$this->toggle_filters;
+    }
+
+    public function suppressWhenToggled()
+    {
+        return (array)$this->suppress_when_toggled;
+    }
+
+    public function appendWhenToggled()
+    {
+        return (array)$this->append_when_toggled;
+    }
+
     public function isNested()
     {
         return (bool)$this->parentResource();
@@ -142,7 +161,7 @@ class BaseModel extends \Eloquent {
     public function parentItemId($id)
     {
         $id_column = $this->parentIdColumn();
-        return self::find($id)->$id_column;
+        return $this->find($id)->$id_column;
     }
 
     public function parentItem($id)
@@ -182,7 +201,7 @@ class BaseModel extends \Eloquent {
 
     public function isRequiredByOthers()
     {
-        return !self::requiredBy()->isEmpty();
+        return !$this->requiredBy()->isEmpty();
     }
 
     public function orderEquivalence()
@@ -252,7 +271,7 @@ class BaseModel extends \Eloquent {
         return $per_page ? $query->paginate($per_page) : $query->get();
     }
 
-    public function scopeCustomFilter($query)
+    public function scopeFiltered($query)
     {
         if (Session::has("clumsy.filter.{$this->resource_name}"))
         {
@@ -297,6 +316,22 @@ class BaseModel extends \Eloquent {
                 }
             }
         }
+    }
+
+    public function scopeManaged($query)
+    {
+        return $query->filtered()
+                     ->orderSortable();
+    }
+
+    public function scopeGetManaged($query)
+    {
+        return $query->managed()->getPaged();
+    }
+
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
     }
 
     public function getFilterData($query)
