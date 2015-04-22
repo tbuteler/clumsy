@@ -209,6 +209,11 @@ class BaseModel extends \Eloquent {
         return array_merge($this->columnEquivalence(), $this->order_equivalence);
     }
 
+    public function hasSorter($column)
+    {
+        return method_exists($this, 'sort'.studly_case($column).'Column');
+    }
+
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
     {
         $sorted = false;
@@ -216,6 +221,11 @@ class BaseModel extends \Eloquent {
         if (Session::has("clumsy.order.{$this->resource_name}"))
         {
             list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
+
+            if ($this->hasSorter($column))
+            {
+                return $this->{'sort'.studly_case($column).'Column'}($query, $direction);
+            }
         
             if (!in_array($column, Schema::getColumnListing($this->getTable())))
             {
@@ -343,6 +353,9 @@ class BaseModel extends \Eloquent {
             $values = array();
 
             $queryaux = clone $query;
+            
+            // Remove eager loads from query
+            $queryaux->setEagerLoads(array());
 
             $filter_key = str_contains($column, '.') ? last(explode('.', $column)) : $column;
 

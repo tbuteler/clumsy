@@ -66,7 +66,7 @@ class AdminController extends APIController {
         View::share('columns', $this->columns);
         View::share('order_equivalence', $this->order_equivalence);
         
-        View::share('sortable', false);
+        View::share('sortable', true);
         View::share('pagination', '');
 
         View::share('toggle_filters', false);
@@ -107,12 +107,10 @@ class AdminController extends APIController {
             $data['columns'] = $this->columns;
         }
 
-        $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
+        $query = !isset($data['query']) ? $this->model->select('*')->managed() : $data['query'];
 
         if ($this->model->filters())
         {
-            $query->filtered();
-            
             $buffer = array();
             $names = array();
             $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
@@ -162,12 +160,6 @@ class AdminController extends APIController {
         if (!isset($data['items']))
         {
             if ($this->request->ajax()) return parent::index($data);
-            
-            if (!isset($data['sortable']) || $data['sortable'])
-            {
-                $query->orderSortable();
-                $data['sortable'] = true;
-            }
 
             $data['items'] = $query->getPaged();
         }
@@ -200,7 +192,7 @@ class AdminController extends APIController {
 
         if (!isset($data['query']))
         {
-            $data['query'] = $this->model->select('*');
+            $data['query'] = $this->model->select('*')->managed();
         }
 
         if (!isset($data['columns']))

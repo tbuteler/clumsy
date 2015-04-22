@@ -246,6 +246,11 @@ class LegacyModel extends \Eloquent {
         return array_merge($this->columnEquivalence(), $this->order_equivalence);
     }
 
+    public function hasSorter($column)
+    {
+        return method_exists($this, 'sort'.studly_case($column).'Column');
+    }
+
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
     {
         $sorted = false;
@@ -254,6 +259,11 @@ class LegacyModel extends \Eloquent {
         {
             list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
 
+            if ($this->hasSorter($column))
+            {
+                return $this->{'sort'.studly_case($column).'Column'}($query, $direction);
+            }
+        
             if (!in_array($column, Schema::getColumnListing($this->getTable())))
             {
                 Session::forget("clumsy.order.{$this->resource_name}");
@@ -267,7 +277,7 @@ class LegacyModel extends \Eloquent {
         {
             $sorted = true;
         }
-
+        
         if (!$sorted)
         {
             if (sizeof($this->default_order))
@@ -280,7 +290,7 @@ class LegacyModel extends \Eloquent {
                         $column = $direction;
                         $direction = 'asc';
                     }
-
+                    
                     $query->orderBy($column, $direction);
                 }
 
@@ -297,7 +307,7 @@ class LegacyModel extends \Eloquent {
         {
             return $query->orderBy($column, $direction);
         }
-
+        
         return $query;
     }
 
@@ -380,6 +390,9 @@ class LegacyModel extends \Eloquent {
             $values = array();
 
             $queryaux = clone $query;
+            
+            // Remove eager loads from query
+            $queryaux->setEagerLoads(array());
 
             $filter_key = str_contains($column, '.') ? last(explode('.', $column)) : $column;
 
