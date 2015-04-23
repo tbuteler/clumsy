@@ -30,5 +30,7 @@ return array(
 
     'clear'         => 'Clear',
     
-    'apply'         => 'Apply'
+    'apply'         => 'Apply',
+
+    'all_resources' => 'All',
 );

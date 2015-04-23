@@ -44,6 +44,10 @@ class LegacyModel extends \Eloquent {
     public $filters = array();
     public $filter_equivalence = array();
 
+    public $toggle_filters = array();
+    public $suppress_when_toggled = array();
+    public $append_when_toggled = array();
+
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);
@@ -123,9 +127,16 @@ class LegacyModel extends \Eloquent {
         {
             $original = $column;
             
+            // If we can't find the column name, look for an equivalence
             if (!isset($columns[$column]))
             {
                 $column = $equivalences[$column];
+            }
+
+            // If we still can't find it, it could have been added dynamically, so ignore
+            if (!isset($columns[$column]))
+            {
+                continue;
             }
 
             $columnNames[$original] = $columns[$column];
@@ -136,7 +147,7 @@ class LegacyModel extends \Eloquent {
 
     public function booleans()
     {
-        return (array)($this->booleans + $this->active_booleans);
+        return array_merge($this->booleans, $this->active_booleans);
     }
 
     public function filters()
@@ -146,7 +157,22 @@ class LegacyModel extends \Eloquent {
 
     public function filterEquivalence()
     {
-        return (array)($this->columnEquivalence() + $this->filter_equivalence);
+        return array_merge($this->columnEquivalence(), $this->filter_equivalence);
+    }
+
+    public function toggleFilters()
+    {
+        return (array)$this->toggle_filters;
+    }
+
+    public function suppressWhenToggled()
+    {
+        return (array)$this->suppress_when_toggled;
+    }
+    
+    public function appendWhenToggled()
+    {
+        return (array)$this->append_when_toggled;
     }
 
     public function isNested()
@@ -217,7 +243,12 @@ class LegacyModel extends \Eloquent {
 
     public function orderEquivalence()
     {
-        return (array)($this->columnEquivalence() + $this->order_equivalence);
+        return array_merge($this->columnEquivalence(), $this->order_equivalence);
+    }
+
+    public function hasSorter($column)
+    {
+        return method_exists($this, 'sort'.studly_case($column).'Column');
     }
 
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
@@ -228,6 +259,11 @@ class LegacyModel extends \Eloquent {
         {
             list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
 
+            if ($this->hasSorter($column))
+            {
+                return $this->{'sort'.studly_case($column).'Column'}($query, $direction);
+            }
+        
             if (!in_array($column, Schema::getColumnListing($this->getTable())))
             {
                 Session::forget("clumsy.order.{$this->resource_name}");
@@ -241,7 +277,7 @@ class LegacyModel extends \Eloquent {
         {
             $sorted = true;
         }
-
+        
         if (!$sorted)
         {
             if (sizeof($this->default_order))
@@ -254,7 +290,7 @@ class LegacyModel extends \Eloquent {
                         $column = $direction;
                         $direction = 'asc';
                     }
-
+                    
                     $query->orderBy($column, $direction);
                 }
 
@@ -271,11 +307,18 @@ class LegacyModel extends \Eloquent {
         {
             return $query->orderBy($column, $direction);
         }
-
+        
         return $query;
     }
 
-    public function scopeCustomFilter($query)
+    public function scopeGetPaged($query)
+    {
+        $per_page = property_exists($this, 'admin_per_page') ? $this->admin_per_page : Config::get('clumsy::per_page');
+
+        return $per_page ? $query->paginate($per_page) : $query->get();
+    }
+
+    public function scopeFiltered($query)
     {
         if (Session::has("clumsy.filter.{$this->resource_name}"))
         {
@@ -322,6 +365,22 @@ class LegacyModel extends \Eloquent {
         }
     }
 
+    public function scopeManaged($query)
+    {
+        return $query->filtered()
+                     ->orderSortable();
+    }
+
+    public function scopeGetManaged($query)
+    {
+        return $query->managed()->getPaged();
+    }
+
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
     public function getFilterData($query)
     {
         $data = array();
@@ -331,11 +390,16 @@ class LegacyModel extends \Eloquent {
             $values = array();
 
             $queryaux = clone $query;
+            
+            // Remove eager loads from query
+            $queryaux->setEagerLoads(array());
 
-            $filter_key = $column;
+            $filter_key = str_contains($column, '.') ? last(explode('.', $column)) : $column;
 
             $equivalence = $this->filterEquivalence();
             $column = array_key_exists($column, $equivalence) ? array_get($equivalence, $column) : $column;
+
+            $index = $column;
 
             // If the column exists in the table, use it
             if(in_array($column, Schema::getColumnListing($this->getTable())))
@@ -347,7 +411,7 @@ class LegacyModel extends \Eloquent {
             else
             {
                 list($model, $column) = explode('.', $column);
-                $items = $model->select($column)->distinct()->get();
+                $items = with(new $model)->select($column)->distinct()->get();
             }
             
             // If the column is a boolean, use 'yes' or 'no' values
@@ -367,7 +431,7 @@ class LegacyModel extends \Eloquent {
                 });
             }
 
-            $data[$column] = $values;
+            $data[$index] = $values;
         }
 
         return $data;

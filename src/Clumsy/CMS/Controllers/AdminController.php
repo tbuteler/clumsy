@@ -1,5 +1,6 @@
 <?php namespace Clumsy\CMS\Controllers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -65,14 +66,33 @@ class AdminController extends APIController {
         View::share('columns', $this->columns);
         View::share('order_equivalence', $this->order_equivalence);
         
-        View::share('sortable', false);
+        View::share('sortable', true);
         View::share('pagination', '');
+
+        View::share('toggle_filters', false);
 
         Asset::json('admin', array(
             'prefix'   => $this->admin_prefix,
             'resource' => $this->resource,
             'model'    => $this->modelClass(),
         ));
+    }
+
+    protected function typeCounts()
+    {
+        $counts['all'] = $this->model->managed()->count();
+        
+        foreach ($this->model->toggleFilters() as $filter => $filter_label)
+        {
+            if ($filter === 'all')
+            {
+                continue;
+            }
+
+            $counts[$filter] = $this->model->managed()->ofType($filter)->count();
+        }
+
+        return $counts;
     }
 
     /**
@@ -87,78 +107,66 @@ class AdminController extends APIController {
             $data['columns'] = $this->columns;
         }
 
+        $query = !isset($data['query']) ? $this->model->select('*')->managed() : $data['query'];
+
+        if ($this->model->filters())
+        {
+            $buffer = array();
+            $names = array();
+            $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
+            $hasFilters = false;
+            foreach ($this->model->filters() as $column)
+            {
+                $original = $column;
+                
+                $equivalence = $this->model->filterEquivalence();
+                $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
+
+                if ($activeFilters != null && array_key_exists($column, $activeFilters))
+                {
+                    $hasFilters = true;
+                    $buffer[$column] = $activeFilters[$column];
+                }
+                else
+                {
+                    $buffer[$column] = null;
+                }
+
+                // Names
+                if (strpos($column, '.') !== false)
+                {
+                    $otherBuffer = explode('.', $column);
+                    $modelName = studly_case($otherBuffer[0]);
+                    $model = new $modelName();
+                    $model_column_names = $model->columnNames();
+                    $names[$column] = $model_column_names[$otherBuffer[1]];
+                }
+                else
+                {
+                    $column_names = $this->model->columnNames() + $data['columns'];
+
+                    $names[$column] = isset($column_names[$column]) ? $column_names[$column] : $column;
+                }
+            }
+
+            $data['filtersData'] = array(
+                'data'       => $this->model->getFilterData($query),
+                'selected'   => $buffer,
+                'hasFilters' => $hasFilters,
+                'names'      => $names,
+            );
+        }
+
         if (!isset($data['items']))
         {
             if ($this->request->ajax()) return parent::index($data);
 
-            $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
+            $data['items'] = $query->getPaged();
+        }
 
-            if ($this->model->filters())
-            {
-                $query->customFilter();
-                $buffer = array();
-                $names = array();
-                $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
-                $hasFilters = false;
-                foreach ($this->model->filters() as $column)
-                {
-                    $original = $column;
-                    
-                    $equivalence = $this->model->filterEquivalence();
-                    $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
-
-                    if ($activeFilters != null && array_key_exists($column, $activeFilters))
-                    {
-                        $hasFilters = true;
-                        $buffer[$column] = $activeFilters[$column];
-                    }
-                    else
-                    {
-                        $buffer[$column] = null;
-                    }
-
-                    // Names
-                    if (strpos($column, '.') !== false)
-                    {
-                        $otherBuffer = explode('.', $column);
-                        $modelName = studly_case($otherBuffer[0]);
-                        $model = new $modelName();
-                        $model_column_names = $model->columnNames();
-                        $names[$column] = $model_column_names[$otherBuffer[1]];
-                    }
-                    else
-                    {
-                        $column_names = $this->model->columnNames() + $data['columns'];
-
-                        $names[$column] = isset($column_names[$column]) ? $column_names[$column] : $column;
-                    }
-                }
-
-                $data['filtersData'] = array(
-                    'data'       => $this->model->getFilterData($query),
-                    'selected'   => $buffer,
-                    'hasFilters' => $hasFilters,
-                    'names'      => $names,
-                );
-            }
-            
-            if (!isset($data['sortable']) || $data['sortable'])
-            {
-                $query->orderSortable();
-                $data['sortable'] = true;
-            }
-            
-            $per_page = property_exists($this->model, 'admin_per_page') ? $this->model->admin_per_page : Config::get('clumsy::per_page');
-
-            if ($per_page)
-            {
-                $data['items'] = $query->paginate($per_page);
-                $data['pagination'] = $data['items']->links();
-            }
-            else
-            {
-                $data['items'] = $query->get();
-            }
+        if (!isset($data['pagination']) && $data['items'] instanceof Paginator)
+        {
+            $data['pagination'] = $data['items']->links();
         }
 
         if (!isset($data['title']))
@@ -166,7 +174,51 @@ class AdminController extends APIController {
             $data['title'] = $this->labeler->displayNamePlural($this->model);
         }
 
+        if ($this->model->toggleFilters())
+        {
+            $data['index_type'] = isset($data['index_type']) ? $data['index_type'] : false;
+            $data['item_count'] = $this->typeCounts();
+
+            $data['toggle_filters'] = $this->model->toggleFilters();
+        }
+
         return View::make($this->view->resolve('index'), $data);
+    }
+
+    public function indexOfType($type, $data = array())
+    {
+        $data['index_type'] = $type;
+        $data['item_count'] = $this->typeCounts();
+
+        if (!isset($data['query']))
+        {
+            $data['query'] = $this->model->select('*')->managed();
+        }
+
+        if (!isset($data['columns']))
+        {
+            $data['columns'] = $this->columns;
+
+            if (sizeof($this->model->suppressWhenToggled()))
+            {
+                foreach ($this->model->suppressWhenToggled() as $suppress)
+                {
+                    unset($data['columns'][$suppress]);
+                }
+            }
+
+            if (sizeof($this->model->appendWhenToggled()))
+            {
+                foreach ($this->model->appendWhenToggled() as $append => $append_label)
+                {
+                    $data['columns'][$append] = $append_label;
+                }
+            }
+        }
+
+        $data['query']->ofType($type);
+
+        return $this->index($data);
     }
 
     /**

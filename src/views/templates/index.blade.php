@@ -12,16 +12,9 @@
 
 @section('master')
 
-    @if (isset($filtersData))
-        @include('clumsy::templates.filter')
-    @endif
-
+    @include('clumsy::templates.filter')
+    @include('clumsy::templates.filter-toggles')
     @include('clumsy::templates.table')
-
-    @if ($pagination)
-        <div class="pull-right">
-            {{ $pagination }}
-        </div>
-    @endif
+    @include('clumsy::templates.pagination')
 
 @stop
