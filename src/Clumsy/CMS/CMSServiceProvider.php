@@ -28,6 +28,7 @@ class CMSServiceProvider extends ServiceProvider {
 		$this->app->register('Clumsy\Utils\UtilsServiceProvider');
 		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
 
+
         $this->app['clumsy'] = new Clumsy;
 
 		// Bind view resolver conditionally so we can provide legacy support for Laravel 4.1
