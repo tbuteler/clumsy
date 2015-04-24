@@ -190,6 +190,13 @@ $(function(){
             // $('form#filter-form').submit();
         });
     }
+
+    $('a[role="tab"]').on('shown.bs.tab', function (e) {
+        var tab_id = $(e.target).attr('href').substring(1);
+        var $tab = $('div.tab-pane#' + tab_id);
+
+        $tab.find('.photoset-row').attr('style','overflow: hidden;');
+    })
 });
 
 
