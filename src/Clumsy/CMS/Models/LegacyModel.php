@@ -318,6 +318,11 @@ class LegacyModel extends \Eloquent {
         return $per_page ? $query->paginate($per_page) : $query->get();
     }
 
+    public function hasFilterer($column)
+    {
+        return method_exists($this, 'filter'.studly_case(str_replace('.', '_', $column)).'Column');
+    }
+
     public function scopeFiltered($query)
     {
         if (Session::has("clumsy.filter.{$this->resource_name}"))
@@ -326,7 +331,12 @@ class LegacyModel extends \Eloquent {
             foreach ($buffer as $column => $values)
             {
                 $equivalence = $this->filterEquivalence();
-                $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
+                $column = array_key_exists($column, $equivalence) ? array_get($equivalence, $column) : $column;
+
+                if ($this->hasFilterer($column))
+                {
+                    return $this->{'filter'.studly_case(str_replace('.', '_', $column)).'Column'}($query, $values);
+                }
 
                 // If the column exists in the table, use it
                 if (in_array($column, Schema::getColumnListing($this->getTable())))
@@ -430,6 +440,8 @@ class LegacyModel extends \Eloquent {
                     $values[$item->getAttributeFromArray($column)] = $item->$filter_key;
                 });
             }
+
+            asort($values);
 
             $data[$index] = $values;
         }

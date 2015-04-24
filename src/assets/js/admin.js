@@ -196,7 +196,6 @@ $(function(){
         var $tab = $('div.tab-pane#' + tab_id);
 
         $tab.find('.photoset-row').attr('style','overflow: hidden;');
-        console.log($tab.find('.photoset-row'));
     })
 });
 
