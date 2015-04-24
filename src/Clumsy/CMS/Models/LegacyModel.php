@@ -510,22 +510,6 @@ class LegacyModel extends \Eloquent {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }
 
-    /**
-     * Return a timestamp as DateTime object
-     * Doesn't output time when juggled as string, so can be used for date-only mutators
-     *
-     * @param  mixed  $value
-     * @return \Carbon\Carbon
-     */
-    protected function asDate($value)
-    {
-        $value = parent::asDateTime($value);
-
-        $value->setToStringFormat('Y-m-d');
-
-        return $value;
-    }
-
     public function displayName()
     {
         return false;
@@ -538,7 +522,8 @@ class LegacyModel extends \Eloquent {
 
     public function media()
     {
-        return $this->morphToMany('\Clumsy\Eminem\Models\Media', 'media_association')->select(array('media.*', 'position'));
+        return $this->morphToMany('\Clumsy\Eminem\Models\Media', 'media_association')
+                    ->withPivot('position', 'meta');
     }
 
     public function mediaSlots()
@@ -551,24 +536,27 @@ class LegacyModel extends \Eloquent {
         return (bool)sizeof($this->media);
     }
 
+    public function getMediaByPosition($position = null, $offset = 0)
+    {
+        $media = $this->media;
+
+        if ($position)
+        {
+            $media = $media->filter(function($media) use ($position)
+                {
+                    return $media->pivot->position === $position;
+                })
+                ->values();
+        }
+
+        return $media->offsetExists($offset) ? $media->offsetGet($offset) : null;
+    }
+
     public function mediaPath($position = null, $offset = 0)
     {
         if ($this->hasMedia())
         {
-            if ($position)
-            {
-                $media = $this->media->filter(function($media) use ($position)
-                    {
-                        return $media->position === $position;
-                    })
-                    ->values();
-
-                $media = $media->offsetExists($offset) ? $media->offsetGet($offset) : null;
-            }
-            else
-            {
-                $media = $this->media->offsetExists($offset) ? $this->media->offsetGet($offset) : null;
-            }
+            $media = $this->getMediaByPosition($position, $offset);
 
             if ($media)
             {
@@ -577,6 +565,19 @@ class LegacyModel extends \Eloquent {
         }
 
         return $this->mediaPlaceholder($position);
+    }
+
+    public function mediaMeta($position = null, $offset = 0)
+    {
+        if ($this->hasMedia())
+        {
+            $media = $this->getMediaByPosition($position, $offset);
+
+            if ($media)
+            {
+                return $media->pivot->meta;
+            }
+        }
     }
 
     public function mediaPlaceholder($position = null)
