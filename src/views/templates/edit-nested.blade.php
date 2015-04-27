@@ -17,11 +17,7 @@
 
         @include('clumsy::templates.table', array('items' => $children, 'columns' => $child_columns, 'resource' => $child_resource))
 
-	    @if ($pagination)
-	    	<div class="pull-right">
-				{{ $pagination }}
-	    	</div>
-	    @endif
+    	@include('clumsy::templates.pagination')
 
     @endif
 
