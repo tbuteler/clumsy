@@ -8,7 +8,7 @@
 
 		<?php if ($filter === 'all') continue; ?>
 
-		<li role="presentation" {{ $index_type === $filter ? 'class="active"' : '' }}>
+		<li role="presentation" {{ $index_type == $filter ? 'class="active"' : '' }}>
 			<a href="{{ route("$admin_prefix.$resource.index-of-type", $filter) }}" role="tab">{{ $filter_label }} <span class="badge">{{ $item_count[$filter] }}</span></a>
 		</li>
 	@endforeach
