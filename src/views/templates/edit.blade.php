@@ -6,7 +6,9 @@
 
     @include($form_fields)
 
-    {{ $parent_field or '' }}
+    @foreach ($fields as $field)
+        {{ $field }}
+    @endforeach
 
     <div class="bottom-buttons">
         {{ Form::button(isset($item) ? trans('clumsy::buttons.save') : trans('clumsy::buttons.create'), array('type' => 'submit', 'class' => 'btn btn-lg btn-success')) }}

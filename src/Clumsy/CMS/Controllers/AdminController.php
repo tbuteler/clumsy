@@ -78,6 +78,21 @@ class AdminController extends APIController {
         ));
     }
 
+    protected function redirectAfter($action, $id = null)
+    {
+        return null;
+    }
+
+    protected function redirectAfterStore($id = null)
+    {
+        return null;
+    }
+
+    protected function redirectAfterUpdate($id = null)
+    {
+        return null;
+    }
+
     protected function typeCounts()
     {
         $counts['all'] = $this->model->managed()->count();
@@ -257,7 +272,12 @@ class AdminController extends APIController {
                 ));
         }
 
-        return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $response->getOriginalContent())->with(array(
+        if (!$url = $this->redirectAfterStore($response->getOriginalContent()))
+        {
+            $url = URL::route("{$this->admin_prefix}.{$this->resource}.edit", $response->getOriginalContent());
+        }
+
+        return Redirect::to($url)->with(array(
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_added'),
         ));
@@ -339,12 +359,15 @@ class AdminController extends APIController {
             }
         }
 
-        $data['parent_field'] = null;
+        if (!isset($data['fields']))
+        {
+            $data['fields'] = array();
+        }
 
         if ($this->model->isNested())
         {
             $parent_id_column = $this->model->parentIdColumn();
-            $data['parent_field'] = Form::hidden($parent_id_column, $id ? $data['item']->$parent_id_column : Input::get('parent'));
+            $data['fields'][] = Form::hidden($parent_id_column, $id ? $data['item']->$parent_id_column : Input::get('parent'));
         }
 
         if (!isset($data['suppress_delete']))
@@ -377,7 +400,12 @@ class AdminController extends APIController {
                 ));
         }
 
-        return Redirect::route("{$this->admin_prefix}.{$this->resource}.edit", $id)->with(array(
+        if (!$url = $this->redirectAfterUpdate($id))
+        {
+            $url = URL::route("{$this->admin_prefix}.{$this->resource}.edit", $id);
+        }
+
+        return Redirect::to($url)->with(array(
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_updated'),
         ));
