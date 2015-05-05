@@ -1,6 +1,7 @@
 <?php namespace Clumsy\CMS\Controllers;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -52,5 +53,22 @@ class BackEndController extends Controller {
 
         $entry->$column = $value;
         $entry->save();
+    }
+
+    public function saveOrder($resource)
+    {
+        $order = Input::get('order');
+        $model = studly_case($resource);
+
+        $resourceObj = new $model;
+
+        foreach ($order as $order => $id) {
+            $resourceObj->where('id','=',$id)->update(array($resourceObj->reorder_item => $order + 1));
+        }
+
+        return  Redirect::back()->with(array(
+           'alert_status' => 'success',
+           'alert'        => trans('clumsy::alerts.reorder.success'),
+        ));
     }
 }

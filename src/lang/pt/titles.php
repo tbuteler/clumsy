@@ -9,7 +9,7 @@ return array(
 	'new_item'       => 'Adicionar :resource',
 	
 	'edit_item'      => 'Editar :resource',
-
+	
 	'user'           => 'Utilizador',
 	
 	'users'          => 'Utilizadores',
@@ -21,10 +21,12 @@ return array(
 	'edit_user'      => 'Editar utilizador',
 	
 	'user_control'   => 'Controlo de login',
-
+	
 	'filters'        => 'Filtros',
 	
 	'locator'        => 'Localizador',
 	
 	'map'            => 'Mapa',
+	
+	'reorder'        => 'Reordenar',
 );

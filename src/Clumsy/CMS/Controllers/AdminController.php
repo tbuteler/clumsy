@@ -197,6 +197,8 @@ class AdminController extends APIController {
             $data['toggle_filters'] = $this->model->toggleFilters();
         }
 
+        isset($this->model->reorder_item) ? View::share('reorder', true) : View::share('reorder', false);
+
         return View::make($this->view->resolve('index'), $data);
     }
 
@@ -443,5 +445,22 @@ class AdminController extends APIController {
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.item_deleted'),
         ));
+    }
+
+    public function reorder($resource)
+    {
+        if (isset($this->model->reorder_item)) {
+            $data['columns'] = $this->model->reorderColumns();
+
+            $query = $this->model->select('*')->orderBy($this->model->reorder_item,'asc');
+
+            $data['items'] = $query->get();
+
+            $data['title'] = $this->labeler->displayNamePlural($this->model);
+
+            return View::make($this->view->resolve('reorder'), $data);
+        }
+
+        return Redirect::route(Config::get('clumsy::admin_prefix').'.home');
     }
 }

@@ -71,6 +71,11 @@ return array(
 
 	'email-error'    => 'Ocorreu um erro ao enviar o seu email. Por favor tente novamente mais tarde.',
 
-	'token_mismatch' => 'Sua sessão expirou antes que pudesse salvar as mudanças. Se acredita que isto é um erro, por favor entre em contacto com o administrador do sistema.'
+	'token_mismatch' => 'Sua sessão expirou antes que pudesse salvar as mudanças. Se acredita que isto é um erro, por favor entre em contacto com o administrador do sistema.',
+
+	'reorder' => array(
+
+		'success' => 'Ordenação guardada com sucesso.',
+	),
 
 );

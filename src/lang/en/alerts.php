@@ -73,4 +73,9 @@ return array(
 
 	'token_mismatch' => 'Your session expired before submitting changes. If you believe this is an error, please contact the website administrator.',
 
+	'reorder' => array(
+
+		'success' => 'New order saved with success.',
+	),
+
 );
