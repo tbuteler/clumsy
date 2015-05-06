@@ -1,8 +1,8 @@
 <div class="{{ $resource }}-panel">
 
 @if (count($items))
-{{ Form::open(array('url' => route('_save-reorder',$resource))) }}
 
+{{ Form::open(array('url' => route('_save-reorder', $resource))) }}
 
 <table class="reorder-table">
     <tbody>
@@ -18,7 +18,7 @@
                         @foreach ($columns as $column => $name)
                             {{ $item->$column }}
                         @endforeach
-                        {{ Form::hidden('order[]',$item->id,array('type' => 'hidden')) }}
+                        {{ Form::hidden('order[]', $item->id) }}
                     </span>
                 </td>
             </tr>

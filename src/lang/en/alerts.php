@@ -75,7 +75,7 @@ return array(
 
 	'reorder' => array(
 
-		'success' => 'New order saved with success.',
+		'success' => 'New order saved successfully.',
 	),
 
 );

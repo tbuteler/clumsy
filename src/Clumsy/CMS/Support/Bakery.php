@@ -74,7 +74,7 @@ class Bakery {
 
 			case 'reorder' :
 		    	$this->breadcrumb[$this->labeler->displayNamePlural($current)] = $this->url->route("{$this->prefix}.{$current->resource_name}.index");
-		    	$this->breadcrumb[trans('clumsy::titles.reorder')] = '';
+		    	$this->breadcrumb[trans('clumsy::titles.reorder', array('resources' => $this->labeler->displayNamePlural($current)))] = '';
 				break;
 
 			case 'index-of-type' :

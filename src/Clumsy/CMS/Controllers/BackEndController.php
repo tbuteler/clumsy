@@ -62,8 +62,9 @@ class BackEndController extends Controller {
 
         $resourceObj = new $model;
 
-        foreach ($order as $order => $id) {
-            $resourceObj->where('id','=',$id)->update(array($resourceObj->reorder_item => $order + 1));
+        foreach ($order as $order => $id)
+        {
+            $resourceObj->where('id','=',$id)->update(array($resourceObj->active_reorder => $order + 1));
         }
 
         return  Redirect::back()->with(array(

@@ -28,5 +28,5 @@ return array(
 
 	'map'            => 'Map',
 
-	'reorder'        => 'Reorder',
+	'reorder'        => 'Reorder :resources',
 );

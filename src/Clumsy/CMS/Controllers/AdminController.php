@@ -197,7 +197,7 @@ class AdminController extends APIController {
             $data['toggle_filters'] = $this->model->toggleFilters();
         }
 
-        isset($this->model->reorder_item) ? View::share('reorder', true) : View::share('reorder', false);
+        $data['reorder'] = (bool)$this->model->active_reorder;
 
         return View::make($this->view->resolve('index'), $data);
     }
@@ -449,18 +449,21 @@ class AdminController extends APIController {
 
     public function reorder($resource)
     {
-        if (isset($this->model->reorder_item)) {
-            $data['columns'] = $this->model->reorderColumns();
-
-            $query = $this->model->select('*')->orderBy($this->model->reorder_item,'asc');
-
-            $data['items'] = $query->get();
-
-            $data['title'] = $this->labeler->displayNamePlural($this->model);
-
-            return View::make($this->view->resolve('reorder'), $data);
+        if (!isset($this->model->active_reorder))
+        {
+            return Redirect::route("{$this->admin_prefix}.home");
         }
 
-        return Redirect::route(Config::get('clumsy::admin_prefix').'.home');
+        $data['columns'] = $this->model->reorderColumns();
+
+        $query = $this->model->select('*')->orderBy($this->model->active_reorder, 'asc');
+
+        $data['items'] = $query->get();
+
+        $data['title'] = trans('clumsy::titles.reorder', array('resources' => $this->labeler->displayNamePlural($this->model)));
+
+        Asset::enqueue('jquery-ui', 30);
+
+        return View::make($this->view->resolve('reorder'), $data);
     }
 }

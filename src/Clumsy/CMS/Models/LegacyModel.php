@@ -47,6 +47,9 @@ class LegacyModel extends \Eloquent {
     public $toggle_filters = array();
     public $suppress_when_toggled = array();
     public $append_when_toggled = array();
+    
+    public $active_reorder = false;
+    public $reorder_columns = array();
 
     public function __construct(array $attributes = array())
     {
@@ -109,7 +112,7 @@ class LegacyModel extends \Eloquent {
 
     public function reorderColumns()
     {
-        return isset($this->reorder_columns) ? $this->reorder_columns : $this->columns;
+        return count($this->reorder_columns) ? $this->reorder_columns : array_slice($this->columns, 0, 1);
     }
 
     public function columnEquivalence()
@@ -434,7 +437,8 @@ class LegacyModel extends \Eloquent {
             {
                 $items->each(function($item) use($column, $filter_key, &$values)
                 {
-                    $values[$item->getAttributeFromArray($column)] = $item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+                    $attributes = $item->getAttributes();
+                    $values[$attributes[$column]] = $item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
                 });
             }
             // Otherwise, use the default attribute (will use get mutator, if available)
@@ -442,7 +446,8 @@ class LegacyModel extends \Eloquent {
             {
                 $items->each(function($item) use($column, $filter_key, &$values)
                 {
-                    $values[$item->getAttributeFromArray($column)] = $item->$filter_key;
+                    $attributes = $item->getAttributes();
+                    $values[$attributes[$column]] = $item->$filter_key;
                 });
             }
 
