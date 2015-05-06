@@ -198,24 +198,27 @@ $(function(){
         $tab.find('.photoset-row').attr('style','overflow: hidden;');
     });
 
-    var reorder = $(".reorder-table tbody").sortable({
-        revert: true,
-        helper: "clone",
-        scroll: false,
-        axis: "y",
-        placeholder: "sortable-placeholder"
+    if ($('body').hasClass('_reorder')) {
 
-    }).disableSelection();
+        var reorder = $(".reorder-table tbody").sortable({
+            revert: true,
+            helper: "clone",
+            scroll: false,
+            axis: "y",
+            placeholder: "sortable-placeholder"
 
-    reorder.on('sortupdate',function(event,ui){
-        $('.reorder-table tbody > tr td:first-child').fadeOut().promise().done(function(){
-            $('.reorder-table tbody > tr').each(function(index){
-                $(this).find(' > td:first').text(index + 1);
-            }).promise().done(function(){
-                $('.reorder-table tbody > tr td:first-child').fadeIn();
+        }).disableSelection();
+
+        reorder.on('sortupdate',function(event,ui){
+            $('.reorder-table tbody > tr td:first-child').fadeOut().promise().done(function(){
+                $('.reorder-table tbody > tr').each(function(index){
+                    $(this).find(' > td:first').text(index + 1);
+                }).promise().done(function(){
+                    $('.reorder-table tbody > tr td:first-child').fadeIn();
+                });
             });
         });
-    })
+    }
 
 });
 
