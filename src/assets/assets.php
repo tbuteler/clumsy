@@ -12,7 +12,7 @@ return array(
     'admin.js' => array(
         'set'   => 'footer',
         'path'  => 'packages/clumsy/cms/js/admin.min.js',
-        'req'   => array('bootstrap.js','chosen'),
+        'req'   => array('bootstrap.js','chosen','jqueryui'),
         'v'     => '0.16.0',
     ),
 
@@ -26,4 +26,8 @@ return array(
         'path'  => 'http://maps.google.com/maps/api/js?sensor=true&libraries=places,geometry',
     ),
 
+    'jqueryui' => array(
+        'set'   => 'footer',
+        'path'  => '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js',
+    ),
 );

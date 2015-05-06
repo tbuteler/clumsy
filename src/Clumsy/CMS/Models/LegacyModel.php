@@ -107,6 +107,11 @@ class LegacyModel extends \Eloquent {
         return (array)($this->columns ? $this->columns : Config::get('clumsy::default_columns'));
     }
 
+    public function reorderColumns()
+    {
+        return isset($this->reorder_columns) ? $this->reorder_columns : $this->columns;
+    }
+
     public function columnEquivalence()
     {
         return (array)($this->column_equivalence);

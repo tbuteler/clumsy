@@ -80,9 +80,14 @@ Route::group(
             'uses' => 'ExternalResourceController@import',
         ));
 
-        Route::get('_reorder/{resource}', array(
-            'as'   => '_reorder',
-            'uses' => 'BackEndController@reorder',
+        Route::get('{resource}/reorder',array(
+            'as'     => '_reorder',
+            'uses'   => 'AdminController@reorder',
+        ));
+
+        Route::post('_reorder/{resource}',array(
+            'as'   => '_save-reorder',
+            'uses' => 'BackEndController@saveOrder',
         ));
 
         Route::post('_filter/{resource}', array(

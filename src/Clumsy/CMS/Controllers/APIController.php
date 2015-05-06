@@ -92,13 +92,21 @@ class APIController extends Controller {
 
         $this->columns = Config::get('clumsy::default_columns');
 
-        $route_name = $this->admin_prefix ? str_replace("{$this->admin_prefix}.", '', $this->route->getName()) : $this->route->getName();
-
-        if (str_contains($route_name, '.'))
+        $indicator = $this->route->getName();
+        if (!str_contains($indicator, '.'))
         {
-            $route_array = explode('.', $route_name);
-            $this->action = last($route_array);
-            $this->resource = head($route_array);
+            $indicator = str_replace('/', '.', $request->path());
+        }
+
+        $indicator = $this->admin_prefix
+                     ? str_replace("{$this->admin_prefix}.", '', $indicator)
+                     : $indicator;
+
+        if (str_contains($indicator, '.'))
+        {
+            $indicator_array = explode('.', $indicator);
+            $this->action = last($indicator_array);
+            $this->resource = head($indicator_array);
 
             $this->model_base_name = studly_case($this->resource);
 

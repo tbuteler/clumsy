@@ -209,6 +209,11 @@ class BaseModel extends \Eloquent {
         return array_merge($this->columnEquivalence(), $this->order_equivalence);
     }
 
+    public function reorderColumns()
+    {
+        return isset($this->reorder_columns) ? $this->reorder_columns : $this->columns;
+    }
+
     public function hasSorter($column)
     {
         return method_exists($this, 'sort'.studly_case($column).'Column');

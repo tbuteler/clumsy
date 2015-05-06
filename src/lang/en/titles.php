@@ -27,4 +27,6 @@ return array(
 	'locator'        => 'Locator',
 
 	'map'            => 'Map',
+
+	'reorder'        => 'Reorder',
 );
