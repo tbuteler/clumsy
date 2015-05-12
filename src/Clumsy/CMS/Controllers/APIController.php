@@ -102,7 +102,7 @@ class APIController extends Controller {
                      ? str_replace("{$this->admin_prefix}.", '', $indicator)
                      : $indicator;
 
-        if (str_contains($indicator, '.'))
+        if (str_contains($indicator, '.') && !starts_with($indicator, '_'))
         {
             $indicator_array = explode('.', $indicator);
             $this->action = last($indicator_array);
