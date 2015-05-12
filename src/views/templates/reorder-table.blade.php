@@ -2,7 +2,7 @@
 
 @if (count($items))
 
-{{ Form::open(array('url' => route('_save-reorder', $resource))) }}
+{{ Form::open(array('url' => route('_save-active-reorder', $resource))) }}
 
 <table class="reorder-table">
     <tbody>

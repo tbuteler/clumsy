@@ -82,31 +82,78 @@ Route::group(
             }
         ));
 
+        /*
+        |--------------------------------------------------------------------------
+        | External resource update routine
+        |--------------------------------------------------------------------------
+        |
+        */
+
         Route::get('_import/{resource?}', array(
             'as'   => '_import',
             'uses' => 'ExternalResourceController@import',
         ));
 
-        Route::get('{resource}/reorder',array(
-            'as'     => '_reorder',
-            'uses'   => 'AdminController@reorder',
+        /*
+        |--------------------------------------------------------------------------
+        | Column sorting
+        |--------------------------------------------------------------------------
+        |
+        */
+
+        Route::get('_reorder/{resource}', array(
+            'as'   => '_reorder',
+            'uses' => 'BackEndController@reorder',
         ));
 
-        Route::post('_reorder/{resource}',array(
-            'as'   => '_save-reorder',
-            'uses' => 'BackEndController@saveOrder',
-        ));
+        /*
+        |--------------------------------------------------------------------------
+        | Index dynamic filters
+        |--------------------------------------------------------------------------
+        |
+        */
 
         Route::post('_filter/{resource}', array(
             'as'   => '_filter',
             'uses' => 'BackEndController@filter',
         ));
 
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX entry updating (active booleans)
+        |--------------------------------------------------------------------------
+        |
+        */
+
         Route::post('_update', array(
             'as'     => '_update',
             'before' => 'csrf',
             'uses'   => 'BackEndController@update',
         ));
+
+        /*
+        |--------------------------------------------------------------------------
+        | Active reorder
+        |--------------------------------------------------------------------------
+        |
+        */
+
+        Route::get('{resource}/reorder',array(
+            'as'     => '_active-reorder',
+            'uses'   => 'AdminController@reorder',
+        ));
+
+        Route::post('_reorder/{resource}',array(
+            'as'   => '_save-active-reorder',
+            'uses' => 'BackEndController@saveOrder',
+        ));
+
+        /*
+        |--------------------------------------------------------------------------
+        | User resource
+        |--------------------------------------------------------------------------
+        |
+        */
 
         Route::resource('user', 'UsersController');
     }
