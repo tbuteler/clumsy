@@ -198,7 +198,7 @@ $(function(){
         $tab.find('.photoset-row').attr('style','overflow: hidden;');
     });
 
-    if ($('body').hasClass('_reorder')) {
+    if ($('body').hasClass('_active-reorder')) {
 
         var reorder = $(".reorder-table tbody").sortable({
             revert: true,
