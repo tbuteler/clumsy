@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Clumsy\Assets\Facade as Asset;
-use Clumsy\CMS\Clumsy;
 
 class CMSServiceProvider extends ServiceProvider {
 
@@ -28,8 +27,6 @@ class CMSServiceProvider extends ServiceProvider {
 		$this->app->register('Clumsy\Utils\UtilsServiceProvider');
 		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
 
-        $this->app['clumsy'] = new Clumsy;
-
 		// Bind view resolver conditionally so we can provide legacy support for Laravel 4.1
 		$this->app->bind('clumsy.view-resolver-factory',
 			class_exists('Illuminate\View\Environment')
@@ -46,6 +43,8 @@ class CMSServiceProvider extends ServiceProvider {
             });
 
         $this->commands(array('command.clumsy.publish'));
+
+        $this->app->bind('\Clumsy\CMS\Contracts\ShortcodeInterface', '\Clumsy\CMS\Library\Shortcode');
 	}
 
 	/**
@@ -77,7 +76,7 @@ class CMSServiceProvider extends ServiceProvider {
 	public function provides()
 	{
 		return array(
-			'clumsy',
+			'clumsy.shortcode',
 		);
 	}
 
