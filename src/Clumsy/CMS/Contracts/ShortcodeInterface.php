@@ -6,6 +6,8 @@ interface ShortcodeInterface {
 
 	public function add($key, $description);
 
+    public function addMany($codes);
+
 	public function remove($key);
 
 	public function setCodes(Array $shortcodes);

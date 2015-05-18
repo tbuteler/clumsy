@@ -4,8 +4,8 @@ use Clumsy\CMS\Contracts\ShortcodeInterface;
 
 class Shortcode implements ShortcodeInterface {
 
-	protected $start_limiter = '[';
-	protected $end_limiter = ']';
+	protected $start_delimiter = '[';
+	protected $end_delimiter = ']';
 
 	protected $shortcodes = array();
 
@@ -21,12 +21,17 @@ class Shortcode implements ShortcodeInterface {
 
 	public function wrap($string)
 	{
-		return "{$this->start_limiter}$string{$this->end_limiter}";
+		return "{$this->start_delimiter}$string{$this->end_delimiter}";
 	}
 
 	public function add($key, $description)
 	{
 		$this->shortcodes[$key] = $description;
+	}
+
+	public function addMany($codes)
+	{
+		$this->shortcodes = array_merge($this->shortcodes, $codes);
 	}
 
 	public function remove($key)
