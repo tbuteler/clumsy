@@ -5,14 +5,14 @@ use Clumsy\CMS\Facades\International;
 
 trait Translatable {
 
-	public static function matchSlug($base_column, $slug)
+	public static function matchSlug($base_column, $slug, $callback = null)
 	{
 		$base_column .= '_'.International::getCurrentLocale();
 		
 		$items = self::all();
-		return $items->filter(function($item) use($base_column, $slug)
+		return $items->filter(function($item) use($base_column, $slug, $callback)
 			{
-				return Str::slug($item->$base_column) === $slug;
+				return ($callback ? $callback($item) : true) && Str::slug($item->$base_column) === $slug;
 			})
 			->first();
 	}
