@@ -4,6 +4,10 @@
     @lang('clumsy::titles.login')
 @stop
 
+@section('inner-title')
+    @lang('clumsy::titles.login')
+@stop
+
 @section('master')
 
     {{ Form::open() }}

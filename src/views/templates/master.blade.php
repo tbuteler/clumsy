@@ -1,4 +1,4 @@
-@extends('clumsy::templates.head')
+@include('clumsy::templates.head')
 
 <div class="container master">
 
@@ -39,4 +39,4 @@
 
 </div>
 
-@extends('clumsy::templates.footer')
+@include('clumsy::templates.footer')

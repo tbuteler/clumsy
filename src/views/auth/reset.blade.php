@@ -4,6 +4,10 @@
     @lang('clumsy::titles.reset-password')
 @stop
 
+@section('inner-title')
+    @lang('clumsy::titles.reset-password')
+@stop
+
 @section('master')
 
     {{ Form::open() }}
