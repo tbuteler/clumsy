@@ -1,6 +1,6 @@
-@extends('clumsy::templates.edit')
+@extends($view->resolve('edit'))
 
-@section('title')
+@section('inner-title')
 @stop
 
 @section('master')
@@ -36,8 +36,7 @@
                     </div>
                 </div>
             </h1>
-            @include('clumsy::templates.table', array('items' => $children, 'columns' => $child_columns, 'resource' => $child_resource))
-            @include('clumsy::templates.pagination')
+            @include($view->resolve('inner-index', $child_resource), array('title' => $children_title, 'items' => $children, 'columns' => $child_columns, 'resource' => $child_resource))
         </div>
         @endif
     </div>

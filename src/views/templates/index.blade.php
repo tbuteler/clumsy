@@ -1,4 +1,4 @@
-@extends('clumsy::templates.master')
+@extends($view->resolve('master'))
 
 @section('after-title')
 
@@ -12,9 +12,6 @@
 
 @section('master')
 
-    @include('clumsy::templates.filter')
-    @include('clumsy::templates.filter-toggles')
-    @include('clumsy::templates.table')
-    @include('clumsy::templates.pagination')
+    @include($view->resolve('inner-index'))
 
 @stop

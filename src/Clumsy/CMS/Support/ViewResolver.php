@@ -20,22 +20,14 @@ class ViewResolver {
 
 	public function setDomain($domain)
 	{
-		$this->domain = $domain;
-	}
-
-	public function getDomain()
-	{
-		return $this->domain;
+		$this->domain = str_plural($domain);
 	}
 
 	public function getFullDomain($domain = false)
 	{
 		$prefix = $this->getDomainPrefix();
-	
-        if (!$domain)
-        {
-            $domain = $this->domain;
-        }
+
+        $domain = $domain ? str_plural($domain) : $this->domain;
 
 		return !$this->domain ? $prefix : "$prefix.$domain";
 	}
@@ -56,15 +48,12 @@ class ViewResolver {
         	return "$prefix.templates.$slug";
         }
 
-        if (!$domain)
-        {
-            $domain = $this->domain;
-        }
+        $domain = $domain ? str_plural($domain) : $this->domain;
 
         // 3) Clumsy package: resources.slug
         if ($this->domain && $this->view->exists("clumsy::{$domain}.$slug"))
         {
-        	return "clumsy::{$domain}.$slug";
+            return "clumsy::{$domain}.$slug";
         }
 
         // 4) Clumsy package: templates.slug

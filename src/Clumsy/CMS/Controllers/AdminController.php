@@ -52,8 +52,9 @@ class AdminController extends APIController {
         View::share('navbar_wrapper', $this->view->resolve('navbar-wrapper'));
         View::share('navbar', $this->view->resolve('navbar'));
 
-        $this->view->setDomain(str_plural($this->resource));
+        $this->view->setDomain($this->resource);
         $this->bakery->setPrefix($this->admin_prefix);
+        View::share('view', $this->view);
 
         View::share('model', $this->model);
         View::share('resource', $this->resource);

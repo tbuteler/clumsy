@@ -14,7 +14,7 @@
     </head>
     <body class="{{ $body_class or '' }}">
 
-    @include('clumsy::templates.alert')
+    @include($view->resolve('alert'))
     
     @if (Cartalyst\Sentry\Facades\Laravel\Sentry::check())
 

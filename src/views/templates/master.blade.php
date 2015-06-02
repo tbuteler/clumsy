@@ -1,4 +1,4 @@
-@include('clumsy::templates.head')
+@include($view->resolve('head'))
 
 <div class="container master">
 
@@ -11,7 +11,7 @@
     <h1 class="page-header first">
         <div class="row">
             <div class="col-sm-9">
-            @section('title')
+            @section('inner-title')
                 {{ $title or '' }}
             @show
             @if (isset($filtersData))
@@ -39,4 +39,4 @@
 
 </div>
 
-@include('clumsy::templates.footer')
+@include($view->resolve('footer'))
