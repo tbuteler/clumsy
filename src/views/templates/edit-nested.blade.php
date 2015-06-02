@@ -25,7 +25,7 @@
             @parent
         </div>
         @if ($item->exists)
-        <div role="tabpanel" class="tab-pane" id="{{ $child_resource }}">
+        <div role="tabpanel" class="tab-pane child-resource-pane" id="{{ $child_resource }}">
             <h1 class="page-header">
                 <div class="row">
                     <div class="col-sm-9">
