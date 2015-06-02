@@ -1,4 +1,4 @@
-@extends($view->resolve('master'))
+@extends('clumsy::templates.master')
 
 @section('master')
 
