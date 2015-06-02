@@ -1,4 +1,4 @@
-@include($view->resolve('head'))
+@extends('clumsy::templates.head')
 
 <div class="container master">
 
@@ -39,4 +39,4 @@
 
 </div>
 
-@include($view->resolve('footer'))
+@extends('clumsy::templates.footer')
