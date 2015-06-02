@@ -332,7 +332,7 @@ class AdminController extends APIController {
                 if ($per_page)
                 {
                     $data['children'] = $query->paginate($per_page);
-                    $data['pagination'] = $data['children']->links();
+                    $data['pagination'] = $data['children']->fragment($child->resource_name)->links();
                 }
                 else
                 {
