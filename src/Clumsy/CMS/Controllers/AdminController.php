@@ -102,7 +102,7 @@ class AdminController extends APIController {
     protected function typeCount($type)
     {
         $method = 'typeCount'.studly_case($type);
-        return $this->{$method};
+        return $this->{$method}();
     }
 
     protected function typeCounts()
