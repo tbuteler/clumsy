@@ -94,9 +94,20 @@ class AdminController extends APIController {
         return null;
     }
 
+    protected function hasTypeCounter($type)
+    {
+        return method_exists($this, 'typeCount'.studly_case($type));
+    }
+
+    protected function typeCount($type)
+    {
+        $method = 'typeCount'.studly_case($type);
+        return $this->{$method};
+    }
+
     protected function typeCounts()
     {
-        $counts['all'] = $this->model->managed()->count();
+        $counts['all'] = $this->hasTypeCounter('all') ? $this->typeCount('all') : $this->model->managed()->count();
         
         foreach ($this->model->toggleFilters() as $filter => $filter_label)
         {
@@ -105,7 +116,7 @@ class AdminController extends APIController {
                 continue;
             }
 
-            $counts[$filter] = $this->model->managed()->ofType($filter)->count();
+            $counts[$filter] = $this->hasTypeCounter($filter) ? $this->typeCount($filter) : $this->model->managed()->ofType($filter)->count();
         }
 
         return $counts;

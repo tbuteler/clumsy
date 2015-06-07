@@ -3,6 +3,7 @@
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -194,6 +195,11 @@ class APIController extends Controller {
 
         $item = $this->model->create($data);
 
+        // Fire custom Clumsy model events, so controllers can further manipulate
+        // items without fear of infinite loops
+        Event::fire("clumsy.created: {$this->model_base_name}", array($item));
+        Event::fire("clumsy.saved: {$this->model_base_name}", array($item));
+
         return $this->content($item->id, 200);
     }
 
@@ -230,6 +236,11 @@ class APIController extends Controller {
         }
 
         $item->update($data);
+
+        // Fire custom Clumsy model events, so controllers can further manipulate
+        // items without fear of infinite loops
+        Event::fire("clumsy.updated: {$this->model_base_name}", array($item));
+        Event::fire("clumsy.saved: {$this->model_base_name}", array($item));
 
         return $this->code(200);
     }
