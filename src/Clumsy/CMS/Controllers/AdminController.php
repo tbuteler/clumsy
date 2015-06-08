@@ -378,6 +378,11 @@ class AdminController extends APIController {
             $data['fields'] = array();
         }
 
+        if (!isset($data['buttons']))
+        {
+            $data['buttons'] = array();
+        }
+
         if ($this->model->isNested())
         {
             $parent_id_column = $this->model->parentIdColumn();
