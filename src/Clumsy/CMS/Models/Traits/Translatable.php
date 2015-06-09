@@ -12,7 +12,7 @@ trait Translatable {
 
 	public static function matchSlug($column, $slug, $callback = null)
 	{
-		$column = $this->localizeColumn($column);
+		$column = self::localizeColumn($column);
 		
 		$items = self::all();
 		return $items->filter(function($item) use($column, $slug, $callback)
