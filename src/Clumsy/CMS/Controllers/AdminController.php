@@ -330,9 +330,17 @@ class AdminController extends APIController {
         {    
             $child = head($this->model_hierarchy['children']);
 
-            $data['add_child'] = HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child->resource_name}.create"), 'parent', $id);
             $data['child_resource'] = $child->resource_name;
-            $data['children_title'] = $this->labeler->displayNamePlural($child);
+            
+            if (!isset($data['add_child']))
+            {
+                $data['add_child'] = HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child->resource_name}.create"), 'parent', $id);
+            }
+
+            if (!isset($data['children_title']))
+            {
+                $data['children_title'] = $this->labeler->displayNamePlural($child);
+            }
 
             if (!isset($data['children']))
             {
