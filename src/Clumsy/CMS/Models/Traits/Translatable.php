@@ -17,9 +17,14 @@ trait Translatable {
 			->first();
 	}
 
+	public static function localizeColumn($column)
+	{
+		return $column.'_'.International::getCurrentLocale();
+	}
+
 	public function translatable($column)
 	{
-		$column .= '_'.International::getCurrentLocale();
+		$column = $this->localizeColumn($column);
 
 		return $this->$column;
 	}
