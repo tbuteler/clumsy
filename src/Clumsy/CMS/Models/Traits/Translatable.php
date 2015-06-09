@@ -5,21 +5,21 @@ use Clumsy\CMS\Facades\International;
 
 trait Translatable {
 
-	public static function matchSlug($base_column, $slug, $callback = null)
-	{
-		$base_column .= '_'.International::getCurrentLocale();
-		
-		$items = self::all();
-		return $items->filter(function($item) use($base_column, $slug, $callback)
-			{
-				return ($callback ? $callback($item) : true) && Str::slug($item->$base_column) === $slug;
-			})
-			->first();
-	}
-
 	public static function localizeColumn($column)
 	{
 		return $column.'_'.International::getCurrentLocale();
+	}
+
+	public static function matchSlug($column, $slug, $callback = null)
+	{
+		$column = $this->localizeColumn($column);
+		
+		$items = self::all();
+		return $items->filter(function($item) use($column, $slug, $callback)
+			{
+				return ($callback ? $callback($item) : true) && Str::slug($item->$column) === $slug;
+			})
+			->first();
 	}
 
 	public function translatable($column)
@@ -31,7 +31,7 @@ trait Translatable {
 
 	public function localizeOrderBy(\Illuminate\Database\Eloquent\Builder $query, $column, $direction = 'asc')
 	{
-		$column .= '_'.International::getCurrentLocale();
+		$column = $this->localizeColumn($column);
 
 		return $query->orderBy($column, $direction);
 	}
@@ -43,7 +43,7 @@ trait Translatable {
 
 	public function scopeListsWithId($query, $column)
 	{
-		$column .= '_'.International::getCurrentLocale();
+		$column = $this->localizeColumn($column);
 
 		return $query->lists($column, 'id');
 	}
