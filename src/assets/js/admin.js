@@ -1,4 +1,16 @@
 $(function(){
+
+    $('.with-tooltip').tooltip();
+    $('.navbar').on('show.bs.dropdown', function(event) {
+        $el = $(event.target);
+        if ($el.hasClass('with-tooltip')){
+            $el.tooltip('destroy');
+            $el.one('hide.bs.dropdown', function(event) {
+                $el.tooltip();
+            });
+        }
+    });
+
     $('.delete').click(function(e){
         $(this).closest('form').next('.delete-form').submit();
     });

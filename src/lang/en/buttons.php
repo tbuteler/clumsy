@@ -2,9 +2,9 @@
 
 return array(
 
-    'login'         => 'Login',
+    'login'         => 'Sign in',
 
-    'logout'        => 'Log out',
+    'logout'        => 'Sign out',
 
     'reset'         => 'Reset',
 
