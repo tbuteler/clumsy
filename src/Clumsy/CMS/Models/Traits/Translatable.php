@@ -5,6 +5,18 @@ use Clumsy\CMS\Facades\International;
 
 trait Translatable {
 
+	protected static $translatableMutators = array();
+	public static $translatable = array();
+
+	protected static function bootTranslatable()
+	{
+		foreach (static::$translatable as $translatable)
+		{
+			static::$mutatorCache[get_called_class()][] = $translatable;
+			static::$translatableMutators['get'.studly_case($translatable).'Attribute'] = $translatable;
+		}
+	}
+
 	public static function localizeColumn($column)
 	{
 		return $column.'_'.International::getCurrentLocale();
@@ -46,5 +58,25 @@ trait Translatable {
 		$column = $this->localizeColumn($column);
 
 		return $query->lists($column, 'id');
+	}
+
+	public function hasTranslatableGetMutator($key)
+	{
+		return in_array($key, (array)static::$translatable);
+	}
+
+	public function hasGetMutator($key)
+	{
+		return $this->hasTranslatableGetMutator($key) || method_exists($this, 'get'.studly_case($key).'Attribute');
+	}
+
+	public function __call($method, $parameters)
+	{
+		if (array_key_exists($method, static::$translatableMutators))
+		{
+			return $this->translatable(static::$translatableMutators[$method]);
+		}
+
+		return parent::__call($method, $parameters);
 	}
 }

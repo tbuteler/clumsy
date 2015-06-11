@@ -55,7 +55,7 @@ class BaseModel extends \Eloquent {
         $this->resource_name = snake_case(class_basename(get_class($this)));
     }
 
-    public static function boot()
+    protected static function boot()
     {
         parent::boot();
         
