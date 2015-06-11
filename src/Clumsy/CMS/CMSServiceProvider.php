@@ -1,5 +1,6 @@
 <?php namespace Clumsy\CMS;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
@@ -26,6 +27,9 @@ class CMSServiceProvider extends ServiceProvider {
 		$this->app->register('Clumsy\Assets\AssetsServiceProvider');
 		$this->app->register('Clumsy\Utils\UtilsServiceProvider');
 		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
+
+		// Override the default router so we can add more methods to resource controllers
+		$this->app['router'] = $this->app->make('Clumsy\CMS\Routing\Router');
 
 		// Bind view resolver conditionally so we can provide legacy support for Laravel 4.1
 		$this->app->bind('clumsy.view-resolver-factory',
