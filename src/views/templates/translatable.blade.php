@@ -11,28 +11,19 @@
 	@foreach ($locales as $locale => $language)
 		<div class="tab-pane{{ $locale === $first ? ' active' : '' }}" id="{{ $locale }}">
 		@foreach ($fields as $column => $label)
-		<?php
-			if(str_contains($column, ':'))
-			{
-				list($column, $type) = explode(':', $column);
-			}
-			else
-			{
-				$type = 'field';
-			}
+			
+			@if(str_contains($column, ':'))
+				<?php list($column, $type) = explode(':', $column); ?>
+			@else
+				<?php $type = 'field'; ?>
+			@endif
 
-			if ($type == 'media') {
-				$newColumn = $column.'_'.$locale;
-		?>
-				{{ Form::$type($label[$newColumn]) }}		
-		<?php
-			}
-			else{
-		?>
-				{{ Form::$type($column.'_'.$locale, $label) }}
-		<?php
-			}
-		?>
+			@if ($type === 'media')
+				{{ Form::$type($label[$model->localizeColumn($column, $locale)]) }}	
+			@else
+				{{ Form::$type($model->localizeColumn($column, $locale), $label) }}
+			@endif
+
 		@endforeach
 		</div>
 	@endforeach

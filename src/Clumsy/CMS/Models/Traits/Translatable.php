@@ -17,9 +17,14 @@ trait Translatable {
 		}
 	}
 
-	public static function localizeColumn($column)
+	public static function localizeColumn($column, $locale = null)
 	{
-		return $column.'_'.International::getCurrentLocale();
+		if (!$locale)
+		{
+			$locale = International::getCurrentLocale();
+		}
+
+		return $column.'_'.$locale;
 	}
 
 	public static function matchSlug($column, $slug, $callback = null)
