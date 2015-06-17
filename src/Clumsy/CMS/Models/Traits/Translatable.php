@@ -39,9 +39,9 @@ trait Translatable {
 			->first();
 	}
 
-	public function translatable($column)
+	public function translatable($column, $locale = null)
 	{
-		$column = $this->localizeColumn($column);
+		$column = $this->localizeColumn($column, $locale);
 
 		return $this->$column;
 	}
