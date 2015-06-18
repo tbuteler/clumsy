@@ -73,8 +73,6 @@ HTML::macro('translatable', function($fields)
 {
     $locales = International::getSupportedLocales();
     
-    krsort($locales); // PT first?
-    
     reset($locales);
     $first = key($locales);
 
