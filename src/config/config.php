@@ -89,6 +89,42 @@ return array(
 
     'per_page' => 50,
 
+
+    /*
+     |--------------------------------------------------------------------------
+     | Generators
+     |--------------------------------------------------------------------------
+     |
+     | Here you can configure namespaces and target folders for Clumsy's
+     | boilerplate generation service
+     |
+     */
+
+    /*
+     |--------------------------------------------------------------------------
+     | Object namespaces
+     |--------------------------------------------------------------------------
+     */
+    
+    'model_namespace'      => '',
+
+    'controller_namespace' => '',
+
+    /*
+     |--------------------------------------------------------------------------
+     | Base target paths
+     |--------------------------------------------------------------------------
+     */
+        
+    'model_path'        => app_path('models'),
+
+    'controller_path'   => app_path('controllers'),
+
+    'seed_path'         => app_path('database/seeds'),
+
+    'views_folder_path' => app_path('views/admin'),
+
+
     /*
      |--------------------------------------------------------------------------
      | API Keys

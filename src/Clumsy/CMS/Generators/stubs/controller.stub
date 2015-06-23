@@ -1,0 +1,5 @@
+<?php{{namespace}}
+
+class {{object_name_plural}}Controller extends \Clumsy\CMS\Controllers\AdminController {
+
+}

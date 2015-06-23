@@ -46,7 +46,12 @@ class CMSServiceProvider extends ServiceProvider {
                 return new Console\PublishCommand($app['asset.publisher']);
             });
 
-        $this->commands(array('command.clumsy.publish'));
+        $this->app['command.clumsy.resource'] = $this->app->share(function($app)
+            {
+                return new Console\ResourceCommand();
+            });
+
+        $this->commands(array('command.clumsy.publish', 'command.clumsy.resource'));
 
         $this->app->bind('\Clumsy\CMS\Contracts\ShortcodeInterface', '\Clumsy\CMS\Library\Shortcode');
 	}
