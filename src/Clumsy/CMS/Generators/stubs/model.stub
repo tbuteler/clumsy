@@ -1,5 +1,26 @@
 <?php{{namespace}}
 
+use Clumsy\Eminem\Traits\Mediable;
+
 class {{object_name}} extends \Clumsy\CMS\Models\BaseModel {
 
+    use Mediable;
+
+    public $columns = array(
+        'title' => 'Title',
+    );
+
+    public $rules = array();
+    public $booleans = array();
+    public $active_booleans = array();
+
+    public function mediaSlots()
+    {
+        return false;
+    }
+
+    public function mediaPlaceholder($position = null)
+    {
+        return '';
+    }
 }

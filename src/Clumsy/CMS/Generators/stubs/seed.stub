@@ -3,7 +3,7 @@
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class {{object_name_plural}} extends Seeder {
+class {{object_name_plural}}Seeder extends Seeder {
 
 	public function run()
 	{
