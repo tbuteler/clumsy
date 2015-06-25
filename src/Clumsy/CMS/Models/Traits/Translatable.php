@@ -6,11 +6,20 @@ use Clumsy\CMS\Facades\International;
 trait Translatable {
 
 	protected static $translatableMutators = array();
-	public static $translatable = array();
+
+	protected static function translatables()
+	{
+		if (isset(static::$translatable))
+		{
+			return (array)static::$translatable;
+		}
+
+		return array();
+	}
 
 	protected static function bootTranslatable()
 	{
-		foreach (static::$translatable as $translatable)
+		foreach (static::translatables() as $translatable)
 		{
 			static::$mutatorCache[get_called_class()][] = $translatable;
 			static::$translatableMutators['get'.studly_case($translatable).'Attribute'] = $translatable;
@@ -27,16 +36,15 @@ trait Translatable {
 		return $column.'_'.$locale;
 	}
 
-	public static function matchSlug($column, $slug, $callback = null)
+	public function scopeGetFromLocalizedSlug($query, $column, $slug)
 	{
 		$column = self::localizeColumn($column);
 		
-		$items = self::all();
-		return $items->filter(function($item) use($column, $slug, $callback)
+		$items = $query->get();
+		return $items->filter(function($item) use($column, $slug)
 			{
-				return ($callback ? $callback($item) : true) && Str::slug($item->$column) === $slug;
-			})
-			->first();
+				return Str::slug($item->$column) === $slug;
+			});
 	}
 
 	public function translatable($column, $locale = null)
@@ -67,7 +75,7 @@ trait Translatable {
 
 	public function hasTranslatableGetMutator($key)
 	{
-		return in_array($key, (array)static::$translatable);
+		return in_array($key, static::translatables());
 	}
 
 	public function hasGetMutator($key)
