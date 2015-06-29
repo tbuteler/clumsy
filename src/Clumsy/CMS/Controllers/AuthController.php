@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
+use Clumsy\CMS\Facades\Clumsy;
 
 class AuthController extends Controller {
 
@@ -22,13 +23,13 @@ class AuthController extends Controller {
     {
         if (Sentry::check())
         {
-            return Redirect::to(Config::get('clumsy::admin_prefix'));
+            return Redirect::to(Clumsy::prefix());
         }
     }
 
     public function login()
     {
-        $data['admin_prefix'] = Config::get('clumsy::admin_prefix');
+        $data['admin_prefix'] = Clumsy::prefix();
         $data['intended'] = Session::get('intended');
         $data['body_class'] = 'login';
 
@@ -37,7 +38,7 @@ class AuthController extends Controller {
 
     public function postLogin()
     {
-        $admin_prefix = Config::get('clumsy::admin_prefix');
+        $admin_prefix = Clumsy::prefix();
 
         try
         {
@@ -171,7 +172,7 @@ class AuthController extends Controller {
                 {
                     Sentry::login($user);
 
-                    $admin_prefix = Config::get('clumsy::admin_prefix');
+                    $admin_prefix = Clumsy::prefix();
 
                     return Redirect::route("$admin_prefix.home")->with(array(
                         'alert_status' => 'success',

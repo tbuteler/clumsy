@@ -87,7 +87,7 @@ return array(
      |
      */
 
-    'per_page' => 50,
+    'per_page' => 40,
 
 
     /*
@@ -131,6 +131,6 @@ return array(
      |--------------------------------------------------------------------------
      */
     
-    'API_google_maps' => 'AIzaSyDTiJ_tH1-nnrKdnLcsKm54ovJGtCtmd_k',
+    'API_google_maps' => '',
 
 );

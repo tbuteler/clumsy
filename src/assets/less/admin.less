@@ -101,6 +101,68 @@ body.login {
 
 /*
 |--------------------------------------------------------------------------
+| Page headings
+|--------------------------------------------------------------------------
+|
+*/
+
+.main-content {
+
+    & > .page-header {
+        margin-top: 5px;
+    }
+}
+
+.page-header {
+    position: relative;
+    margin-top: 30px;
+    line-height: 42px;
+
+    &.section-header {
+        margin-top: 0;
+    }
+}
+
+.after-title {
+    margin-top: 10px;
+    text-align: left;
+
+    .btn {
+        position: relative;
+        top: -2px;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Tabs
+|--------------------------------------------------------------------------
+|
+*/
+
+.tab-pane {
+    display: none;
+
+    &.active {
+        display: block;
+    }
+}
+
+.nav-tabs {
+    margin-bottom: 30px;
+
+    & > li {
+
+        &.active > a,
+        &.active > a:hover,
+        &.active > a:focus {
+            background-color: #f7f7f7;
+        }
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
 | Items table
 |--------------------------------------------------------------------------
 |
@@ -220,26 +282,6 @@ table {
 
 /*
 |--------------------------------------------------------------------------
-| Tabs
-|--------------------------------------------------------------------------
-|
-*/
-
-.nav-tabs {
-    margin-bottom: 30px;
-
-    & > li {
-
-        &.active > a,
-        &.active > a:hover,
-        &.active > a:focus {
-            background-color: #f7f7f7;
-        }
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
 | Tooltips
 |--------------------------------------------------------------------------
 |
@@ -247,6 +289,36 @@ table {
 
 .tooltip {
     white-space: nowrap;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Form
+|--------------------------------------------------------------------------
+|
+*/
+
+form {
+    margin-bottom: 1em;
+}
+
+.bottom-buttons {
+    overflow: hidden;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+
+    button {
+        margin-left: 15px;
+
+        &:first-child {
+            margin-left: 0;
+        }
+
+        &.glyphicon {
+            top: 0;
+        }
+    }
 }
 
 /*
@@ -429,58 +501,10 @@ input+.iris-picker{
 
 /*
 |--------------------------------------------------------------------------
-| Misc elements
+| Map input
 |--------------------------------------------------------------------------
 |
 */
-
-form {
-    margin-bottom: 1em;
-}
-
-.page-header {
-    position: relative;
-
-    &.first {
-        margin-top: 5px;
-    }
-
-    &.section-header {
-        margin-top: 0;
-    }
-}
-
-.after-title {
-    margin-top: 10px;
-    text-align: left;
-}
-
-.bottom-buttons {
-    overflow: hidden;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-
-    button {
-        margin-left: 15px;
-
-        &:first-child {
-            margin-left: 0;
-        }
-
-        &.glyphicon {
-            top: 0;
-        }
-    }
-}
-
-.tab-pane {
-    display: none;
-
-    &.active {
-        display: block;
-    }
-}
 
 #map {
     min-height: 400px;

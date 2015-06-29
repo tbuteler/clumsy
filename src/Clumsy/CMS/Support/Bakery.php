@@ -3,6 +3,7 @@
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Input;
 use Clumsy\CMS\Support\ResourceNameResolver;
+use Clumsy\Utils\Facades\HTTP;
 
 class Bakery {
 
@@ -53,7 +54,7 @@ class Bakery {
                     {
 						$parent_id = $id ? $current->parentItemId($id) : Input::get('parent');
 
-                    	$parent_crumbs[$this->labeler->displayNamePlural($current)] = $this->url->route("{$this->prefix}.{$parent->resource_name}".'.edit', $parent_id).("#{$current->resource_name}");
+                    	$parent_crumbs[$this->labeler->displayNamePlural($current)] = HTTP::queryStringAdd($this->url->route("{$this->prefix}.{$parent->resource_name}".'.edit', $parent_id), 'show', $current->resource_name);
                     	$parent_crumbs[trans('clumsy::titles.edit_item', array('resource' => $this->labeler->displayName($parent)))] = $this->url->route("{$this->prefix}.{$parent->resource_name}".'.edit', $parent_id);
                     	$parent_crumbs[$this->labeler->displayNamePlural($parent)] = $this->url->route("{$this->prefix}.{$parent->resource_name}".'.index');
 

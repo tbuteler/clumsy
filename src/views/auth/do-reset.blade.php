@@ -4,10 +4,6 @@
     @lang('clumsy::titles.reset-password')
 @stop
 
-@section('inner-title')
-    @lang('clumsy::titles.reset-password')
-@stop
-
 @section('master')
 
     {{ Form::open(array('route' => 'post-do-reset-password')) }}

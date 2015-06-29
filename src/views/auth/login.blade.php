@@ -4,12 +4,8 @@
     @lang('clumsy::titles.login')
 @stop
 
-@section('inner-title')
-    @lang('clumsy::titles.login')
-@stop
-
 @section('master')
-
+    
     {{ Form::open() }}
 
     {{ Form::hidden('intended', $intended ? $intended : URL::route("$admin_prefix.home")) }}

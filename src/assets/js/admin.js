@@ -18,10 +18,6 @@ $(function(){
         return $(this).hasClass('user') ? confirm(handover.admin.strings.delete_confirm_user) : confirm(handover.admin.strings.delete_confirm);
     });
 
-    if ($('a[data-toggle="tab"]').length && window.location.hash !== '') {
-            $('.nav a').filter('a[href="'+window.location.hash+'"]').tab('show');
-    }
-
     if ($('.rich-text').length) {
         tinymce.init($.extend(
         {

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
+use Clumsy\Utils\Facades\HTTP;
 
 class BackEndController extends Controller {
 
@@ -19,19 +21,19 @@ class BackEndController extends Controller {
             Session::put("clumsy.order.$resource", array(Input::get('column'), Input::get('direction')));
         }
 
-        return Redirect::back();
+        return Redirect::to(HTTP::queryStringAdd(URL::previous(), 'show', $resource));
     }
 
     public function filter($resource)
     {
         $buffer = array();
-        foreach (Input::except('_token') as $column => $values) {
-            $column = str_replace(':','.',$column);
+        foreach (Input::except('_token') as $column => $values)
+        {
+            $column = str_replace(':', '.', $column);
             $buffer[$column] = $values;
         }
 
-        Session::put("clumsy.filter.$resource",$buffer);
-        
+        Session::put("clumsy.filter.$resource", $buffer);
 
         return  Redirect::back();
     }

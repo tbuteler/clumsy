@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\URL;
+use Clumsy\CMS\Facades\Clumsy;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,7 @@ Form::macro('delete', function($resource_type, $id) {
 
     $form_parameters = array(
         'method' => "DELETE",
-        'url'    => URL::route(Config::get('clumsy::admin_prefix').".$resource_type.destroy", $id),
+        'url'    => URL::route(Clumsy::prefix().".$resource_type.destroy", $id),
         'class'  => "delete-form btn-outside pull-left $resource_type",
     );
  

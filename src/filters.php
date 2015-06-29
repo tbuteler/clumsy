@@ -1,92 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Lang;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
-use Clumsy\Assets\Facade as Asset;
-use Clumsy\CMS\Facades\ViewResolver;
-
 /*
 |--------------------------------------------------------------------------
-| Admin Filters
+| Clumsy boot filter
 |--------------------------------------------------------------------------
 |
 */
 
-Route::filter('admin_auth', function()
-{
-    if (!Sentry::check())
-    {        
-        return Redirect::guest(Config::get('clumsy::admin_prefix').'/login');
-    }
-});
+Route::filter('clumsy', '\Clumsy\CMS\Clumsy@boot');
 
-Route::filter('admin_assets', function()
-{
-    $admin_locale = Config::get('clumsy::admin_locale');
-    App::setLocale($admin_locale);
-    Config::set('app.locale', $admin_locale);
+/*
+|--------------------------------------------------------------------------
+| Backwards compatibility
+|--------------------------------------------------------------------------
+|
+*/
 
-    Asset::enqueue('admin.css');
-    Asset::enqueue('admin.js');
-    Asset::json('admin', array(
-        'urls' => array(
-            'base'   => URL::to(Config::get('clumsy::admin_prefix')),
-            'update' => URL::route('_update'),
-        ),
-        'strings' => array(
-            'delete_confirm'      => trans('clumsy::alerts.delete_confirm'),
-            'delete_confirm_user' => trans('clumsy::alerts.user.delete_confirm'),
-        ),
-    ));
-
-    View::share('admin_prefix', Config::get('clumsy::admin_prefix'));
-
-    View::share('navbar_wrapper', ViewResolver::resolve('navbar-wrapper'));
-    View::share('navbar', ViewResolver::resolve('navbar'));
-
-    $alert = $alert_status = false;
-
-    if (Session::has('alert'))
-    {
-        $alert = Session::get('alert');
-        $alert_status = Session::has('alert_status') ? Session::get('alert_status') : 'warning';
-    }
-
-    View::share('alert', $alert);
-    View::share('alert_status', $alert_status);
-
-    View::share('body_class', str_replace('.', '-', Route::currentRouteName()));
-});
-
-Route::filter('admin_user', function()
-{
-    $user = Sentry::getUser();
-
-    $username = array_filter(array(
-        $user->first_name,
-        $user->last_name,
-    ));
-
-    if (!count($username))
-    {
-        $username = (array)$user->email;
-    }
-
-    $usergroup = str_singular($user->getGroups()->first()->name);
-
-    if (Lang::has('clumsy::fields.roles.'.Str::lower($usergroup)))
-    {
-        $usergroup = trans('clumsy::fields.roles.'.Str::lower($usergroup));
-    }
-
-    View::share('user', $user);
-    View::share('username', implode(' ', $username));
-    View::share('usergroup', $usergroup);
-});
+Route::filter('admin_auth', '\Clumsy\CMS\Clumsy@auth');
+Route::filter('admin_assets', '\Clumsy\CMS\Clumsy@assets');
+Route::filter('admin_assets', '\Clumsy\CMS\Clumsy@user');

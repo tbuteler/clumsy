@@ -23,21 +23,12 @@ class CMSServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
 		$this->app->register('Clumsy\Assets\AssetsServiceProvider');
 		$this->app->register('Clumsy\Utils\UtilsServiceProvider');
 		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
 
 		// Override the default router so we can add more methods to resource controllers
 		$this->app['router'] = $this->app->make('Clumsy\CMS\Routing\Router');
-
-		// Bind view resolver conditionally so we can provide legacy support for Laravel 4.1
-		$this->app->bind('clumsy.view-resolver-factory',
-			class_exists('Illuminate\View\Environment')
-				? 'Illuminate\View\Environment' // Laravel 4.1
-				: 'Illuminate\View\Factory'		// Laravel 4.2+
-		);
-		$this->app['clumsy.view-resolver'] = $this->app->make('Clumsy\CMS\Support\ViewResolver');
 
         $this->app['command.clumsy.publish'] = $this->app->share(function($app)
             {
@@ -70,8 +61,6 @@ class CMSServiceProvider extends ServiceProvider {
         $admin_assets = include($path.'/assets/assets.php');
 		Asset::batchRegister($admin_assets);
 
-		require $path.'/macros/html.php';
-		require $path.'/macros/form.php';
 		require $path.'/filters.php';
 		require $path.'/routes.php';
 		require $path.'/errors.php';

@@ -13,11 +13,11 @@
 							<th>{{ $filtersData['names'][$column] }}</th>
 							<td>
 							{{	Form::dropdown('filter_'.str_replace('.',':',$column), 
-			                                ' ', 
-			                                array(null => '') + $items,
-			                                $filtersData['selected'][$column],
-			                                array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => 'Seleccionar...'))
-			                            );
+	                                ' ', 
+	                                array(null => '') + $items,
+	                                $filtersData['selected'][$column],
+	                                array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => 'Seleccionar...'))
+	                            );
 		                    }}
 							</td>
 						</tr>

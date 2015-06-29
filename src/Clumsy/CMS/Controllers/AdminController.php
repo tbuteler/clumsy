@@ -32,7 +32,7 @@ class AdminController extends APIController {
     {
         parent::__construct();
 
-        $this->view = $view;
+        $this->view = clone $view;
 
         $this->bakery = $bakery;
 
@@ -48,13 +48,11 @@ class AdminController extends APIController {
 
         $this->resource_plural = str_plural($this->resource);
 
-        // Resolve navbar before setting the resource as domain
-        View::share('navbar_wrapper', $this->view->resolve('navbar-wrapper'));
-        View::share('navbar', $this->view->resolve('navbar'));
-
         $this->view->setDomain($this->resource);
-        $this->bakery->setPrefix($this->admin_prefix);
+        $this->view->pushLevel($this->action);
         View::share('view', $this->view);
+
+        $this->bakery->setPrefix($this->admin_prefix);
 
         View::share('model', $this->model);
         View::share('resource', $this->resource);
@@ -216,6 +214,9 @@ class AdminController extends APIController {
 
     public function indexOfType($type, $data = array())
     {
+        $this->view->nestLevel($type);
+        $this->view->pushLevel('index');
+
         $data['index_type'] = $type;
         $data['item_count'] = $this->typeCounts();
 
@@ -322,8 +323,6 @@ class AdminController extends APIController {
             $data['title'] = trans('clumsy::titles.edit_item', array('resource' => $this->labeler->displayName($this->model)));
         }
 
-        $data['form_fields'] = $this->view->resolve('fields');
-
         $view = $this->view->resolve('edit');
 
         if ($id && $this->model->hasChildren())
@@ -331,16 +330,17 @@ class AdminController extends APIController {
             $child = head($this->model_hierarchy['children']);
 
             $data['child_resource'] = $child->resource_name;
-            
-            if (!isset($data['add_child']))
-            {
-                $data['add_child'] = HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child->resource_name}.create"), 'parent', $id);
-            }
 
-            if (!isset($data['children_title']))
-            {
-                $data['children_title'] = $this->labeler->displayNamePlural($child);
-            }
+            $child_view = clone $this->view;
+            $child_view->setDomain($child->resource_name)->clearLevels()->pushLevel('index');
+            $data['child_view'] = $child_view;
+
+            $data = array_merge(array(
+                'children_title' => $this->labeler->displayNamePlural($child),
+                'child_columns'  => $child->columns(),
+                'create_link'    => HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child->resource_name}.create"), 'parent', $id),
+
+            ), $data);
 
             if (!isset($data['children']))
             {
@@ -352,7 +352,7 @@ class AdminController extends APIController {
                 if ($per_page)
                 {
                     $data['children'] = $query->paginate($per_page);
-                    $data['pagination'] = $data['children']->fragment($child->resource_name)->links();
+                    $data['pagination'] = $data['children']->appends(array('show' => $child->resource_name))->links();
                 }
                 else
                 {
@@ -360,10 +360,18 @@ class AdminController extends APIController {
                 }
             }
 
-            if (!isset($data['child_columns']))
-            {
-                $data['child_columns'] = $child->columns();
-            }
+            $child_data = array_merge(
+                $data,
+                array(
+                    'title'    => $data['children_title'],
+                    'items'    => $data['children'],
+                    'columns'  => $data['child_columns'],
+                    'resource' => $data['child_resource'],
+                    'view'     => $data['child_view'],
+                )
+            );
+
+            $data['child_inner_index'] = View::make($child_view->resolve('inner-index'), $child_data)->render();
 
             $view = $this->view->resolve('edit-nested');
         }
@@ -401,6 +409,8 @@ class AdminController extends APIController {
         {
             $data['suppress_delete'] = $this->model->suppress_delete;
         }
+
+        $data['show_resource'] = Input::get('show');
 
         return View::make($view, $data);
     }

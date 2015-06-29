@@ -4,23 +4,24 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 
-/*
-|--------------------------------------------------------------------------
-| Admin Routes - Authentication
-|--------------------------------------------------------------------------
-|
-*/
-
 Route::group(
     array(
         'namespace' => 'Clumsy\CMS\Controllers',
         'prefix'    => Config::get('clumsy::admin_prefix'),
+        'before'    => 'clumsy:setPrefix',
     ),
     function()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Admin authentication routes
+        |--------------------------------------------------------------------------
+        |
+        */
+
         Route::get('login', array(
             'as'       => 'login',
-            'before'   => 'admin_assets',
+            'before'   => 'clumsy:assets',
             'uses'     => 'AuthController@login',
         ));
 
@@ -31,7 +32,7 @@ Route::group(
 
         Route::get('reset', array(
             'as'       => 'reset-password',
-            'before'   => 'admin_assets',
+            'before'   => 'clumsy:assets',
             'uses'     => 'AuthController@reset',
         ));
 
@@ -42,7 +43,7 @@ Route::group(
 
         Route::get('do-reset/{user_id}/{code}', array(
             'as'       => 'do-reset-password',
-            'before'   => 'admin_assets',
+            'before'   => 'clumsy:assets',
             'uses'     => 'AuthController@doReset',
         ));
 
@@ -56,105 +57,118 @@ Route::group(
             'as'       => 'logout',
             'uses'     => 'AuthController@logout',
         ));
-    }
-);
 
-/*
-|--------------------------------------------------------------------------
-| Admin Routes
-|--------------------------------------------------------------------------
-|
-*/
+        /*
+        |--------------------------------------------------------------------------
+        | Admin front-end routes
+        |--------------------------------------------------------------------------
+        |
+        */
 
-Route::group(
-    array(
-        'namespace' => 'Clumsy\CMS\Controllers',
-        'prefix'    => Config::get('clumsy::admin_prefix'),
-        'before'    => 'admin_auth|admin_user|admin_assets|admin_extra',
-    ),
-    function()
-    {
-        Route::get('/', array(
-            'as'   => Config::get('clumsy::admin_prefix').'.home',
+        Route::group(
+            array(
+                'before'    => 'clumsy|admin_extra',
+            ),
             function()
             {
-                return View::make('clumsy::index');
+                Route::get('/', array(
+                    'as'   => Config::get('clumsy::admin_prefix').'.home',
+                    function()
+                    {
+                        return View::make('clumsy::index');
+                    }
+                ));
+
+                Route::get('{resource}/reorder',array(
+                    'as'     => '_active-reorder',
+                    'uses'   => 'AdminController@reorder',
+                ));
+
+                /*
+                |--------------------------------------------------------------------------
+                | User resource
+                |--------------------------------------------------------------------------
+                |
+                */
+
+                Route::resource('user', 'UsersController');
             }
-        ));
+        );
 
         /*
         |--------------------------------------------------------------------------
-        | External resource update routine
+        | Back-end routes
         |--------------------------------------------------------------------------
         |
         */
 
-        Route::get('_import/{resource?}', array(
-            'as'   => '_import',
-            'uses' => 'ExternalResourceController@import',
-        ));
+        Route::group(
+            array(
+                'before'    => 'clumsy:auth+user',
+            ),
+            function()
+            {
+                /*
+                |--------------------------------------------------------------------------
+                | External resource update routine
+                |--------------------------------------------------------------------------
+                |
+                */
 
-        /*
-        |--------------------------------------------------------------------------
-        | Column sorting
-        |--------------------------------------------------------------------------
-        |
-        */
+                Route::get('_import/{resource?}', array(
+                    'as'   => '_import',
+                    'uses' => 'ExternalResourceController@import',
+                ));
 
-        Route::get('_reorder/{resource}', array(
-            'as'   => '_reorder',
-            'uses' => 'BackEndController@reorder',
-        ));
+                /*
+                |--------------------------------------------------------------------------
+                | Column sorting
+                |--------------------------------------------------------------------------
+                |
+                */
 
-        /*
-        |--------------------------------------------------------------------------
-        | Index dynamic filters
-        |--------------------------------------------------------------------------
-        |
-        */
+                Route::get('_reorder/{resource}', array(
+                    'as'   => '_reorder',
+                    'uses' => 'BackEndController@reorder',
+                ));
 
-        Route::post('_filter/{resource}', array(
-            'as'   => '_filter',
-            'uses' => 'BackEndController@filter',
-        ));
+                /*
+                |--------------------------------------------------------------------------
+                | Index dynamic filters
+                |--------------------------------------------------------------------------
+                |
+                */
 
-        /*
-        |--------------------------------------------------------------------------
-        | AJAX entry updating (active booleans)
-        |--------------------------------------------------------------------------
-        |
-        */
+                Route::post('_filter/{resource}', array(
+                    'as'   => '_filter',
+                    'uses' => 'BackEndController@filter',
+                ));
 
-        Route::post('_update', array(
-            'as'     => '_update',
-            'before' => 'csrf',
-            'uses'   => 'BackEndController@update',
-        ));
+                /*
+                |--------------------------------------------------------------------------
+                | AJAX entry updating (active booleans)
+                |--------------------------------------------------------------------------
+                |
+                */
 
-        /*
-        |--------------------------------------------------------------------------
-        | Active reorder
-        |--------------------------------------------------------------------------
-        |
-        */
+                Route::post('_update', array(
+                    'as'     => '_update',
+                    'before' => 'csrf',
+                    'uses'   => 'BackEndController@update',
+                ));
 
-        Route::get('{resource}/reorder',array(
-            'as'     => '_active-reorder',
-            'uses'   => 'AdminController@reorder',
-        ));
+                /*
+                |--------------------------------------------------------------------------
+                | Active reorder
+                |--------------------------------------------------------------------------
+                |
+                */
 
-        Route::post('_reorder/{resource}',array(
-            'as'   => '_save-active-reorder',
-            'uses' => 'BackEndController@saveOrder',
-        ));
-
-        /*
-        |--------------------------------------------------------------------------
-        | User resource
-        |--------------------------------------------------------------------------
-        |
-        */
-
-        Route::resource('user', 'UsersController');
+                Route::post('_reorder/{resource}',array(
+                    'as'   => '_save-active-reorder',
+                    'uses' => 'BackEndController@saveOrder',
+                ));
+            }
+        );
     }
 );
