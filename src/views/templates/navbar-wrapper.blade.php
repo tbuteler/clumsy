@@ -16,7 +16,7 @@
             @include($navbar)
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ route('logout') }}" class="with-tooltip glyphicon glyphicon-off" title="{{ trans('clumsy::buttons.logout') }}" data-placement="bottom"></a></li>
+                <li><a href="{{ route('clumsy.logout') }}" class="with-tooltip glyphicon glyphicon-off" title="{{ trans('clumsy::buttons.logout') }}" data-placement="bottom"></a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

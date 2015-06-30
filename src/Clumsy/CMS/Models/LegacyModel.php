@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Clumsy\CMS\Facades\Clumsy;
 
 class LegacyModel extends \Eloquent {
 
@@ -497,7 +498,7 @@ class LegacyModel extends \Eloquent {
 
         if ($value === false || $value === null) $value = $this->columnValuePlaceHolder();
 
-        $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);
+        $url = URL::route(Clumsy::prefix().".{$this->resource_name}.edit", $this->id);
 
         return HTML::link($url, $value);
     }

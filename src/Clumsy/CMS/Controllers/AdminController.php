@@ -490,9 +490,9 @@ class AdminController extends APIController {
         ));
     }
 
-    public function reorder($resource)
+    public function reorder()
     {
-        if (!isset($this->model->active_reorder))
+        if (!isset($this->model->active_reorder) || !$this->model->active_reorder)
         {
             return Redirect::route("{$this->admin_prefix}.home");
         }

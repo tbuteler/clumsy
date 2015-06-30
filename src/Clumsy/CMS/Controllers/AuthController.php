@@ -29,7 +29,6 @@ class AuthController extends Controller {
 
     public function login()
     {
-        $data['admin_prefix'] = Clumsy::prefix();
         $data['intended'] = Session::get('intended');
         $data['body_class'] = 'login';
 
@@ -114,7 +113,7 @@ class AuthController extends Controller {
 
                 $resetCode = $user->getResetPasswordCode();
 
-                $url = URL::route('do-reset-password', array('user_id' => $user->id, 'code' => $resetCode));
+                $url = URL::route('clumsy.do-reset-password', array('user_id' => $user->id, 'code' => $resetCode));
 
                 Mail::send('clumsy::emails.auth.reset', compact('url'), function($message) use($user)
                 {
@@ -152,7 +151,7 @@ class AuthController extends Controller {
         return View::make('clumsy::auth.do-reset', compact('body_class', 'user_id', 'code'));
     }
  
-    public function postDoReset()
+    public function postDoReset($user_id, $code)
     {
         $validator = Validator::make(Input::all(), array(
             'password' => 'required|confirmed',
@@ -166,15 +165,15 @@ class AuthController extends Controller {
         {
             try
             {
-                $user = Sentry::findUserById(Input::get('user_id'));
+                $user = Sentry::findUserById($user_id);
 
-                if ($user->checkResetPasswordCode(Input::get('code')) && $user->attemptResetPassword(Input::get('code'), Input::get('password')))
+                if ($user->checkResetPasswordCode($code) && $user->attemptResetPassword($code, Input::get('password')))
                 {
                     Sentry::login($user);
 
                     $admin_prefix = Clumsy::prefix();
 
-                    return Redirect::route("$admin_prefix.home")->with(array(
+                    return Redirect::to(Clumsy::prefix())->with(array(
                         'alert_status' => 'success',
                         'alert'        => trans('clumsy::alerts.auth.password-changed'),
                     ));
@@ -198,7 +197,7 @@ class AuthController extends Controller {
     {
         Sentry::logout();
 
-        return Redirect::route('login')->with(array(
+        return Redirect::route('clumsy.login')->with(array(
             'alert_status' => 'success',
             'alert'        => trans('clumsy::alerts.auth.logged_out')
         ));

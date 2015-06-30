@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Clumsy\CMS\Facades\Clumsy;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,7 @@ App::error(function(Illuminate\Session\TokenMismatchException $exception)
     Log::error(Input::all());
     Log::error($exception);
 
-	if (Config::get('clumsy::silent') && Route::getCurrentRoute()->getPrefix() === Config::get('clumsy::admin_prefix'))
+	if (Config::get('clumsy::silent') && Route::getCurrentRoute()->getPrefix() === Clumsy::prefix())
 	{
     	return Redirect::back()->with(array(
             'alert_status' => 'warning',

@@ -9,7 +9,7 @@ use Clumsy\CMS\Facades\International;
 
 HTML::macro('columnTitle', function($resource, $column, $name)
 {
-    $url = URL::route('_reorder', $resource);
+    $url = URL::route('clumsy.reorder', $resource);
     $attributes = array();
     $html = '';
 

@@ -41,12 +41,11 @@ class Clumsy {
         $this->app['clumsy.view-resolver'] = $this->app->make('Clumsy\CMS\Support\ViewResolver');
         $this->view = $this->app['clumsy.view-resolver'];
 
-        $path = __DIR__.'/../..';
+        $this->app->instance('clumsy', $this);
 
+        $path = __DIR__.'/../..';
         require $path.'/macros/admin/html.php';
         require $path.'/macros/admin/form.php';
-
-        $this->app->instance('clumsy', $this);
     }
 
     public function boot(Route $route, Request $request, $filters = null)
@@ -85,7 +84,7 @@ class Clumsy {
     {
         if (!Sentry::check())
         {
-            return Redirect::guest($route->getPrefix().'/login');
+            return Redirect::guest(route('clumsy.login'));
         }
     }
 
@@ -106,7 +105,7 @@ class Clumsy {
         Asset::json('admin', array(
             'urls' => array(
                 'base'   => URL::to($route->getPrefix()),
-                'update' => URL::route('_update'),
+                'update' => URL::route('clumsy.update'),
             ),
             'strings' => array(
                 'delete_confirm'      => trans('clumsy::alerts.delete_confirm'),
