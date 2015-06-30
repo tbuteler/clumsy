@@ -2,6 +2,7 @@
 
 use Clumsy\Eminem\Models\Media;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\HTML;
@@ -521,6 +522,30 @@ class LegacyModel extends \Eloquent {
     public function booleanColumnValue($column)
     {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+    }
+
+    public function adminContextPrefix()
+    {
+        return 'clumsy_';
+    }
+
+    public function setAdminContext($context, $value)
+    {
+        $context = $this->adminContextPrefix().$context;
+        return $this->{$context} = $value;
+    }
+
+    public function getAdminContext($context)
+    {
+        $context = $this->adminContextPrefix().$context;
+        return $this->{$context};
+    }
+
+    public function scopeWithAdminContext($query, $context, $value)
+    {
+        $context = $this->adminContextPrefix().$context;
+        DB::connection()->getPdo()->quote($value);
+        return $query->addSelect(DB::raw("\"$value\" as `$context`"));
     }
 
     public function displayName()

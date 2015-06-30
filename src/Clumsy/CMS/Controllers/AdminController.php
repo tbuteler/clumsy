@@ -246,7 +246,7 @@ class AdminController extends APIController {
             }
         }
 
-        $data['query']->ofType($type);
+        $data['query']->withAdminContext('of_type', $type)->ofType($type);
 
         return $this->index($data);
     }
