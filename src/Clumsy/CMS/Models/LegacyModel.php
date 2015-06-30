@@ -259,6 +259,12 @@ class LegacyModel extends \Eloquent {
         return method_exists($this, 'sort'.studly_case($column).'Column');
     }
 
+    public function currentInnerView()
+    {
+        $defaultView = isset($this->innerViews) ? $this->innerViews : 'table';
+        return Session::get("clumsy.inner-view.{$this->resource_name}",head((array) $defaultView));
+    }
+
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
     {
         $sorted = false;

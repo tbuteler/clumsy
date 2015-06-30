@@ -207,6 +207,11 @@ class AdminController extends APIController {
             $data['toggle_filters'] = $this->model->toggleFilters();
         }
 
+        if (!isset($data['innerView']))
+        {
+            $data['innerView'] = $this->model->currentInnerView();
+        }
+
         $data['reorder'] = (bool)$this->model->active_reorder;
 
         return View::make($this->view->resolve('index'), $data);
@@ -363,11 +368,12 @@ class AdminController extends APIController {
             $child_data = array_merge(
                 $data,
                 array(
-                    'title'    => $data['children_title'],
-                    'items'    => $data['children'],
-                    'columns'  => $data['child_columns'],
-                    'resource' => $data['child_resource'],
-                    'view'     => $data['child_view'],
+                    'title'     => $data['children_title'],
+                    'items'     => $data['children'],
+                    'columns'   => $data['child_columns'],
+                    'resource'  => $data['child_resource'],
+                    'view'      => $data['child_view'],
+                    'innerView' => $child->currentInnerView(),
                 )
             );
 
