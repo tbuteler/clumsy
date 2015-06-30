@@ -327,51 +327,59 @@ class AdminController extends APIController {
 
         if ($id && $this->model->hasChildren())
         {    
-            $child = head($this->model_hierarchy['children']);
-
-            $data['child_resource'] = $child->resource_name;
-
-            $child_view = clone $this->view;
-            $child_view->setDomain($child->resource_name)->clearLevels()->pushLevel('index');
-            $data['child_view'] = $child_view;
-
-            $data = array_merge(array(
-                'children_title' => $this->labeler->displayNamePlural($child),
-                'child_columns'  => $child->columns(),
-                'create_link'    => HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child->resource_name}.create"), 'parent', $id),
-
-            ), $data);
-
             if (!isset($data['children']))
             {
-                $query = $child->select('*')->where($child->parentIdColumn(), $id)->orderSortable();
-                $data['sortable'] = true;
-
-                $per_page = property_exists($child, 'admin_per_page') ? $child->admin_per_page : Config::get('clumsy::per_page');
-
-                if ($per_page)
-                {
-                    $data['children'] = $query->paginate($per_page);
-                    $data['pagination'] = $data['children']->appends(array('show' => $child->resource_name))->links();
-                }
-                else
-                {
-                    $data['children'] = $query->get();
-                }
+                $data['children'] = array();
             }
 
-            $child_data = array_merge(
-                $data,
-                array(
-                    'title'    => $data['children_title'],
-                    'items'    => $data['children'],
-                    'columns'  => $data['child_columns'],
-                    'resource' => $data['child_resource'],
-                    'view'     => $data['child_view'],
-                )
-            );
+            foreach ($this->model_hierarchy['children'] as $child)
+            {
+                $child_resource = $child->resource_name;
 
-            $data['child_inner_index'] = View::make($child_view->resolve('inner-index'), $child_data)->render();
+                if (!isset($data['children'][$child_resource]))
+                {
+                    $data['children'][$child_resource] = array();
+                }
+
+                $data['children'][$child_resource]['resource'] = $child_resource;
+
+                $data['children'][$child_resource] = array_merge(array(
+                    'title'       => $this->labeler->displayNamePlural($child),
+                    'columns'     => $child->columns(),
+                    'create_link' => HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child_resource}.create"), 'parent', $id),
+
+                ), $data['children'][$child_resource]);
+
+                if (!isset($data['children'][$child_resource]) || !isset($data['children'][$child_resource]['items']))
+                {
+                    $query = $child->select('*')->where($child->parentIdColumn(), $id)->orderSortable();
+                    $data['children'][$child_resource]['sortable'] = true;
+
+                    $per_page = property_exists($child, 'admin_per_page') ? $child->admin_per_page : Config::get('clumsy::per_page');
+
+                    if ($per_page)
+                    {
+                        $child_items = $query->paginate($per_page);
+                        $data['children'][$child_resource]['items'] = $child_items;
+                        $data['children'][$child_resource]['pagination'] = $child_items->appends(array('show' => $child_resource))->links();
+                    }
+                    else
+                    {
+                        $data['children'][$child_resource]['items'] = $query->get();
+                    }
+                }
+
+                $child_view = clone $this->view;
+                $child_view->setDomain($child->resource_name)->clearLevels()->pushLevel('index');
+                $data['children'][$child_resource]['view'] = $child_view;
+
+                $child_data = array_merge(
+                    $data,
+                    $data['children'][$child_resource]
+                );
+
+                $data['children'][$child_resource]['inner_index'] = View::make($child_view->resolve('inner-index'), $child_data)->render();
+            }
 
             $view = $this->view->resolve('edit-nested');
         }
