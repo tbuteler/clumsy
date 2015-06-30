@@ -159,7 +159,7 @@ $(function(){
         var chosen_op = {
             width: '100%',
             max_selected_options: 5,
-            no_results_text: "Nenhum resultado com "
+            no_results_text: handover.admin.strings.filter_no_results
         };
 
         $('.filter-box select').chosen(chosen_op);

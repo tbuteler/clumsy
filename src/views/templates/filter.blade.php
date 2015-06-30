@@ -16,7 +16,7 @@
 	                                ' ', 
 	                                array(null => '') + $items,
 	                                $filtersData['selected'][$column],
-	                                array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => 'Seleccionar...'))
+	                                array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => trans('clumsy::fields.filter-select')))
 	                            );
 		                    }}
 							</td>
