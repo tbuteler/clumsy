@@ -2,6 +2,7 @@
 
 use Clumsy\Eminem\Models\Media;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Form;
 use Illuminate\Support\Facades\HTML;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Clumsy\CMS\Facades\Clumsy;
 
 class LegacyModel extends \Eloquent {
 
@@ -503,7 +505,7 @@ class LegacyModel extends \Eloquent {
 
         if ($value === false || $value === null) $value = $this->columnValuePlaceHolder();
 
-        $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);
+        $url = URL::route(Clumsy::prefix().".{$this->resource_name}.edit", $this->id);
 
         return HTML::link($url, $value);
     }
@@ -526,6 +528,30 @@ class LegacyModel extends \Eloquent {
     public function booleanColumnValue($column)
     {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+    }
+
+    public function adminContextPrefix()
+    {
+        return 'clumsy_';
+    }
+
+    public function setAdminContext($context, $value)
+    {
+        $context = $this->adminContextPrefix().$context;
+        return $this->{$context} = $value;
+    }
+
+    public function getAdminContext($context)
+    {
+        $context = $this->adminContextPrefix().$context;
+        return $this->{$context};
+    }
+
+    public function scopeWithAdminContext($query, $context, $value)
+    {
+        $context = $this->adminContextPrefix().$context;
+        DB::connection()->getPdo()->quote($value);
+        return $query->addSelect(DB::raw("\"$value\" as `$context`"));
     }
 
     public function displayName()

@@ -18,7 +18,7 @@ return array(
 
 	'password'         => 'Password',
 
-	'password_confirmation' => 'Confirm password',
+	'confirm_password' => 'Confirm password',
 
 	'reset-password'   => 'Reset password',
 
@@ -53,6 +53,10 @@ return array(
 	
 	'user_is_banned'    => 'User has been banned.',
 	
+	'filter-select'     => 'Select...',
+
+	'filter-no-results' => 'No results for ',
+
 	'latitude'          => 'Latitude',
 	
 	'longitude'         => 'Longitude'

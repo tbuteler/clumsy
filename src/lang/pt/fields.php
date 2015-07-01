@@ -18,7 +18,7 @@ return array(
 
 	'password'         => 'Palavra-passe',
 
-	'password_confirmation' => 'Confirmar palavra-passe',
+	'confirm_password' => 'Confirmar palavra-passe',
 
 	'reset-password'   => 'Redefinir palavra-passe',
 
@@ -52,6 +52,10 @@ return array(
 	'user_is_suspended' => 'O utilizador está suspenso.',
 
 	'user_is_banned'    => 'O utilizador foi banido.',
+
+	'filter-select'     => 'Seleccionar...',
+
+	'filter-no-results' => 'Nenhum resultado com ',
 
 	'latitude'          => 'Latitude',
 	

@@ -24,15 +24,15 @@ return array(
 
     /*
      |--------------------------------------------------------------------------
-     | Admin prefix
+     | Authentication routes prefix
      |--------------------------------------------------------------------------
      |
-     | URL prefix that points to the admin area of your CMS
-     | i.e. http://example.com/admin/
+     | URL prefix for the authentication URLs
+     | i.e. http://example.com/admin/login
      |
      */
 
-    'admin_prefix' => 'admin',
+    'authentication-prefix' => 'admin',
 
     /*
      |--------------------------------------------------------------------------

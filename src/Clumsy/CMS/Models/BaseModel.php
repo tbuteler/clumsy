@@ -1,12 +1,14 @@
 <?php namespace Clumsy\CMS\Models;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\HTML;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Clumsy\CMS\Facades\Clumsy;
 
 class BaseModel extends \Eloquent {
 
@@ -469,7 +471,7 @@ class BaseModel extends \Eloquent {
 
         if ($value === false || $value === null) $value = $this->columnValuePlaceHolder();
 
-        $url = URL::route(Config::get('clumsy::admin_prefix').".{$this->resource_name}.edit", $this->id);
+        $url = URL::route(Clumsy::prefix().".{$this->resource_name}.edit", $this->id);
 
         return HTML::link($url, $value);
     }
@@ -497,6 +499,30 @@ class BaseModel extends \Eloquent {
     public function galleryThumbnail()
     {
         return '<img src="'.$this->mediaPath($this->galleryThumbnailSlot).'" class="img-responsive" alt="image">';
+    }
+
+    public function adminContextPrefix()
+    {
+        return 'clumsy_';
+    }
+
+    public function setAdminContext($context, $value)
+    {
+        $context = $this->adminContextPrefix().$context;
+        return $this->{$context} = $value;
+    }
+
+    public function getAdminContext($context)
+    {
+        $context = $this->adminContextPrefix().$context;
+        return $this->{$context};
+    }
+
+    public function scopeWithAdminContext($query, $context, $value)
+    {
+        $context = $this->adminContextPrefix().$context;
+        DB::connection()->getPdo()->quote($value);
+        return $query->addSelect(DB::raw("\"$value\" as `$context`"));
     }
 
     public function displayName()

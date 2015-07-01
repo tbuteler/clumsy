@@ -5,26 +5,6 @@ use Clumsy\CMS\Models\LocalChange;
 
 class ExternalResourceController extends AdminController {
 
-    protected function hasImporter($model = null)
-    {
-        if ($model === null)
-        {
-            $model = $this->model;
-        }
-        
-        return (bool)strpos($model::$importer, '@');
-    }
-
-    protected function importer($model = null)
-    {
-        if ($model === null)
-        {
-            $model = $this->model;
-        }
-
-        return explode('@', $model::$importer);
-    }
-
     /**
      * Display a listing of items
      *
@@ -38,19 +18,6 @@ class ExternalResourceController extends AdminController {
     }
 
     /**
-     * Show the form for creating a new item
-     *
-     * @return Response
-     */
-    public function create($data = array())
-    {
-        return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
-            'alert_status' => 'warning',
-            'alert'        => trans('clumsy::alerts.import.required', array('resources' => $this->labeler->displayNamePlural($this->model))),
-        ));
-    }
-
-    /**
      * Update the specified item in storage.
      *
      * @param  int  $id
@@ -58,10 +25,9 @@ class ExternalResourceController extends AdminController {
      */
     public function update($id)
     {
-        $model = $this->modelClass();
         $resource = $this->resource;
 
-        $model::updating(function($item) use($resource)
+        $this->model->updating(function($item) use($resource)
         {
             foreach ($item->getDirty() as $field => $value)
             {
@@ -82,20 +48,21 @@ class ExternalResourceController extends AdminController {
         return parent::update($id);
     }
 
-    public function import($resource_type = null)
+    protected function hasImporter()
+    {        
+        return (bool)strpos($this->model->importer, '@');
+    }
+
+    protected function fireImport()
     {
-        if ($resource_type === null)
+        return call_user_func(array($this->model, last(explode('@', $this->model->importer))));
+    }
+
+    public function import()
+    {
+        if ($this->hasImporter())
         {
-            return Redirect::route("{$this->admin_prefix}.home");
-        }
-
-        $model_name = studly_case($resource_type);
-
-        $model = new $model_name;
-
-        if ($this->hasImporter($model_name))
-        {
-            $import = call_user_func(self::importer($model_name));
+            $import = $this->fireImport();
             
             if ($import !== false)
             {
@@ -104,36 +71,36 @@ class ExternalResourceController extends AdminController {
 
                     if ($import->has('error'))
                     {
-                        return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
+                        return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
                             'alert_status' => 'warning',
                             'alert'        => $import->first('error'),
                         ));
                     }
 
-                    return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
+                    return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
                         'alert_status' => 'success',
                         'alert'        => $import->first(),
                     ));
                 }
 
                 // General success
-                return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
+                return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
                     'alert_status' => 'success',
-                    'alert'        => trans('clumsy::alerts.import.success', array('resources' => $this->labeler->displayNamePlural($model))),
+                    'alert'        => trans('clumsy::alerts.import.success', array('resources' => $this->labeler->displayNamePlural($this->model))),
                 ));
             }
 
             // General failure message
-            return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
+            return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
                 'alert_status' => 'warning',
-                'alert'        => trans('clumsy::alerts.import.fail', array('resources' => $this->labeler->displayNamePlural($model))),
+                'alert'        => trans('clumsy::alerts.import.fail', array('resources' => $this->labeler->displayNamePlural($this->model))),
             ));
         }
         else
         {
-            return Redirect::route("{$this->admin_prefix}.$resource_type.index")->with(array(
+            return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
                 'alert_status' => 'warning',
-                'alert'        => trans('clumsy::alerts.import.undefined', array('resources' => $this->labeler->displayNamePlural($model))),
+                'alert'        => trans('clumsy::alerts.import.undefined', array('resources' => $this->labeler->displayNamePlural($this->model))),
             ));
         }
     }

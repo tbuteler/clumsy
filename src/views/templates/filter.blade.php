@@ -16,7 +16,7 @@
 	                                ' ', 
 	                                array(null => '') + $items,
 	                                $filtersData['selected'][$column],
-	                                array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => 'Seleccionar...'))
+	                                array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => trans('clumsy::fields.filter-select')))
 	                            );
 		                    }}
 							</td>
@@ -32,12 +32,12 @@
 				{{ trans('clumsy::buttons.apply') }}</button>
 			</div>
 			<div class="clearfix"></div>
-			{{ Form::open(array('url' => URL::route('_filter', $resource),'id' => 'filter-form','style' => 'display:none;')) }}
+			{{ Form::open(array('url' => URL::route('clumsy.filter', $resource), 'id' => 'filter-form')) }}
 			    @if (isset($filtersData['selected']))
 			        @foreach ($filtersData['selected'] as $column => $values)
 			            @if ($values != null) 
 			                @foreach ($values as $value)
-			                    {{ Form::text(str_replace('.',':',$column).'[]',$value) }}
+			                    {{ Form::hidden(str_replace('.',':',$column).'[]', $value) }}
 			                @endforeach
 			            @endif
 			        @endforeach

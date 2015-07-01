@@ -6,10 +6,7 @@
 
 @section('master')
 
-    {{ Form::open(array('route' => 'post-do-reset-password')) }}
-
-    {{ Form::hidden('user_id', $user_id) }}
-    {{ Form::hidden('code', $code) }}
+    {{ Form::open() }}
 
     {{ Form::field('password', trans('clumsy::fields.password'), 'password') }}
 

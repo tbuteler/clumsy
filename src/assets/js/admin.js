@@ -159,7 +159,7 @@ $(function(){
         var chosen_op = {
             width: '100%',
             max_selected_options: 5,
-            no_results_text: "Nenhum resultado com "
+            no_results_text: handover.admin.strings.filter_no_results
         };
 
         $('.filter-box select').chosen(chosen_op);
@@ -168,7 +168,7 @@ $(function(){
             $('#filter-submit-btn').removeAttr('disabled');
 
             if (typeof data.selected != "undefined") {
-               $('form#filter-form').append('<input name="' + $(this).data('name') + '[]" value="' + data.selected + '">');
+               $('form#filter-form').append('<input type="hidden" name="'+$(this).data('name')+'[]" value="'+data.selected+'">');
                $(this).parents('.filter-box').find('button').removeAttr('disabled');
             }
             else{
@@ -210,7 +210,7 @@ $(function(){
         $tab.find('.photoset-row').attr('style','overflow: hidden;');
     });
 
-    if ($('body').hasClass('_active-reorder')) {
+    if ($('.reorder-table').length) {
 
         var reorder = $(".reorder-table tbody").sortable({
             revert: true,

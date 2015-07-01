@@ -58,11 +58,13 @@ class CMSServiceProvider extends ServiceProvider {
 
         $this->package('clumsy/cms', 'clumsy', $path);
 
+        $this->registerAuthRoutes();
+        $this->registerBackEndRoutes();
+
         $admin_assets = include($path.'/assets/assets.php');
 		Asset::batchRegister($admin_assets);
 
 		require $path.'/filters.php';
-		require $path.'/routes.php';
 		require $path.'/errors.php';
 	}
 
@@ -78,4 +80,131 @@ class CMSServiceProvider extends ServiceProvider {
 		);
 	}
 
+    protected function registerAuthRoutes()
+    {
+        $this->app['router']->group(
+            array(
+                'namespace' => 'Clumsy\CMS\Controllers',
+                'prefix'    => $this->app['config']->get('clumsy::authentication-prefix'),
+                'before'    => 'clumsy:setPrefix',
+            ),
+            function()
+            {
+                $this->app['router']->get('login', array(
+                    'as'       => 'clumsy.login',
+                    'before'   => 'clumsy:assets',
+                    'uses'     => 'AuthController@login',
+                ));
+
+                $this->app['router']->post('login', array(
+                    'before'   => 'csrf',
+                    'uses'     => 'AuthController@postLogin',
+                ));
+
+                $this->app['router']->get('reset', array(
+                    'as'       => 'clumsy.reset-password',
+                    'before'   => 'clumsy:assets',
+                    'uses'     => 'AuthController@reset',
+                ));
+
+                $this->app['router']->post('reset', array(
+                    'before'   => 'csrf',
+                    'uses'     => 'AuthController@postReset',
+                ));
+
+                $this->app['router']->get('do-reset/{user_id}/{code}', array(
+                    'as'       => 'clumsy.do-reset-password',
+                    'before'   => 'clumsy:assets',
+                    'uses'     => 'AuthController@doReset',
+                ));
+
+                $this->app['router']->post('do-reset/{user_id}/{code}', array(
+                    'before'   => 'csrf',
+                    'uses'     => 'AuthController@postDoReset',
+                ));
+
+                $this->app['router']->get('logout', array(
+                    'as'       => 'clumsy.logout',
+                    'uses'     => 'AuthController@logout',
+                ));
+
+                /*
+                |--------------------------------------------------------------------------
+                | User resource
+                |--------------------------------------------------------------------------
+                |
+                */
+
+                $this->app['router']->group(array(
+                        'before' => 'clumsy',
+                    ),
+                    function()
+                    {
+                        $this->app['router']->resource('user', 'UsersController');
+                    }
+                );
+            }
+        );
+    }
+
+    protected function registerBackEndRoutes()
+    {
+        $this->app['router']->group(
+            array(
+                'namespace' => 'Clumsy\CMS\Controllers',
+                'before' => 'clumsy:auth+user',
+            ),
+            function()
+            {
+                /*
+                |--------------------------------------------------------------------------
+                | Column sorting
+                |--------------------------------------------------------------------------
+                |
+                */
+
+                $this->app['router']->get('_reorder/{resource}', array(
+                    'as'   => 'clumsy.reorder',
+                    'uses' => 'BackEndController@reorder',
+                ));
+
+                /*
+                |--------------------------------------------------------------------------
+                | Index dynamic filters
+                |--------------------------------------------------------------------------
+                |
+                */
+
+                $this->app['router']->post('_filter/{resource}', array(
+                    'as'   => 'clumsy.filter',
+                    'uses' => 'BackEndController@filter',
+                ));
+
+                /*
+                |--------------------------------------------------------------------------
+                | AJAX entry updating (active booleans)
+                |--------------------------------------------------------------------------
+                |
+                */
+
+                $this->app['router']->post('_update', array(
+                    'as'     => 'clumsy.update',
+                    'before' => 'csrf',
+                    'uses'   => 'BackEndController@update',
+                ));
+
+                /*
+                |--------------------------------------------------------------------------
+                | Active reorder
+                |--------------------------------------------------------------------------
+                |
+                */
+
+                $this->app['router']->post('_reorder/{resource}',array(
+                    'as'   => 'clumsy.save-active-reorder',
+                    'uses' => 'BackEndController@saveOrder',
+                ));
+            }
+        );
+    }
 }

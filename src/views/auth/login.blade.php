@@ -13,7 +13,7 @@
     {{ Form::field('email', trans('clumsy::fields.email'), 'email', array('field' => array('tabindex' => '1'))) }}
 
     <div class="form-group">
-        <a tabindex="5" href="{{ route('reset-password') }}" class="pull-right">@lang('clumsy::fields.reset-password')</a>
+        <a tabindex="5" href="{{ route('clumsy.reset-password') }}" class="pull-right">@lang('clumsy::fields.reset-password')</a>
         {{ Form::label('password', trans('clumsy::fields.password')) }}
         {{ Form::password('password', array('class' => 'form-control', 'tabindex' => '2')) }}
     </div>
