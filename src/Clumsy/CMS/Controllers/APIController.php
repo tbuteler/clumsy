@@ -75,9 +75,12 @@ class APIController extends Controller {
     {
         if ($model->hasChildren())
         {
-            $child_model_base_name = $model->childModel();
+            foreach ($model->childResources() as $child_resource)
+            {
+                $child_model_base_name = $model->resourceToModel($child_resource);
 
-            $this->model_hierarchy['children'][] = new $child_model_base_name;
+                $this->model_hierarchy['children'][] = new $child_model_base_name;
+            }
         }
     }
 

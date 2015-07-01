@@ -4,8 +4,11 @@
         @parent
     </div>
     @if ($item->exists)
-    <div role="tabpanel" class="tab-pane child-resource-pane {{ $show_resource === $child_resource ? 'active' : '' }}" id="{{ $child_resource }}">        
-        {{ $child_inner_index }}
+        @foreach ($children as $child_resource => $child)
+            <div role="tabpanel" class="tab-pane child-resource-pane {{ $show_resource === $child_resource ? 'active' : '' }}" id="{{ $child_resource }}">
+            {{ $child['inner_index'] }}
+            </div>
+        @endforeach
     </div>
     @endif
 </div>

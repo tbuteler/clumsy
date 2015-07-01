@@ -3,8 +3,10 @@
         <a href="#{{ $resource }}" aria-controls="{{ $resource }}" role="tab" data-toggle="tab">{{ $title or '' }}</a>
     </li>
     @if ($item->exists)
-    <li role="presentation" {{ $show_resource === $child_resource ? 'class="active"' : '' }}>
-        <a href="#{{ $child_resource }}" aria-controls="{{ $child_resource }}" role="tab" data-toggle="tab">{{ $children_title }}</a>
-    </li>
+        @foreach ($children as $child_resource => $child)
+            <li role="presentation" {{ $show_resource === $child_resource ? 'class="active"' : '' }}>
+                <a href="#{{ $child_resource }}" aria-controls="{{ $child_resource }}" role="tab" data-toggle="tab">{{ $child['title'] }}</a>
+            </li>
+        @endforeach
     @endif
 </ul>

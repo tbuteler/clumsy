@@ -35,7 +35,9 @@ class LegacyModel extends \Eloquent {
 
     public $parent_resource = null;
     public $parent_id_column = null;
+    
     public $child_resource = null;
+    public $child_resources = null;
 
     public $suppress_delete = false;
 
@@ -183,6 +185,11 @@ class LegacyModel extends \Eloquent {
         return (array)$this->append_when_toggled;
     }
 
+    public function resourceToModel($resource)
+    {
+        return (string)studly_case($resource);
+    }
+
     public function isNested()
     {
         return (bool)$this->parentResource();
@@ -195,7 +202,7 @@ class LegacyModel extends \Eloquent {
 
     public function parentModel()
     {
-        return (string)studly_case($this->parent_resource);
+        return $this->resourceToModel($this->parent_resource);
     }
 
     public function parentIdColumn()
@@ -217,17 +224,12 @@ class LegacyModel extends \Eloquent {
 
     public function hasChildren()
     {
-        return (bool)$this->childResource();
+        return (bool)$this->childResources();
     }
 
-    public function childResource()
+    public function childResources()
     {
-        return (string)$this->child_resource;
-    }
-
-    public function childModel()
-    {
-        return (string)studly_case($this->child_resource);
+        return array_merge((array)$this->child_resource, (array)$this->child_resources);
     }
 
     public function requiredBy()

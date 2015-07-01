@@ -32,7 +32,9 @@ class BaseModel extends \Eloquent {
 
     public $parent_resource = null;
     public $parent_id_column = null;
+    
     public $child_resource = null;
+    public $child_resources = null;
 
     public $suppress_delete = false;
 
@@ -47,6 +49,10 @@ class BaseModel extends \Eloquent {
     
     public $active_reorder = false;
     public $reorder_columns = array();
+
+    public $innerViews = 'table';
+
+    public $galleryThumbnailSlot = null;
 
     public function __construct(array $attributes = array())
     {
@@ -141,6 +147,11 @@ class BaseModel extends \Eloquent {
         return (array)$this->append_when_toggled;
     }
 
+    public function resourceToModel($resource)
+    {
+        return (string)studly_case($resource);
+    }
+
     public function isNested()
     {
         return (bool)$this->parentResource();
@@ -153,7 +164,7 @@ class BaseModel extends \Eloquent {
 
     public function parentModel()
     {
-        return (string)studly_case($this->parent_resource);
+        return $this->resourceToModel($this->parent_resource);
     }
 
     public function parentIdColumn()
@@ -175,17 +186,12 @@ class BaseModel extends \Eloquent {
 
     public function hasChildren()
     {
-        return (bool)$this->childResource();
+        return (bool)$this->childResources();
     }
 
-    public function childResource()
+    public function childResources()
     {
-        return (string)$this->child_resource;
-    }
-
-    public function childModel()
-    {
-        return (string)studly_case($this->child_resource);
+        return array_merge((array)$this->child_resource, (array)$this->child_resources);
     }
 
     public function requiredBy()
@@ -224,8 +230,7 @@ class BaseModel extends \Eloquent {
 
     public function currentInnerView()
     {
-        $defaultView = isset($this->innerViews) ? $this->innerViews : 'table';
-        return Session::get("clumsy.inner-view.{$this->resource_name}",head((array) $defaultView));
+        return Session::get("clumsy.inner-view.{$this->resource_name}",head((array) $this->innerViews));
     }
 
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
@@ -487,6 +492,11 @@ class BaseModel extends \Eloquent {
     public function booleanColumnValue($column)
     {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+    }
+
+    public function galleryThumbnail()
+    {
+        return '<img src="'.$this->mediaPath($this->galleryThumbnailSlot).'" class="img-responsive" alt="image">';
     }
 
     public function displayName()

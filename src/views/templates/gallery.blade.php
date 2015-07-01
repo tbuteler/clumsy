@@ -3,7 +3,7 @@
 		<div class="col-md-3">
 			<a href="{{ route("$admin_prefix.$resource.edit", $item->id) }}">
 				<div class="col-md-12 thumbnail gallery-item">
-					<img src="{{ $item->mediaPath('image') }}" class="img-responsive" alt="image">
+					{{ $item->galleryThumbnail() }}
 					<div class="caption">
 						@foreach ($columns as $column => $name)
 		                    <p>{{ $item->$column }}</p>
