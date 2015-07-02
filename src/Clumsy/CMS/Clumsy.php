@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route as RouteFacade;
@@ -92,6 +91,7 @@ class Clumsy {
             'navbar_wrapper' => $this->view->resolve('navbar-wrapper'),
             'navbar'         => $this->view->resolve('navbar'),
             'view'           => $this->view,
+            'columns'        => $this->app['config']->get('clumsy::default_columns'),
             'alert'          => Session::get('alert', false),
             'alert_status'   => Session::get('alert_status', 'warning'),
             'body_class'     => str_replace('.', '-', $route->getName()),

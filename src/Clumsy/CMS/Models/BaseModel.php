@@ -76,10 +76,29 @@ class BaseModel extends \Eloquent {
         }
     }
 
+    public function reorderViewColumns()
+    {
+        return count($this->reorder_columns) ? $this->reorder_columns : array_slice($this->columns, 0, 1);
+    }
+
     public function columns()
     {
-        return (array)($this->columns ? $this->columns : Config::get('clumsy::default_columns'));
+        $innerView = $this->getAdminContext('inner_view');
+        $viewColumnsMethod = camel_case($innerView).'ViewColumns';
+        if ($innerView && method_exists($this, $viewColumnsMethod))
+        {
+            $columns = $this->{$viewColumnsMethod}();
+        }
+        else
+        {
+            $columns = (array)($this->columns ? $this->columns : Config::get('clumsy::default_columns'));
+        }
+
+        $this->prepareColumns($columns);
+        return $columns;
     }
+
+    public function prepareColumns(&$columns) {}
 
     public function columnEquivalence()
     {
@@ -218,11 +237,6 @@ class BaseModel extends \Eloquent {
     public function orderEquivalence()
     {
         return array_merge($this->columnEquivalence(), $this->order_equivalence);
-    }
-
-    public function reorderColumns()
-    {
-        return count($this->reorder_columns) ? $this->reorder_columns : array_slice($this->columns, 0, 1);
     }
 
     public function hasSorter($column)
@@ -509,7 +523,9 @@ class BaseModel extends \Eloquent {
     public function setAdminContext($context, $value)
     {
         $context = $this->adminContextPrefix().$context;
-        return $this->{$context} = $value;
+        $this->{$context} = $value;
+
+        return $this;
     }
 
     public function getAdminContext($context)
@@ -520,15 +536,15 @@ class BaseModel extends \Eloquent {
 
     public function scopeWithAdminContext($query, $context, $value)
     {
-        $context = $this->adminContextPrefix().$context;
-        DB::connection()->getPdo()->quote($value);
+        $context = snake_case($this->adminContextPrefix().$context);
+        $value = DB::connection()->getPdo()->quote($value);
 
         if (!$query->getQuery()->columns)
         {
             $query->select('*');
         }
 
-        $query->addSelect(DB::raw("\"$value\" as `$context`"));
+        $query->addSelect(DB::raw("$value as `$context`"));
     }
 
     public function displayName()

@@ -22,9 +22,9 @@ return array(
 
     'toggle_navbar' => 'Mostrar menu de navegação',
 
-    'manage_site'   => 'Gerenciar site',
+    'manage_site'   => 'Gerir site',
 
-    'manage_users'  => 'Gerenciar utilizadores',
+    'manage_users'  => 'Gerir utilizadores',
 
     'session'       => 'Sessão',
 

@@ -41,7 +41,8 @@ module.exports = function(grunt) {
         },
         less: {
             options: {
-                cleancss: true
+                cleancss: true,
+                compress: true,
             },
             files: {
                 expand: true,

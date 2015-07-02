@@ -31,9 +31,6 @@ class APIController extends Controller {
     protected $model_base_name;
     protected $model;
 
-    protected $columns;
-    protected $order_equivalence = array();
-
     protected $model_hierarchy = array(
         'current'  => null,
         'parents'  => array(),
@@ -86,6 +83,13 @@ class APIController extends Controller {
         }
     }
 
+    protected function setContext($context, $value)
+    {
+        $this->query->withAdminContext($context, $value);
+        
+        $this->model->setAdminContext($context, $value);
+    }
+
     /**
      * Prepare generic processing of resources base on current route
      */
@@ -95,8 +99,6 @@ class APIController extends Controller {
         $this->request = $request;
 
         $this->admin_prefix = $this->route->getPrefix();
-
-        $this->columns = Config::get('clumsy::default_columns');
 
         $indicator = $this->route->getName();
         if (!str_contains($indicator, '.'))
@@ -120,8 +122,6 @@ class APIController extends Controller {
             {
                 $model_name = $this->modelClass();
                 $this->model = new $model_name;
-                $this->columns = $this->model->columns();
-                $this->order_equivalence = $this->model->orderEquivalence();
 
                 $this->model_hierarchy['current'] = $this->model;
 

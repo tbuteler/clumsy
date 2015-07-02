@@ -62,9 +62,8 @@ class AdminController extends APIController {
 
         View::share('breadcrumb', $this->bakery->breadcrumb($this->model_hierarchy, $this->action, $id));
 
-        View::share('columns', $this->columns);
-        View::share('order_equivalence', $this->order_equivalence);
-        
+        View::share('order_equivalence', $this->model->orderEquivalence());
+
         View::share('sortable', true);
         View::share('pagination', '');
 
@@ -127,19 +126,20 @@ class AdminController extends APIController {
      */
     public function index($data = array())
     {
-        if (!isset($data['columns']))
-        {
-            $data['columns'] = $this->columns;
-        }
-
         if (isset($data['query']))
         {
             $this->query = $data['query'];
         }
 
         $data['innerView'] = !isset($data['innerView']) ? $this->model->currentInnerView() : $data['innerView'];
+        $this->setContext('inner_view', $data['innerView']);
 
-        $this->query->managed()->withAdminContext('innerView', $data['innerView']);
+        $this->query->managed();
+
+        if (!isset($data['columns']))
+        {
+            $data['columns'] = $this->model->columns();
+        }
 
         if ($this->model->filters())
         {
@@ -221,6 +221,8 @@ class AdminController extends APIController {
 
     public function indexOfType($type, $data = array())
     {
+        $this->setContext('of_type', $type);
+
         $this->view->nestLevel($type);
         $this->view->pushLevel('index');
 
@@ -235,7 +237,7 @@ class AdminController extends APIController {
 
         if (!isset($data['columns']))
         {
-            $data['columns'] = $this->columns;
+            $data['columns'] = $this->model->columns();
 
             if (sizeof($this->model->suppressWhenToggled()))
             {
@@ -254,7 +256,7 @@ class AdminController extends APIController {
             }
         }
 
-        $this->query->withAdminContext('of_type', $type)->ofType($type);
+        $this->query->ofType($type);
 
         return $this->index($data);
     }
@@ -509,12 +511,12 @@ class AdminController extends APIController {
             return Redirect::route("{$this->admin_prefix}.home");
         }
 
-        $data['columns'] = $this->model->reorderColumns();
+        $this->setContext('inner_view', 'reorder');
 
         $this->query->orderBy($this->model->active_reorder, 'asc');
 
+        $data['columns'] = $this->model->columns();
         $data['items'] = $this->query->get();
-
         $data['title'] = trans('clumsy::titles.reorder', array('resources' => $this->labeler->displayNamePlural($this->model)));
 
         Asset::enqueue('jquery-ui', 30);
