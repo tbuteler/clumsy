@@ -48,11 +48,12 @@ class AdminController extends APIController {
 
         $this->resource_plural = str_plural($this->resource);
 
-        $this->view->setDomain($this->resource);
-        $this->view->pushLevel($this->action);
+        $this->view->setDomain($this->resource)->pushLevel($this->action);
         View::share('view', $this->view);
 
         $this->bakery->setPrefix($this->admin_prefix);
+
+        View::share('action', $this->action);
 
         View::share('model', $this->model);
         View::share('resource', $this->resource);
@@ -223,8 +224,7 @@ class AdminController extends APIController {
     {
         $this->setContext('of_type', $type);
 
-        $this->view->nestLevel($type);
-        $this->view->pushLevel('index');
+        $this->view->nestLevel($type)->pushLevel('index');
 
         $data['index_type'] = $type;
         $data['item_count'] = $this->typeCounts();

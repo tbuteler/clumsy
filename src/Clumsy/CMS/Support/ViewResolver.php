@@ -5,23 +5,23 @@ use Illuminate\Support\Str;
 
 class ViewResolver {
 
-	protected $view;
+    protected $view;
 
-	protected $domain;
+    protected $domain;
 
     protected $levels = array();
 
     protected $nested = array();
 
-	public function __construct(Application $app)
-	{
-		$this->view = $app->make('clumsy.view-resolver-factory');
-	}
+    public function __construct(Application $app)
+    {
+        $this->view = $app->make('clumsy.view-resolver-factory');
+    }
 
-	protected function prefix()
-	{
-		return 'admin';
-	}
+    protected function prefix()
+    {
+        return 'admin';
+    }
 
     protected function domainPath($domain = false)
     {
@@ -60,29 +60,38 @@ class ViewResolver {
         return $this;
     }
 
-    public function pushLevel($level)
+    public function pushLevel()
     {
-        $this->levels = array_merge($this->levels, $this->prepareLevel($level));
-
-        return $this;
-    }
-
-    public function unshiftLevel($level)
-    {
-        $this->levels = array_merge($this->prepareLevel($level), $this->levels);
-
-        return $this;
-    }
-
-    public function nestLevel($nested)
-    {
-        $this->nested[] = $nested;
-
-        $this->levels = array_merge(array_map(function($level) use($nested)
+        foreach (func_get_args() as $level)
         {
-            return "$level.$nested";
+            $this->levels = array_merge($this->levels, $this->prepareLevel($level));
+        }
 
-        }, $this->levels), $this->levels);
+        return $this;
+    }
+
+    public function unshiftLevel()
+    {
+        foreach (func_get_args() as $level)
+        {
+            $this->levels = array_merge($this->prepareLevel($level), $this->levels);
+        }
+
+        return $this;
+    }
+
+    public function nestLevel()
+    {
+        foreach (func_get_args() as $nested)
+        {
+            $this->nested[] = $nested;
+
+            $this->levels = array_merge(array_map(function($level) use($nested)
+            {
+                return "$level.$nested";
+
+            }, $this->levels), $this->levels);
+        }
 
         return $this;
     }
@@ -95,8 +104,8 @@ class ViewResolver {
         return $this;
     }
 
-	public function resolve($slug, $domain = false)
-	{
+    public function resolve($slug, $domain = false)
+    {
         $domain_path = $this->domainPath($domain);
 
         // 1) Local app, with runtime-defined levels and nested levels:
@@ -110,17 +119,17 @@ class ViewResolver {
             }
         }
 
-		// 2) Local app: prefix.resources.slug
+        // 2) Local app: prefix.resources.slug
         if ($this->view->exists("$domain_path.$slug"))
         {
             return "$domain_path.$slug";
         }
 
-		// 3) Local app: prefix.templates.slug
+        // 3) Local app: prefix.templates.slug
         $prefix = $this->prefix();
         if ($this->view->exists("$prefix.templates.$slug"))
         {
-        	return "$prefix.templates.$slug";
+            return "$prefix.templates.$slug";
         }
 
         $domain = $domain ? str_plural($domain) : $this->domain;
@@ -152,5 +161,5 @@ class ViewResolver {
 
         // 7) Clumsy templates: templates.slug
         return "clumsy::templates.$slug";
-	}
+    }
 }
