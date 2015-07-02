@@ -52,6 +52,10 @@ class BaseModel extends \Eloquent {
     public $active_reorder = false;
     public $reorder_columns = array();
 
+    public $innerViews = 'table';
+
+    public $galleryThumbnailSlot = null;
+
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);
@@ -224,6 +228,11 @@ class BaseModel extends \Eloquent {
     public function hasSorter($column)
     {
         return method_exists($this, 'sort'.studly_case($column).'Column');
+    }
+
+    public function currentInnerView()
+    {
+        return Session::get("clumsy.inner-view.{$this->resource_name}",head((array) $this->innerViews));
     }
 
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
@@ -485,6 +494,11 @@ class BaseModel extends \Eloquent {
     public function booleanColumnValue($column)
     {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+    }
+
+    public function galleryThumbnail()
+    {
+        return '<img src="'.$this->mediaPath($this->galleryThumbnailSlot).'" class="img-responsive" alt="image">';
     }
 
     public function adminContextPrefix()

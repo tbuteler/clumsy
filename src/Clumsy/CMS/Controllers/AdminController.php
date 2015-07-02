@@ -207,6 +207,11 @@ class AdminController extends APIController {
             $data['toggle_filters'] = $this->model->toggleFilters();
         }
 
+        if (!isset($data['innerView']))
+        {
+            $data['innerView'] = $this->model->currentInnerView();
+        }
+
         $data['reorder'] = (bool)$this->model->active_reorder;
 
         return View::make($this->view->resolve('index'), $data);
@@ -347,6 +352,7 @@ class AdminController extends APIController {
                     'title'       => $this->labeler->displayNamePlural($child),
                     'columns'     => $child->columns(),
                     'create_link' => HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child_resource}.create"), 'parent', $id),
+                    'innerView' => $child->currentInnerView(),
 
                 ), $data['children'][$child_resource]);
 
