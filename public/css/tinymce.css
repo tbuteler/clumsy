@@ -1,12 +1,1 @@
-/*
-|--------------------------------------------------------------------------
-| TinyMCE textarea styles
-|--------------------------------------------------------------------------
-|
-*/
-#tinymce {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  color: #555;
-  padding-bottom: 0!important;
-}
+#tinymce{font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#555;padding-bottom:0!important}

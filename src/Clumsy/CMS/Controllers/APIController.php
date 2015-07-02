@@ -40,6 +40,8 @@ class APIController extends Controller {
         'children' => array(),
     );
 
+    public $query;
+
     public function __construct()
     {
         $this->beforeFilter('@setupResource');
@@ -125,6 +127,8 @@ class APIController extends Controller {
 
                 $this->parseParents($this->model);
                 $this->parseChildren($this->model);
+
+                $this->query = $this->model->select('*');
             }
         }
     }
@@ -141,7 +145,7 @@ class APIController extends Controller {
 
 	protected function getItem($id)
 	{
-		if (!$item = $this->model->find($id))
+		if (!$item = $this->query->where($this->model->getQualifiedKeyName(), '=', $id)->first())
 		{
 			return $this->code(404);
 		}
@@ -157,7 +161,8 @@ class APIController extends Controller {
             
             if (!isset($data['sortable']) || $data['sortable'])
             {
-                $query->orderSortable();            }
+                $query->orderSortable();
+            }
             
             $per_page = property_exists($this->model, 'admin_per_page') ? $this->model->admin_per_page : Config::get('clumsy::per_page');
 

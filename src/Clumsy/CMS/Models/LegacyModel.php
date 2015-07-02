@@ -55,6 +55,10 @@ class LegacyModel extends \Eloquent {
     public $active_reorder = false;
     public $reorder_columns = array();
 
+    public $innerViews = 'table';
+
+    public $galleryThumbnailSlot = null;
+
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);
@@ -112,11 +116,6 @@ class LegacyModel extends \Eloquent {
     public function columns()
     {
         return (array)($this->columns ? $this->columns : Config::get('clumsy::default_columns'));
-    }
-
-    public function reorderColumns()
-    {
-        return count($this->reorder_columns) ? $this->reorder_columns : array_slice($this->columns, 0, 1);
     }
 
     public function columnEquivalence()
@@ -258,15 +257,19 @@ class LegacyModel extends \Eloquent {
         return array_merge($this->columnEquivalence(), $this->order_equivalence);
     }
 
+    public function reorderColumns()
+    {
+        return count($this->reorder_columns) ? $this->reorder_columns : array_slice($this->columns, 0, 1);
+    }
+
     public function hasSorter($column)
     {
         return method_exists($this, 'sort'.studly_case($column).'Column');
     }
-
+    
     public function currentInnerView()
     {
-        $defaultView = isset($this->innerViews) ? $this->innerViews : 'table';
-        return Session::get("clumsy.inner-view.{$this->resource_name}",head((array) $defaultView));
+        return Session::get("clumsy.inner-view.{$this->resource_name}", head((array)$this->innerViews));
     }
 
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
@@ -530,6 +533,11 @@ class LegacyModel extends \Eloquent {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }
 
+    public function galleryThumbnail()
+    {
+        return '<img src="'.$this->mediaPath($this->galleryThumbnailSlot).'" class="img-responsive" alt="image">';
+    }
+
     public function adminContextPrefix()
     {
         return 'clumsy_';
@@ -551,7 +559,13 @@ class LegacyModel extends \Eloquent {
     {
         $context = $this->adminContextPrefix().$context;
         DB::connection()->getPdo()->quote($value);
-        return $query->addSelect(DB::raw("\"$value\" as `$context`"));
+
+        if (!$query->getQuery()->columns)
+        {
+            $query->select('*');
+        }
+
+        $query->addSelect(DB::raw("\"$value\" as `$context`"));
     }
 
     public function displayName()

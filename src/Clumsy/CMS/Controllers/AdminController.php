@@ -132,7 +132,14 @@ class AdminController extends APIController {
             $data['columns'] = $this->columns;
         }
 
-        $query = !isset($data['query']) ? $this->model->select('*')->managed() : $data['query'];
+        if (isset($data['query']))
+        {
+            $this->query = $data['query'];
+        }
+
+        $data['innerView'] = !isset($data['innerView']) ? $this->model->currentInnerView() : $data['innerView'];
+
+        $this->query->managed()->withAdminContext('innerView', $data['innerView']);
 
         if ($this->model->filters())
         {
@@ -175,7 +182,7 @@ class AdminController extends APIController {
             }
 
             $data['filtersData'] = array(
-                'data'       => $this->model->getFilterData($query),
+                'data'       => $this->model->getFilterData($this->query),
                 'selected'   => $buffer,
                 'hasFilters' => $hasFilters,
                 'names'      => $names,
@@ -186,7 +193,7 @@ class AdminController extends APIController {
         {
             if ($this->request->ajax()) return parent::index($data);
 
-            $data['items'] = $query->getPaged();
+            $data['items'] = $this->query->getPaged();
         }
 
         if (!isset($data['pagination']) && $data['items'] instanceof Paginator)
@@ -207,11 +214,6 @@ class AdminController extends APIController {
             $data['toggle_filters'] = $this->model->toggleFilters();
         }
 
-        if (!isset($data['innerView']))
-        {
-            $data['innerView'] = $this->model->currentInnerView();
-        }
-
         $data['reorder'] = (bool)$this->model->active_reorder;
 
         return View::make($this->view->resolve('index'), $data);
@@ -225,9 +227,10 @@ class AdminController extends APIController {
         $data['index_type'] = $type;
         $data['item_count'] = $this->typeCounts();
 
-        if (!isset($data['query']))
+        if (isset($data['query']))
         {
-            $data['query'] = $this->model->select('*')->managed();
+            $this->query = $data['query'];
+            unset($data['query']);
         }
 
         if (!isset($data['columns']))
@@ -251,7 +254,7 @@ class AdminController extends APIController {
             }
         }
 
-        $data['query']->withAdminContext('of_type', $type)->ofType($type);
+        $this->query->withAdminContext('of_type', $type)->ofType($type);
 
         return $this->index($data);
     }
@@ -352,13 +355,16 @@ class AdminController extends APIController {
                     'title'       => $this->labeler->displayNamePlural($child),
                     'columns'     => $child->columns(),
                     'create_link' => HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child_resource}.create"), 'parent', $id),
-                    'innerView' => $child->currentInnerView(),
+                    'innerView'   => $child->currentInnerView(),
 
                 ), $data['children'][$child_resource]);
 
                 if (!isset($data['children'][$child_resource]) || !isset($data['children'][$child_resource]['items']))
                 {
-                    $query = $child->select('*')->where($child->parentIdColumn(), $id)->orderSortable();
+                    $query = $child->withAdminContext('innerView', $data['children'][$child_resource]['innerView'])
+                                   ->where($child->parentIdColumn(), $id)
+                                   ->orderSortable();
+
                     $data['children'][$child_resource]['sortable'] = true;
 
                     $per_page = property_exists($child, 'admin_per_page') ? $child->admin_per_page : Config::get('clumsy::per_page');
@@ -505,9 +511,9 @@ class AdminController extends APIController {
 
         $data['columns'] = $this->model->reorderColumns();
 
-        $query = $this->model->select('*')->orderBy($this->model->active_reorder, 'asc');
+        $this->query->orderBy($this->model->active_reorder, 'asc');
 
-        $data['items'] = $query->get();
+        $data['items'] = $this->query->get();
 
         $data['title'] = trans('clumsy::titles.reorder', array('resources' => $this->labeler->displayNamePlural($this->model)));
 

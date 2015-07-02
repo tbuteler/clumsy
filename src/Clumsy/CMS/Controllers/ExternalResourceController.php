@@ -55,7 +55,8 @@ class ExternalResourceController extends AdminController {
 
     protected function fireImport()
     {
-        return call_user_func(array($this->model, last(explode('@', $this->model->importer))));
+        list($class, $method) = explode('@', $this->model->importer);
+        return call_user_func(array($class, $method));
     }
 
     public function import()

@@ -232,7 +232,7 @@ class BaseModel extends \Eloquent {
 
     public function currentInnerView()
     {
-        return Session::get("clumsy.inner-view.{$this->resource_name}",head((array) $this->innerViews));
+        return Session::get("clumsy.inner-view.{$this->resource_name}", head((array)$this->innerViews));
     }
 
     public function scopeOrderSortable($query, $column = null, $direction = 'asc')
@@ -522,7 +522,13 @@ class BaseModel extends \Eloquent {
     {
         $context = $this->adminContextPrefix().$context;
         DB::connection()->getPdo()->quote($value);
-        return $query->addSelect(DB::raw("\"$value\" as `$context`"));
+
+        if (!$query->getQuery()->columns)
+        {
+            $query->select('*');
+        }
+
+        $query->addSelect(DB::raw("\"$value\" as `$context`"));
     }
 
     public function displayName()

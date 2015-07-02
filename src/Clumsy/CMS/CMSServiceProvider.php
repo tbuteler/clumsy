@@ -86,7 +86,7 @@ class CMSServiceProvider extends ServiceProvider {
             array(
                 'namespace' => 'Clumsy\CMS\Controllers',
                 'prefix'    => $this->app['config']->get('clumsy::authentication-prefix'),
-                'before'    => 'clumsy:setPrefix',
+                'before'    => 'clumsy:init',
             ),
             function()
             {

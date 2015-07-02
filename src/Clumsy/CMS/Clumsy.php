@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Session;
@@ -46,6 +47,8 @@ class Clumsy {
         $path = __DIR__.'/../..';
         require $path.'/macros/admin/html.php';
         require $path.'/macros/admin/form.php';
+
+        $this->admin_prefix = RouteFacade::getCurrentRoute()->getPrefix();
     }
 
     public function boot(Route $route, Request $request, $filters = null)
@@ -53,6 +56,10 @@ class Clumsy {
         if (!$filters)
         {
             $filters = 'auth+assets+user';
+        }
+        elseif ($filters === 'init')
+        {
+            return;
         }
 
         $filters = explode('+', $filters);
@@ -68,16 +75,6 @@ class Clumsy {
                 }
             }
         }
-
-        if (!$this->admin_prefix)
-        {
-            $this->setPrefix($route, $request);
-        }
-    }
-
-    public function setPrefix(Route $route, Request $request)
-    {
-        $this->admin_prefix = $route->getPrefix();
     }
 
     public function auth(Route $route, Request $request)
