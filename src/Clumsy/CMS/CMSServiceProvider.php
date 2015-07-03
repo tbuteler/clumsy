@@ -9,26 +9,26 @@ use Clumsy\Assets\Facade as Asset;
 
 class CMSServiceProvider extends ServiceProvider {
 
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->app->register('Clumsy\Assets\AssetsServiceProvider');
-		$this->app->register('Clumsy\Utils\UtilsServiceProvider');
-		$this->app->register('Clumsy\Eminem\EminemServiceProvider');
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->register('Clumsy\Assets\AssetsServiceProvider');
+        $this->app->register('Clumsy\Utils\UtilsServiceProvider');
+        $this->app->register('Clumsy\Eminem\EminemServiceProvider');
 
-		// Override the default router so we can add more methods to resource controllers
-		$this->app['router'] = $this->app->make('Clumsy\CMS\Routing\Router');
+        // Override the default router so we can add more methods to resource controllers
+        $this->app['router'] = $this->app->make('Clumsy\CMS\Routing\Router');
 
         $this->app['command.clumsy.publish'] = $this->app->share(function($app)
             {
@@ -45,16 +45,16 @@ class CMSServiceProvider extends ServiceProvider {
         $this->commands(array('command.clumsy.publish', 'command.clumsy.resource'));
 
         $this->app->bind('\Clumsy\CMS\Contracts\ShortcodeInterface', '\Clumsy\CMS\Library\Shortcode');
-	}
+    }
 
-	/**
-	 * Boot the service provider.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		$path = __DIR__.'/../..';
+    /**
+     * Boot the service provider.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $path = __DIR__.'/../..';
 
         $this->package('clumsy/cms', 'clumsy', $path);
 
@@ -62,23 +62,29 @@ class CMSServiceProvider extends ServiceProvider {
         $this->registerBackEndRoutes();
 
         $admin_assets = include($path.'/assets/assets.php');
-		Asset::batchRegister($admin_assets);
+        Asset::batchRegister($admin_assets);
 
-		require $path.'/filters.php';
-		require $path.'/errors.php';
-	}
+        require $path.'/filters.php';
+        require $path.'/errors.php';
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array(
-			'clumsy.shortcode',
-		);
-	}
+        if ($this->app->runningInConsole())
+        {
+            $this->app->make('Clumsy\CMS\Clumsy');
+        }
+
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array(
+            'clumsy.shortcode',
+        );
+    }
 
     protected function registerAuthRoutes()
     {

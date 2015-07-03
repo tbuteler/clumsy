@@ -47,7 +47,7 @@ class Clumsy {
         require $path.'/macros/admin/html.php';
         require $path.'/macros/admin/form.php';
 
-        $this->admin_prefix = RouteFacade::getCurrentRoute()->getPrefix();
+        $this->admin_prefix = $this->app->runningInConsole() ? null : RouteFacade::getCurrentRoute()->getPrefix();
     }
 
     public function boot(Route $route, Request $request, $filters = null)
