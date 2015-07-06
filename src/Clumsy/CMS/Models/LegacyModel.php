@@ -1,6 +1,7 @@
 <?php namespace Clumsy\CMS\Models;
 
 use Clumsy\Eminem\Models\Media;
+use Clumsy\Eminem\Models\MediaAssociation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -81,14 +82,11 @@ class LegacyModel extends \Eloquent {
         self::saving(function($model)
         {
             if (isset($model->files)) unset($model->files);
-        });
-
-        self::creating(function($model)
-        {
             if (isset($model->media_bind)) unset($model->media_bind);
+            if (isset($model->media_unbind)) unset($model->media_unbind);
         });
 
-        self::created(function($model)
+        self::saved(function($model)
         {
             if (Input::has('media_bind'))
             {
@@ -108,6 +106,14 @@ class LegacyModel extends \Eloquent {
 
                         $media->bind($options);
                     }
+                }
+            }
+
+            if (Input::has('media_unbind'))
+            {
+                foreach (Input::get('media_unbind') as $bind_id)
+                {
+                    MediaAssociation::destroy($bind_id);
                 }
             }
         });
@@ -610,7 +616,7 @@ class LegacyModel extends \Eloquent {
         return (bool)sizeof($this->media);
     }
 
-    public function getMediaByPosition($position = null, $offset = 0)
+    public function attachment($position = null, $offset = 0)
     {
         $media = $this->media;
 
@@ -630,11 +636,11 @@ class LegacyModel extends \Eloquent {
     {
         if ($this->hasMedia())
         {
-            $media = $this->getMediaByPosition($position, $offset);
+            $media = $this->attachment($position, $offset);
 
             if ($media)
             {
-                return $media->path();
+                return $media->url();
             }
         }
 
@@ -645,7 +651,7 @@ class LegacyModel extends \Eloquent {
     {
         if ($this->hasMedia())
         {
-            $media = $this->getMediaByPosition($position, $offset);
+            $media = $this->attachment($position, $offset);
 
             if ($media)
             {

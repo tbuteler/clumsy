@@ -1,9 +1,5 @@
 <?php namespace Clumsy\CMS;
 
-use Illuminate\Foundation\AliasLoader;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Clumsy\Assets\Facade as Asset;
 
@@ -65,7 +61,6 @@ class CMSServiceProvider extends ServiceProvider {
         Asset::batchRegister($admin_assets);
 
         require $path.'/filters.php';
-        require $path.'/errors.php';
 
         if ($this->app->runningInConsole())
         {
