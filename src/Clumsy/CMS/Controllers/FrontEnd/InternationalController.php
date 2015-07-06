@@ -1,4 +1,4 @@
-<?php namespace Clumsy\CMS\Controllers;
+<?php namespace Clumsy\CMS\Controllers\FrontEnd;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
