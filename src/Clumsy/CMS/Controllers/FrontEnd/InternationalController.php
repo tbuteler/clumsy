@@ -51,7 +51,13 @@ class InternationalController extends Controller {
         }
 
         $this->shareLocalesOnViews();
+        $this->setSessionLocale();
         $this->setEnvironmentLocale();
+    }
+
+    public function setSessionLocale()
+    {
+        Session::put($this->session_slug, $this->current_locale_code);
     }
 
     public function setEnvironmentLocale()
@@ -71,10 +77,12 @@ class InternationalController extends Controller {
 
     public function existingLanguageRedirect($route, $request)
     {
-        if (!str_contains(URL::previous(), url()) && (Cookie::has($this->cookie_slug) || Session::has($this->session_slug)))
+        if (!Session::get('clumsy.locale-redirected') && !str_contains(URL::previous(), url()) && (Cookie::has($this->cookie_slug) || Session::has($this->session_slug)))
         {
             $locale = Cookie::get($this->cookie_slug, Session::get($this->session_slug));
-            return Redirect::to($this->translateRoute($locale, $route, $request));
+            return Redirect::to($this->translateRoute($locale, $route, $request))->with(array(
+                'clumsy.locale-redirected' => true,
+            ));
         }
     }
 
