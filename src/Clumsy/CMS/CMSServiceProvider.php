@@ -41,6 +41,8 @@ class CMSServiceProvider extends ServiceProvider {
         $this->commands(array('command.clumsy.publish', 'command.clumsy.resource'));
 
         $this->app->bind('\Clumsy\CMS\Contracts\ShortcodeInterface', '\Clumsy\CMS\Library\Shortcode');
+
+        $this->app['clumsy.admin'] = false;
     }
 
     /**
@@ -60,6 +62,8 @@ class CMSServiceProvider extends ServiceProvider {
         $admin_assets = include($path.'/assets/assets.php');
         Asset::batchRegister($admin_assets);
 
+        require $path.'/helpers.php';
+        require $path.'/errors.php';
         require $path.'/filters.php';
 
         if ($this->app->runningInConsole())
@@ -77,6 +81,7 @@ class CMSServiceProvider extends ServiceProvider {
     public function provides()
     {
         return array(
+            'clumsy.admin',
             'clumsy.shortcode',
         );
     }

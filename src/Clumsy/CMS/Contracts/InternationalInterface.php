@@ -7,4 +7,8 @@ interface InternationalInterface {
 	public function getSupportedLocales();
 
 	public function getCurrentLocale();
+
+    public function localizeURL();
+
+    public function getURLFromRouteNameTranslated();
 }

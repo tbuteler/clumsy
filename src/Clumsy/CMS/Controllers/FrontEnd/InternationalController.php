@@ -15,9 +15,20 @@ class InternationalController extends Controller {
     protected $current_locale_code;
     protected $current_locale;
 
+    protected $use_localized_routes = false;
+    protected $localized_routes_filter = null;
+    protected $route_translation_prefix;
+
+    protected $cookie_slug;
+    protected $session_slug;
+
     public function __construct()
     {
-        $this->beforeFilter('LaravelLocalizationRoutes');
+        if ($this->use_localized_routes)
+        {
+            $this->beforeFilter($this->localized_routes_filter);
+        }
+
         $this->beforeFilter('@existingLanguageRedirect');
 
         $this->beforeFilter('@parseLocales');
@@ -51,9 +62,9 @@ class InternationalController extends Controller {
 
     public function existingLanguageRedirect($route, $request)
     {
-        if (!str_contains(URL::previous(), url()) && (Cookie::has('language') || Session::has('language')))
+        if (!str_contains(URL::previous(), url()) && (Cookie::has($this->cookie_slug) || Session::has($this->session_slug)))
         {
-            $locale = Cookie::get('language', Session::get('language'));
+            $locale = Cookie::get($this->cookie_slug, Session::get($this->session_slug));
             return Redirect::to($this->translateRoute($locale, $route, $request));
         }
     }
@@ -61,6 +72,18 @@ class InternationalController extends Controller {
     public function hasRequiredParameters($syntax)
     {
         return (bool)preg_match('/\{[^\}\?]+\}/', $syntax);
+    }
+
+    public function routeTranslationIndex($name = null)
+    {
+        $index = array($this->route_translation_prefix);
+
+        if ($name)
+        {
+            $index[] = $name;
+        }
+
+        return implode('.', $index);
     }
 
     public function localizedRootURL()
@@ -71,7 +94,7 @@ class InternationalController extends Controller {
     public function translateRoute($locale, $route, $request)
     {
         $route_name = $route->getName();
-        $route_syntax = Lang::has("routes.{$route_name}") ? Lang::get("routes.{$route_name}") : false;
+        $route_syntax = Lang::has($this->routeTranslationIndex($route_name)) ? Lang::get($this->routeTranslationIndex($route_name)) : false;
 
         // If route name doesn't have a translation, attempt to get syntax from router
         if (!$route_syntax)
@@ -96,7 +119,7 @@ class InternationalController extends Controller {
             return $this->translateRouteWithParameters($locale, $route_syntax, $route, $request);
         }
 
-        return International::getURLFromRouteNameTranslated($locale, "routes.{$route_name}");
+        return International::getURLFromRouteNameTranslated($locale, $this->routeTranslationIndex($route_name));
     }
 
     public function translateRouteWithParameters($locale, $syntax, $route, $request)
