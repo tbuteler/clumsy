@@ -4,6 +4,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -22,9 +23,11 @@ class InternationalController extends Controller {
     protected $cookie_slug;
     protected $session_slug;
 
+    public $current_route_localized = array();
+
     public function __construct()
     {
-        if ($this->use_localized_routes)
+        if ($this->use_localized_routes && $this->localized_routes_filter)
         {
             $this->beforeFilter($this->localized_routes_filter);
         }
@@ -34,13 +37,18 @@ class InternationalController extends Controller {
         $this->beforeFilter('@parseLocales');
     }
 
-    public function parseLocales()
+    public function parseLocales($route, $request)
     {
         $this->locales = International::getSupportedLocales();
         $this->current_locale_code = International::getCurrentLocale();
         $this->current_locale = array(
             $this->current_locale_code => array_pull($this->locales, $this->current_locale_code)
         );
+
+        foreach ($this->locales as $locale => $locale_array)
+        {
+            $this->current_route_localized[$locale] = $this->translateRoute($locale, $route, $request);
+        }
 
         $this->shareLocalesOnViews();
         $this->setEnvironmentLocale();
@@ -54,9 +62,10 @@ class InternationalController extends Controller {
     public function shareLocalesOnViews()
     {
         View::share(array(
-            'locales'             => $this->locales,
-            'current_locale_code' => $this->current_locale_code,
-            'current_locale'      => $this->current_locale,
+            'locales'                 => $this->locales,
+            'current_locale_code'     => $this->current_locale_code,
+            'current_locale'          => $this->current_locale,
+            'current_route_localized' => $this->current_route_localized,
         ));
     }
 
@@ -86,22 +95,32 @@ class InternationalController extends Controller {
         return implode('.', $index);
     }
 
-    public function localizedRootURL()
+    public function localizedRootURL($locale)
     {
-        return International::getURLFromRouteNameTranslated($locale, null);
+        return International::localizeURL(url().'/', $locale);
     }
 
     public function translateRoute($locale, $route, $request)
     {
+        // Add trailing slash, just in case
+        $url = preg_match('/^(.*)\/$/', $request->url()) ? $request->url() : $request->url().'/';
+
+        if (!$this->use_localized_routes)
+        {
+            return International::localizeURL($url, $locale);
+        }
+
         $route_name = $route->getName();
-        $route_syntax = Lang::has($this->routeTranslationIndex($route_name)) ? Lang::get($this->routeTranslationIndex($route_name)) : false;
+        $route_syntax = Lang::has($this->routeTranslationIndex($route_name))
+                        ? Lang::get($this->routeTranslationIndex($route_name))
+                        : false;
 
         // If route name doesn't have a translation, attempt to get syntax from router
         if (!$route_syntax)
         {
             if (!Route::has($route_name))
             {
-                return $this->localizedRootURL();
+                return $this->localizedRootURL($locale);
             }
 
             $route_syntax = URL::route($route_name);
@@ -109,8 +128,8 @@ class InternationalController extends Controller {
             {
                 return $this->translateRouteWithParameters($locale, $route_syntax, $route, $request);
             }
-        
-            return International::localizeURL($request->url(), $locale);
+
+            return International::localizeURL($url, $locale);
         }
 
         // If syntax contains mandatory parameters, do not attempt to translate route
@@ -124,6 +143,6 @@ class InternationalController extends Controller {
 
     public function translateRouteWithParameters($locale, $syntax, $route, $request)
     {
-        return $this->localizedRootURL();
+        return $this->localizedRootURL($locale);
     }
 }
