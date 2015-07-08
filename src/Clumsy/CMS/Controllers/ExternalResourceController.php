@@ -13,8 +13,19 @@ class ExternalResourceController extends AdminController {
     public function index($data = array())
     {
         $data['importer'] = $this->hasImporter();
-
         return parent::index($data);
+    }
+
+    /**
+     * Show the form for editing the specified item.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id, $data = array())
+    {
+        $data['suppress_delete'] = true;
+        return parent::edit($id, $data);
     }
 
     /**
