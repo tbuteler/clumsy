@@ -77,12 +77,19 @@ class InternationalController extends Controller {
 
     public function existingLanguageRedirect($route, $request)
     {
-        if (!Session::get('clumsy.locale-redirected') && !str_contains(URL::previous(), url()) && (Cookie::has($this->cookie_slug) || Session::has($this->session_slug)))
+        if (
+            !Session::get('clumsy.locale-redirected')
+            && !str_contains(URL::previous(), url())
+            && (Cookie::has($this->cookie_slug) || Session::has($this->session_slug))
+        )
         {
             $locale = Cookie::get($this->cookie_slug, Session::get($this->session_slug));
-            return Redirect::to($this->translateRoute($locale, $route, $request))->with(array(
-                'clumsy.locale-redirected' => true,
-            ));
+            if ($locale !== International::getCurrentLocale())
+            {
+                return Redirect::to($this->translateRoute($locale, $route, $request))->with(array(
+                    'clumsy.locale-redirected' => true,
+                ));
+            }
         }
     }
 
