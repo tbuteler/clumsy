@@ -46,14 +46,16 @@ class APIController extends Controller {
         $this->beforeFilter('csrf', array('only' => array('store', 'update', 'destroy')));
     }
 
-    protected function modelClass()
+    protected function modelClass($resource = null)
     {
-        if ($this->model_namespace && $this->model_base_name)
+        $base_name = $resource ? studly_case($resource) : $this->model_base_name;
+        
+        if ($this->model_namespace && $base_name)
         {
-            return "{$this->model_namespace}\\{$this->model_base_name}";
+            return "{$this->model_namespace}\\{$base_name}";
         }
 
-        return $this->model_base_name;
+        return $base_name;
     }
 
     protected function parseParents($model)

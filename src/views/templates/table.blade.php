@@ -6,7 +6,7 @@
 
         {{ Form::token() }}
 
-        <table class="table {{ $resource }}-table">
+        <table class="table {{ $resource }}-table" data-model="{{ $model_class }}" data-resource="{{ $resource }}">
             <thead>
             @foreach ($columns as $column => $name)
                 <?php if (array_key_exists($column, $order_equivalence)) $column = $order_equivalence[$column]; ?>

@@ -6,14 +6,14 @@ return array(
         'set'   => 'styles',
         'path'  => 'packages/clumsy/cms/css/admin.css',
         'req'   => 'bootstrap',
-        'v'     => '0.20.0',
+        'v'     => '0.19.0',
     ),
 
     'admin.js' => array(
         'set'   => 'footer',
         'path'  => 'packages/clumsy/cms/js/admin.min.js',
         'req'   => array('bootstrap.js','chosen'),
-        'v'     => '0.20.0',
+        'v'     => '0.19.0',
     ),
 
     'google-maps' => array(

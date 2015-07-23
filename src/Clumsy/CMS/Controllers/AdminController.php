@@ -57,7 +57,8 @@ class AdminController extends APIController {
 
         View::share('model', $this->model);
         View::share('resource', $this->resource);
-        
+        View::share('model_class', $this->modelClass());
+
         $id = $route->getParameter($this->resource);
         View::share('id', $id);
 
@@ -355,6 +356,7 @@ class AdminController extends APIController {
 
                 $data['children'][$child_resource] = array_merge(array(
                     'title'       => $this->labeler->displayNamePlural($child),
+                    'model_class' => $this->modelClass($child_resource),
                     'columns'     => $child->columns(),
                     'create_link' => HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child_resource}.create"), 'parent', $id),
                     'innerView'   => $child->currentInnerView(),
