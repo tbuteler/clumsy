@@ -18,7 +18,7 @@ return array(
 
 	'password'         => 'Palavra-passe',
 
-	'confirm_password' => 'Confirmar palavra-passe',
+	'password_confirmation' => 'Confirmar palavra-passe',
 
 	'reset-password'   => 'Redefinir palavra-passe',
 

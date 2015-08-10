@@ -18,7 +18,7 @@ return array(
 
 	'password'         => 'Password',
 
-	'confirm_password' => 'Confirm password',
+	'password_confirmation' => 'Confirm password',
 
 	'reset-password'   => 'Reset password',
 

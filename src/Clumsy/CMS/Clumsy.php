@@ -111,7 +111,7 @@ class Clumsy {
                 'delete_confirm'      => trans('clumsy::alerts.delete_confirm'),
                 'delete_confirm_user' => trans('clumsy::alerts.user.delete_confirm'),
             ),
-        ));
+        ), true);
     }
 
     public function user(Route $route, Request $request)

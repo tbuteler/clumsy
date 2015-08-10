@@ -10,7 +10,7 @@
 
     {{ Form::field('password', trans('clumsy::fields.password'), 'password') }}
 
-    {{ Form::field('password_confirmation', trans('clumsy::fields.confirm_password'), 'password') }}
+    {{ Form::field('password_confirmation', trans('clumsy::fields.password_confirmation'), 'password') }}
 
     {{ Form::submit(trans('clumsy::buttons.reset'), array('class' => 'btn btn-primary')) }}
 
