@@ -17,7 +17,7 @@ App::pushError(function(Symfony\Component\HttpKernel\Exception\NotFoundHttpExcep
 {
     if (Config::get('clumsy::silent'))
     {
-        return Redirect::to('/admin');
+        return Redirect::to('/');
     }
 });
 
