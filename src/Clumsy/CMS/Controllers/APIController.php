@@ -228,9 +228,9 @@ class APIController extends Controller {
      */
     public function update($id)
     {
-		$item = $this->getItem($id);
+        $item = $this->getItem($id);
 
-        $validator = Validator::make($data = Input::all(), $this->model->rules);
+        $validator = Validator::make($data = Input::all(), $item->rules);
 
         if ($validator->fails())
         {
