@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Clumsy\CMS\Facades\International;
+use Clumsy\Utils\Facades\HTTP;
 
 class InternationalController extends Controller {
 
@@ -47,7 +49,8 @@ class InternationalController extends Controller {
 
         foreach ($this->locales as $locale => $locale_array)
         {
-            $this->current_route_localized[$locale] = $this->translateRoute($locale, $route, $request);
+            $url = $this->translateRoute($locale, $route, $request);
+            $this->current_route_localized[$locale] = $this->prepareLocalizedUrl($url);
         }
 
         $this->shareLocalesOnViews();
@@ -79,7 +82,7 @@ class InternationalController extends Controller {
     {
         if (
             !Session::get('clumsy.locale-redirected')
-            && !str_contains(URL::previous(), url())
+            && !Input::exists('change_locale')
             && (Cookie::has($this->cookie_slug) || Session::has($this->session_slug))
         )
         {
@@ -159,5 +162,10 @@ class InternationalController extends Controller {
     public function translateRouteWithParameters($locale, $syntax, $route, $request)
     {
         return $this->localizedRootURL($locale);
+    }
+
+    public function prepareLocalizedUrl($url)
+    {
+        return HTTP::queryStringAdd($url, 'change_locale');
     }
 }
