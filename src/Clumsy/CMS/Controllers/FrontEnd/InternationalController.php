@@ -25,6 +25,10 @@ class InternationalController extends Controller {
     protected $cookie_slug;
     protected $session_slug;
 
+    protected $remember_language = true;
+    protected $remember_language_only_methods = array();
+    protected $remember_language_except_methods = array();
+
     public $current_route_localized = array();
 
     public function __construct()
@@ -34,7 +38,20 @@ class InternationalController extends Controller {
             $this->beforeFilter($this->localized_routes_filter);
         }
 
-        $this->beforeFilter('@existingLanguageRedirect');
+        if ($this->remember_language)
+        {
+            $methods = array();
+            if (count($this->remember_language_only_methods))
+            {
+                $methods = array('only' => $this->remember_language_only_methods);
+            }
+            elseif (count($this->remember_language_except_methods))
+            {
+                $methods = array('except' => $this->remember_language_except_methods);
+            }
+
+            $this->beforeFilter('@rememberLanguage', $methods);
+        }
 
         $this->beforeFilter('@parseLocales');
     }
@@ -54,13 +71,7 @@ class InternationalController extends Controller {
         }
 
         $this->shareLocalesOnViews();
-        $this->setSessionLocale();
         $this->setEnvironmentLocale();
-    }
-
-    public function setSessionLocale()
-    {
-        Session::put($this->session_slug, $this->current_locale_code);
     }
 
     public function setEnvironmentLocale()
@@ -78,21 +89,33 @@ class InternationalController extends Controller {
         ));
     }
 
-    public function existingLanguageRedirect($route, $request)
+    public function rememberLanguage($route, $request)
     {
         if (
             !Session::get('clumsy.locale-redirected')
             && !Input::exists('change_locale')
-            && (Cookie::has($this->cookie_slug) || Session::has($this->session_slug))
+            && (Session::has($this->session_slug) || Cookie::has($this->cookie_slug))
         )
         {
-            $locale = Cookie::get($this->cookie_slug, Session::get($this->session_slug));
+            $locale = Session::get($this->cookie_slug, Cookie::get($this->session_slug));
             if ($locale !== International::getCurrentLocale())
             {
                 return Redirect::to($this->translateRoute($locale, $route, $request))->with(array(
                     'clumsy.locale-redirected' => true,
                 ));
             }
+        }
+
+        $locale = International::getCurrentLocale();
+        
+        if ($this->session_slug)
+        {
+            Session::put($this->session_slug, $locale);
+        }
+
+        if ($this->cookie_slug)
+        {
+            Cookie::queue(Cookie::forever($this->cookie_slug, $locale));
         }
     }
 
