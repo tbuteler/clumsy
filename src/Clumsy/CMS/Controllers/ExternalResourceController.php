@@ -1,7 +1,9 @@
 <?php namespace Clumsy\CMS\Controllers;
 
-use Illuminate\Support\Facades\Redirect;
 use Clumsy\CMS\Models\LocalChange;
+use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
 
 class ExternalResourceController extends AdminController {
 
@@ -67,7 +69,7 @@ class ExternalResourceController extends AdminController {
     protected function fireImport()
     {
         list($class, $method) = explode('@', $this->model->importer);
-        return call_user_func(array($class, $method));
+        return call_user_func_array((array($class, $method)), (array)$this->model->importer_parameters) ;
     }
 
     public function import()
@@ -78,6 +80,10 @@ class ExternalResourceController extends AdminController {
             
             if ($import !== false)
             {
+                if ($import instanceof SymfonyResponse) {
+                    return $import;
+                }
+
                 if ($import instanceof \Illuminate\Support\MessageBag && $import->any())
                 {
 
