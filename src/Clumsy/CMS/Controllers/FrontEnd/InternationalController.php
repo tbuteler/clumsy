@@ -1,6 +1,7 @@
 <?php namespace Clumsy\CMS\Controllers\FrontEnd;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
@@ -26,6 +27,7 @@ class InternationalController extends Controller {
     protected $session_slug;
 
     protected $remember_language = true;
+    protected $remember_language_on_post_requests = false;
     protected $remember_language_only_methods = array();
     protected $remember_language_except_methods = array();
 
@@ -92,7 +94,9 @@ class InternationalController extends Controller {
     public function rememberLanguage($route, $request)
     {
         if (
-            !Session::get('clumsy.locale-redirected')
+            // Only attempt to remember language for GET/HEAD requests, unless settings explicitly set
+            (in_array(Str::lower($request->method()), array('get', 'head')) || $this->remember_language_on_post_requests)
+            && !Session::get('clumsy.locale-redirected')
             && !Input::exists('change_locale')
             && (Session::has($this->session_slug) || Cookie::has($this->cookie_slug))
         )
