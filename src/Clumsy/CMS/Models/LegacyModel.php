@@ -618,12 +618,24 @@ class LegacyModel extends \Eloquent {
 
     public function addToMediaSlot($position, $file, $filename = null)
     {
-        return \Clumsy\Eminem\Facade::add($this->getMediaSlot($position), $file, $filename);
+        $options = array(
+            'association_type' => class_basename($this),
+            'association_id'   => $this->id,
+            'position'         => $position,
+        );
+
+        return \Clumsy\Eminem\Facade::add($this->getMediaSlot($position), $file, $filename)->bind($options);
     }
 
     public function addCopyToMediaSlot($position, $file, $filename = null)
     {
-        return \Clumsy\Eminem\Facade::addCopy($this->getMediaSlot($position), $file, $filename);
+        $options = array(
+            'association_type' => class_basename($this),
+            'association_id'   => $this->id,
+            'position'         => $position,
+        );
+        
+        return \Clumsy\Eminem\Facade::addCopy($this->getMediaSlot($position), $file, $filename)->bind($options);
     }
 
     public function attachment($position = null, $offset = 0)
