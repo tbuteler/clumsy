@@ -611,6 +611,21 @@ class LegacyModel extends \Eloquent {
         return $this->media_slots;
     }
 
+    public function getMediaSlot($position)
+    {
+        return \Clumsy\Eminem\Facade::getSlot($this, $position);
+    }
+
+    public function addToMediaSlot($position, $file, $filename = null)
+    {
+        return \Clumsy\Eminem\Facade::add($this->getMediaSlot($position), $file, $filename);
+    }
+
+    public function addCopyToMediaSlot($position, $file, $filename = null)
+    {
+        return \Clumsy\Eminem\Facade::addCopy($this->getMediaSlot($position), $file, $filename);
+    }
+
     public function attachment($position = null, $offset = 0)
     {
         $media = $this->media;
