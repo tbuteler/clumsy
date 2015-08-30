@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url("$admin_prefix") }}">{{ $admin_title or '<span class="visible-xs">Home</span><span class="glyphicon glyphicon-home hidden-xs"></span>' }}</a>
+            @include($view->resolve('navbar-home-link'))
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
