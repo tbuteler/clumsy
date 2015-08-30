@@ -1,50 +1,48 @@
 @if (isset($filtersData))
 
-<div class="panel panel-primary filter-panel" {{ $filtersData['hasFilters'] ? '' : 'style="display:none;"' }}>
-	<div class="panel-heading" data-toggle="collapse" data-target="#filter-colapse">
-		<h3 class="panel-title">{{ trans('clumsy::titles.filters') }}</h3>
+<div class="panel panel-default filter-panel collapse {{ $filtersData['hasFilters'] ? 'in' : '' }}" id="filter-collapse">
+	<div class="panel-heading">
+		<h4 class="panel-title">{{ trans('clumsy::titles.filters') }}</h4>
 	</div>
-	<div class="collapse" id="filter-colapse">
-		<div class="wrapper">
-			<table class="table table-hover filter-box">
-				<tbody>
-					@foreach ($filtersData['data'] as $column => $items)
-						<tr>
-							<th>{{ $filtersData['names'][$column] }}</th>
-							<td>
-							{{	Form::dropdown('filter_'.str_replace('.',':',$column), 
-	                                ' ', 
-	                                array(null => '') + $items,
-	                                $filtersData['selected'][$column],
-	                                array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => trans('clumsy::fields.filter-select')))
-	                            );
-		                    }}
-							</td>
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
-			<div class="pull-right">
-				<button id="filter-clear-btn" class="btn btn-default" type="button">
-				{{ trans('clumsy::buttons.clear') }}
-				</button>
-				<button id="filter-submit-btn" class="btn btn-primary" type="button" disabled>
-				{{ trans('clumsy::buttons.apply') }}</button>
-			</div>
-			<div class="clearfix"></div>
-			{{ Form::open(array('url' => URL::route('clumsy.filter', $resource), 'id' => 'filter-form')) }}
-			    @if (isset($filtersData['selected']))
-			        @foreach ($filtersData['selected'] as $column => $values)
-			            @if ($values != null) 
-			                @foreach ($values as $value)
-			                    {{ Form::hidden(str_replace('.',':',$column).'[]', $value) }}
-			                @endforeach
-			            @endif
-			        @endforeach
-			    @endif
-		    {{ Form::close() }}
-	    </div>
-	</div>
+	<table class="table filter-box">
+		<tbody>
+			@foreach ($filtersData['data'] as $column => $items)
+				<tr>
+					<th>{{ $filtersData['names'][$column] }}</th>
+					<td>
+					{{	Form::dropdown('filter_'.str_replace('.',':',$column), 
+                            ' ', 
+                            $items,
+                            $filtersData['selected'][$column],
+                            array('field' => array('data-name' => str_replace('.',':',$column), 'multiple' => 'multiple', 'data-placeholder' => ' '))
+                        );
+                    }}
+					</td>
+				</tr>
+			@endforeach
+		</tbody>
+	</table>
+	<div class="panel-footer">
+		<div class="pull-right">
+			<button id="filter-clear-btn" class="btn btn-default" type="button">
+			{{ trans('clumsy::buttons.clear') }}
+			</button>
+			<button id="filter-submit-btn" class="btn btn-primary" type="button" disabled>
+			{{ trans('clumsy::buttons.apply') }}</button>
+		</div>
+		<div class="clearfix"></div>
+		{{ Form::open(array('url' => URL::route('clumsy.filter', $resource), 'id' => 'filter-form')) }}
+		    @if (isset($filtersData['selected']))
+		        @foreach ($filtersData['selected'] as $column => $values)
+		            @if ($values != null) 
+		                @foreach ($values as $value)
+		                    {{ Form::hidden(str_replace('.',':',$column).'[]', $value) }}
+		                @endforeach
+		            @endif
+		        @endforeach
+		    @endif
+	    {{ Form::close() }}
+    </div>
 </div>
 
 @endif

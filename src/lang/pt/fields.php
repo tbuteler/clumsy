@@ -53,8 +53,6 @@ return array(
 
 	'user_is_banned'    => 'O utilizador foi banido.',
 
-	'filter-select'     => 'Seleccionar...',
-
 	'filter-no-results' => 'Nenhum resultado com ',
 
 	'latitude'          => 'Latitude',
