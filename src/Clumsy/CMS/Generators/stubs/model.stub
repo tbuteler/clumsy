@@ -1,9 +1,10 @@
-<?php{{namespace}}
+<?php
+{{namespace}}
 
 use Clumsy\Eminem\Traits\Mediable;
 
-class {{object_name}} extends \Clumsy\CMS\Models\BaseModel {
-
+class {{object_name}} extends \Clumsy\CMS\Models\BaseModel
+{
     use Mediable;
 
     public $columns = array(

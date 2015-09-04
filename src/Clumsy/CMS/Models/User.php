@@ -1,10 +1,11 @@
-<?php namespace Clumsy\CMS\Models;
+<?php
+namespace Clumsy\CMS\Models;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class User extends BaseModel {
-
+class User extends BaseModel
+{
     public $rules = array(
         'first_name' => 'required|max:255',
         'last_name'  => 'max:255',

@@ -1,42 +1,38 @@
-<?php namespace Clumsy\CMS\Support;
+<?php
+namespace Clumsy\CMS\Support;
 
 use Illuminate\Support\Str;
 
-class ResourceNameResolver {
+class ResourceNameResolver
+{
+    public static function display($label)
+    {
+        return Str::title(str_replace('_', ' ', snake_case($label)));
+    }
 
-	public static function display($label)
-	{
-		return Str::title(str_replace('_', ' ', snake_case($label)));
-	}
+    public static function singular($model)
+    {
+        if (is_object($model)) {
+            $model = $model->displayName() ? $model->displayName() : class_basename($model);
+        }
 
-	public static function singular($model)
-	{
-		if (is_object($model))
-		{
-		    $model = $model->displayName() ? $model->displayName() : class_basename($model);
-		}
+        return $model;
+    }
 
-		return $model;
-	}
+    public static function plural($model)
+    {
+        if (is_object($model)) {
+            $model = $model->displayNamePlural() ? $model->displayNamePlural() : str_plural(static::singular($model));
+        } else {
+            $model = str_plural($model);
+        }
 
-	public static function plural($model)
-	{
-		if (is_object($model))
-		{
-		    $model = $model->displayNamePlural() ? $model->displayNamePlural() : str_plural(static::singular($model));
-		}
-		else
-		{
-		    $model = str_plural($model);
-		}
-
-		return $model;
-	}
+        return $model;
+    }
 
     public static function displayName($model)
     {
-        if (is_object($model) && method_exists($model, 'displayNamesCallback'))
-        {
+        if (is_object($model) && method_exists($model, 'displayNamesCallback')) {
             return $model->displayNamesCallback(static::singular($model));
         }
 
@@ -45,8 +41,7 @@ class ResourceNameResolver {
 
     public static function displayNamePlural($model = false)
     {
-        if (is_object($model) && method_exists($model, 'displayNamesCallback'))
-        {
+        if (is_object($model) && method_exists($model, 'displayNamesCallback')) {
             return $model->displayNamesCallback(static::plural($model));
         }
 

@@ -2,38 +2,38 @@
 
 return array(
 
-	'items'          => 'item|items',
+    'items'          => 'item|items',
 
-	'count'          => '{0} Nenhum item encontrado|{1}:count item encontrado|[2,Inf]:count itens encontrados',
+    'count'          => '{0} Nenhum item encontrado|{1}:count item encontrado|[2,Inf]:count itens encontrados',
 
-	'item_added'     => 'Novo item adicionado com sucesso.',
+    'item_added'     => 'Novo item adicionado com sucesso.',
 
-	'item_updated'   => 'O item foi actualizado com sucesso.',
+    'item_updated'   => 'O item foi actualizado com sucesso.',
 
-	'item_deleted'   => 'O item foi removido.',
+    'item_deleted'   => 'O item foi removido.',
 
-	'invalid'        => 'Por favor corrija os erros listados abaixo e tente novamente.',
+    'invalid'        => 'Por favor corrija os erros listados abaixo e tente novamente.',
 
-	'required_by'    => 'O item não pode ser removido pois outros recursos dependem dele. Remova os itens relacionados primeiro ou seus vínculos e tente novamente.',
+    'required_by'    => 'O item não pode ser removido pois outros recursos dependem dele. Remova os itens relacionados primeiro ou seus vínculos e tente novamente.',
 
-	'delete_confirm' => 'Tem certeza que deseja remover este item?',
+    'delete_confirm' => 'Tem certeza que deseja remover este item?',
 
-	'user'   => array(
+    'user'   => array(
 
-		'added'     => 'Novo utilizador adicionado com sucesso.',
+        'added'     => 'Novo utilizador adicionado com sucesso.',
 
-		'updated'   => 'O utilizador foi actualizado com sucesso.',
+        'updated'   => 'O utilizador foi actualizado com sucesso.',
 
-		'deleted'   => 'O utilizador foi removido.',
+        'deleted'   => 'O utilizador foi removido.',
 
-		'delete_confirm' => 'Tem certeza que deseja remover este utilizador?',
+        'delete_confirm' => 'Tem certeza que deseja remover este utilizador?',
 
-		'suicide'   => 'Não é possível remover o seu próprio utilizador.',
+        'suicide'   => 'Não é possível remover o seu próprio utilizador.',
 
-		'forbidden' => 'Não tem permissões para gerenciar utilizadores.',
-	),
+        'forbidden' => 'Não tem permissões para gerenciar utilizadores.',
+    ),
 
-	'auth'   => array(
+    'auth'   => array(
 
         'login_required'    => 'O campo email é requerido.',
 
@@ -49,33 +49,33 @@ return array(
 
         'banned_user'       => 'O utilizador foi banido.',
 
-        'logged_out'	    => 'A sessão foi terminada.',
+        'logged_out'        => 'A sessão foi terminada.',
 
-		'reset-email-sent'  => 'Instruções para redefinir sua palavra-passe foram enviadas para o seu email.',
+        'reset-email-sent'  => 'Instruções para redefinir sua palavra-passe foram enviadas para o seu email.',
 
-		'password-changed'  => 'Sua palavra-passe foi alterada com sucesso.',
+        'password-changed'  => 'Sua palavra-passe foi alterada com sucesso.',
 
-		'reset-error'       => 'Ocorreu um erro ao redefinir sua palavra-passe. Por favor entre em contacto com o administrador do sistema.',
-	),
+        'reset-error'       => 'Ocorreu um erro ao redefinir sua palavra-passe. Por favor entre em contacto com o administrador do sistema.',
+    ),
 
-	'import' => array(
+    'import' => array(
 
-		'required'  => 'Para adicionar :resources por favor utilize o website principal e ative as rotinas de actualização automática.',
+        'required'  => 'Para adicionar :resources por favor utilize o website principal e ative as rotinas de actualização automática.',
 
-		'success'   => 'A importação de :resources foi realizada com sucesso.',
+        'success'   => 'A importação de :resources foi realizada com sucesso.',
 
-		'fail'      => 'A importação falhou. Verifique a fonte e tente novamente.',
+        'fail'      => 'A importação falhou. Verifique a fonte e tente novamente.',
 
-		'undefined' => 'A importação falhou. Não foi encontrado um importador para :resources',
-	),
+        'undefined' => 'A importação falhou. Não foi encontrado um importador para :resources',
+    ),
 
-	'email-error'    => 'Ocorreu um erro ao enviar o seu email. Por favor tente novamente mais tarde.',
+    'email-error'    => 'Ocorreu um erro ao enviar o seu email. Por favor tente novamente mais tarde.',
 
-	'token_mismatch' => 'Sua sessão expirou antes que pudesse salvar as mudanças. Se acredita que isto é um erro, por favor entre em contacto com o administrador do sistema.',
+    'token_mismatch' => 'Sua sessão expirou antes que pudesse salvar as mudanças. Se acredita que isto é um erro, por favor entre em contacto com o administrador do sistema.',
 
-	'reorder' => array(
+    'reorder' => array(
 
-		'success' => 'Ordenação guardada com sucesso.',
-	),
+        'success' => 'Ordenação guardada com sucesso.',
+    ),
 
 );

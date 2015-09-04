@@ -1,4 +1,5 @@
-<?php namespace Clumsy\CMS\Controllers;
+<?php
+namespace Clumsy\CMS\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
@@ -9,11 +10,11 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
+use Clumsy\CMS\Facades\Overseer;
 use Clumsy\CMS\Facades\Clumsy;
 
-class AuthController extends Controller {
-
+class AuthController extends Controller
+{
     public function __construct()
     {
         $this->beforeFilter('@loggedInFilter', array('only' => array('login', 'reset', 'doReset')));
@@ -21,8 +22,7 @@ class AuthController extends Controller {
 
     public function loggedInFilter()
     {
-        if (Sentry::check())
-        {
+        if (Overseer::check()) {
             return Redirect::to(Clumsy::prefix());
         }
     }
@@ -39,49 +39,28 @@ class AuthController extends Controller {
     {
         $admin_prefix = Clumsy::prefix();
 
-        try
-        {
+        try {
             $credentials = array(
                 'email'    => Input::get('email'),
                 'password' => Input::get('password'),
             );
 
-            $user = Sentry::authenticate($credentials, Input::has('remember'));
+            $user = Overseer::attempt($credentials, Input::has('remember'));
 
             return Redirect::intended(URL::route("$admin_prefix.home"));
-        }
-
-        catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
-        {
+        } catch (\Cartalyst\Sentry\Users\LoginRequiredException $e) {
             $alert = trans('clumsy::alerts.auth.login_required');
-        }
-
-        catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e)
-        {
+        } catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e) {
             $alert = trans('clumsy::alerts.auth.password_required');
-        }
-
-        catch (\Cartalyst\Sentry\Users\WrongPasswordException $e)
-        {
+        } catch (\Cartalyst\Sentry\Users\WrongPasswordException $e) {
             $alert = trans('clumsy::alerts.auth.wrong_password');
-        }
-        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
+        } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
             $alert = trans('clumsy::alerts.auth.unknown_user');
-        }
-
-        catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e)
-        {
+        } catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e) {
             $alert = trans('clumsy::alerts.auth.inactive_user');
-        }
-
-        catch (\Cartalyst\Sentry\Throttling\UserSuspendedException $e)
-        {
+        } catch (\Cartalyst\Sentry\Throttling\UserSuspendedException $e) {
             $alert = trans('clumsy::alerts.auth.suspended_user');
-        }
-
-        catch (\Cartalyst\Sentry\Throttling\UserBannedException $e)
-        {
+        } catch (\Cartalyst\Sentry\Throttling\UserBannedException $e) {
             $alert = trans('clumsy::alerts.auth.banned_user');
             $alert_status = 'danger';
         }
@@ -98,42 +77,33 @@ class AuthController extends Controller {
 
         return View::make('clumsy::auth.reset', $data);
     }
- 
+
     public function postReset()
     {
-        if (!Input::get('email'))
-        {
+        if (!Input::get('email')) {
             $alert = trans('clumsy::alerts.auth.login_required');
-        }
-        else
-        {
-            try
-            {
-                $user = Sentry::findUserByLogin(Input::get('email'));
+        } else {
+            try {
+                $user = Overseer::findUserByLogin(Input::get('email'));
 
                 $resetCode = $user->getResetPasswordCode();
 
                 $url = URL::route('clumsy.do-reset-password', array('user_id' => $user->id, 'code' => $resetCode));
 
-                Mail::send('clumsy::emails.auth.reset', compact('url'), function($message) use($user)
-                {
+                Mail::send('clumsy::emails.auth.reset', compact('url'), function ($message) use ($user) {
+
                     $message
                         ->to($user->email, $user->first_name.' '.$user->last_name)
                         ->subject(trans('clumsy::titles.reset-password'));
                 });
 
-                if (sizeof(Mail::failures()))
-                {
+                if (sizeof(Mail::failures())) {
                     $alert = trans('clumsy::alerts.email-error');
-                }
-                else
-                {
+                } else {
                     $alert_status = 'success';
                     $alert = trans('clumsy::alerts.auth.reset-email-sent');
                 }
-            }
-            catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
-            {
+            } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
                 $alert = trans('clumsy::alerts.auth.unknown_user');
             }
         }
@@ -150,26 +120,21 @@ class AuthController extends Controller {
 
         return View::make('clumsy::auth.do-reset', compact('body_class', 'user_id', 'code'));
     }
- 
+
     public function postDoReset($user_id, $code)
     {
         $validator = Validator::make(Input::all(), array(
             'password' => 'required|confirmed',
         ));
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             $alert = trans('clumsy::alerts.invalid');
-        }
-        else
-        {
-            try
-            {
-                $user = Sentry::findUserById($user_id);
+        } else {
+            try {
+                $user = Overseer::findUserById($user_id);
 
-                if ($user->checkResetPasswordCode($code) && $user->attemptResetPassword($code, Input::get('password')))
-                {
-                    Sentry::login($user);
+                if ($user->checkResetPasswordCode($code) && $user->attemptResetPassword($code, Input::get('password'))) {
+                    Overseer::login($user);
 
                     $admin_prefix = Clumsy::prefix();
 
@@ -180,9 +145,7 @@ class AuthController extends Controller {
                 }
 
                 $alert = trans('clumsy::alerts.auth.reset-error');
-            }
-            catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-            {
+            } catch (Cartalyst\Sentry\Users\UserNotFoundException $e) {
                 $alert = trans('clumsy::alerts.auth.unknown_user');
             }
         }
@@ -195,7 +158,7 @@ class AuthController extends Controller {
 
     public function logout()
     {
-        Sentry::logout();
+        Overseer::logout();
 
         return Redirect::route('clumsy.login')->with(array(
             'alert_status' => 'success',

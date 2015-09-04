@@ -1,18 +1,19 @@
-<?php namespace Clumsy\CMS\Contracts;
+<?php
+namespace Clumsy\CMS\Contracts;
 
-interface ShortcodeInterface {
-
+interface ShortcodeInterface
+{
     public function wrap($string);
 
-	public function add($key, $description);
+    public function add($key, $description);
 
     public function addMany($codes);
 
-	public function remove($key);
+    public function remove($key);
 
-	public function setCodes(Array $shortcodes);
+    public function setCodes(Array $shortcodes);
 
-	public function availableCodes();
+    public function availableCodes();
 
-	public function parse($content);
+    public function parse($content);
 }

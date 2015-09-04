@@ -2,31 +2,31 @@
 
 return array(
 
-	'login'          => 'Login',
-	
-	'reset-password' => 'Reset password',
-	
-	'new_item'       => 'New :resource',
-	
-	'edit_item'      => 'Edit :resource',
-	
-	'user'           => 'User',
+    'login'          => 'Login',
 
-	'users'          => 'Users',
-	
-	'profile'        => 'Profile',
-	
-	'new_user'       => 'New user',
-	
-	'edit_user'      => 'Edit user',
-	
-	'user_control'   => 'Login control',
+    'reset-password' => 'Reset password',
 
-	'filters'        => 'Filters',
-	
-	'locator'        => 'Locator',
+    'new_item'       => 'New :resource',
 
-	'map'            => 'Map',
+    'edit_item'      => 'Edit :resource',
 
-	'reorder'        => 'Reorder :resources',
+    'user'           => 'User',
+
+    'users'          => 'Users',
+
+    'profile'        => 'Profile',
+
+    'new_user'       => 'New user',
+
+    'edit_user'      => 'Edit user',
+
+    'user_control'   => 'Login control',
+
+    'filters'        => 'Filters',
+
+    'locator'        => 'Locator',
+
+    'map'            => 'Map',
+
+    'reorder'        => 'Reorder :resources',
 );

@@ -1,4 +1,5 @@
-<?php namespace Clumsy\CMS\Console;
+<?php
+namespace Clumsy\CMS\Console;
 
 use Illuminate\Foundation\AssetPublisher;
 use Illuminate\Console\Command;
@@ -9,8 +10,8 @@ use Illuminate\Support\Facades\Artisan;
  *
  * @author Tomas Buteler <tbuteler@gmail.com>
  */
-class PublishCommand extends Command {
-
+class PublishCommand extends Command
+{
     /**
      * The console command name.
      *
@@ -57,15 +58,11 @@ class PublishCommand extends Command {
             'clumsy/eminem',
         );
 
-        foreach ($packages as $package)
-        {
-            if (is_dir($path = $this->vendorPath().'/'.$package.'/public'))
-            {
+        foreach ($packages as $package) {
+            if (is_dir($path = $this->vendorPath().'/'.$package.'/public')) {
                 $this->assets->publish($package, $path);
                 $this->info('Assets published for package: '.$package);
-            }
-            else
-            {
+            } else {
                 $this->error('Could not find path for: '.$package);
             }
         }
@@ -74,8 +71,8 @@ class PublishCommand extends Command {
         $this->info('Clumsy assets published');
     }
 
-    protected function vendorPath(){
+    protected function vendorPath()
+    {
         return base_path().'/vendor';
     }
-
 }

@@ -3,18 +3,16 @@
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class {{object_name_plural}}Seeder extends Seeder {
-
+class {{object_name_plural}}Seeder extends Seeder
+{
 	public function run()
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 10) as $index)
-		{
+		foreach (range(1, 10) as $index) {
 			{{object_name}}::create(array(
-                
+
 			));
 		}
 	}
-
 }

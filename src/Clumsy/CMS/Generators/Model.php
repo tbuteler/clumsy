@@ -1,5 +1,6 @@
-<?php namespace Clumsy\CMS\Generators;
+<?php
+namespace Clumsy\CMS\Generators;
 
-class Model extends Generator {
-
+class Model extends Generator
+{
 }

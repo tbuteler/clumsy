@@ -2,60 +2,60 @@
 
 return array(
 
-	'yes'			   => 'Sim',
+    'yes'              => 'Sim',
 
-	'no'			   => 'Não',
+    'no'               => 'Não',
 
-	'remember'		   => 'Manter sessão',
+    'remember'         => 'Manter sessão',
 
-	'title'            => 'Título',
+    'title'            => 'Título',
 
-	'first_name'       => 'Nome',
+    'first_name'       => 'Nome',
 
-	'last_name'        => 'Apelido',
+    'last_name'        => 'Apelido',
 
-	'email'            => 'Email',
+    'email'            => 'Email',
 
-	'password'         => 'Palavra-passe',
+    'password'         => 'Palavra-passe',
 
-	'password_confirmation' => 'Confirmar palavra-passe',
+    'password_confirmation' => 'Confirmar palavra-passe',
 
-	'reset-password'   => 'Redefinir palavra-passe',
+    'reset-password'   => 'Redefinir palavra-passe',
 
-	'role'			   => 'Função',
+    'role'             => 'Função',
 
-	'current_role'     => 'Função actual',
+    'current_role'     => 'Função actual',
 
-	'change_password'  => 'Mudar palavra-passe',
+    'change_password'  => 'Mudar palavra-passe',
 
-	'new_password'     => 'Nova palavra-passe',
+    'new_password'     => 'Nova palavra-passe',
 
-	'new_password_confirmation' => 'Confirmar nova palavra-passe',
+    'new_password_confirmation' => 'Confirmar nova palavra-passe',
 
-	'roles' => array(
+    'roles' => array(
 
-		'administrator' => 'Administrador',
+        'administrator' => 'Administrador',
 
-		'editor'		=> 'Editor',
+        'editor'        => 'Editor',
 
-		'user'			=> 'Utilizador',
-	),
+        'user'          => 'Utilizador',
+    ),
 
-	'last_login'        => 'Último login: ',
+    'last_login'        => 'Último login: ',
 
-	'never'             => 'Nunca',
+    'never'             => 'Nunca',
 
-	'user_is_active'    => 'O utilizador está activo.',
+    'user_is_active'    => 'O utilizador está activo.',
 
-	'user_is_inactive'  => 'O utilizador ainda não activou a conta.',
+    'user_is_inactive'  => 'O utilizador ainda não activou a conta.',
 
-	'user_is_suspended' => 'O utilizador está suspenso.',
+    'user_is_suspended' => 'O utilizador está suspenso.',
 
-	'user_is_banned'    => 'O utilizador foi banido.',
+    'user_is_banned'    => 'O utilizador foi banido.',
 
-	'filter-no-results' => 'Nenhum resultado com ',
+    'filter-no-results' => 'Nenhum resultado com ',
 
-	'latitude'          => 'Latitude',
-	
-	'longitude'         => 'Longitude'
+    'latitude'          => 'Latitude',
+
+    'longitude'         => 'Longitude'
 );

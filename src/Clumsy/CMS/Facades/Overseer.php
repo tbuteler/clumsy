@@ -1,7 +1,7 @@
 <?php
 namespace Clumsy\CMS\Facades;
 
-class International extends \Illuminate\Support\Facades\Facade
+class Overseer extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.
@@ -10,6 +10,6 @@ class International extends \Illuminate\Support\Facades\Facade
      */
     protected static function getFacadeAccessor()
     {
-        return '\Clumsy\CMS\Contracts\InternationalInterface';
+        return 'clumsy.auth';
     }
 }

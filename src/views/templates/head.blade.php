@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        
+
         <title>
         @section('title')
             {{ $title or '' }}
@@ -15,8 +15,8 @@
     <body class="{{ $body_class or '' }}">
 
     @include('clumsy::templates.alert')
-    
-    @if (Cartalyst\Sentry\Facades\Laravel\Sentry::check())
+
+    @if (Clumsy\CMS\Facades\Overseer::check())
 
         @include($navbar_wrapper)
 

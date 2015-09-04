@@ -29,7 +29,7 @@ return array(
     'session'       => 'Session',
 
     'clear'         => 'Clear',
-    
+
     'apply'         => 'Apply',
 
     'all_resources' => 'All',

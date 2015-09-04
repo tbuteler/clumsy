@@ -1,12 +1,15 @@
-<?php namespace Clumsy\CMS\Facades;
+<?php
+namespace Clumsy\CMS\Facades;
 
-class ViewResolver extends \Illuminate\Support\Facades\Facade {
-
+class ViewResolver extends \Illuminate\Support\Facades\Facade
+{
     /**
      * Get the registered name of the component.
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'clumsy.view-resolver'; }
-
+    protected static function getFacadeAccessor()
+    {
+        return 'clumsy.view-resolver';
+    }
 }

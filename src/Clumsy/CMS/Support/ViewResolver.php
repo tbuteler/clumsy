@@ -1,10 +1,11 @@
-<?php namespace Clumsy\CMS\Support;
+<?php
+namespace Clumsy\CMS\Support;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
 
-class ViewResolver {
-
+class ViewResolver
+{
     protected $view;
 
     protected $domain;
@@ -36,11 +37,9 @@ class ViewResolver {
     {
         $level = snake_case($level);
 
-        if (sizeof($this->nested))
-        {
+        if (sizeof($this->nested)) {
             $clone = $level;
-            foreach ($this->nested as $nested)
-            {
+            foreach ($this->nested as $nested) {
                 $clone .= ".$nested";
                 $levels[] = $clone;
             }
@@ -62,8 +61,7 @@ class ViewResolver {
 
     public function pushLevel()
     {
-        foreach (func_get_args() as $level)
-        {
+        foreach (func_get_args() as $level) {
             $this->levels = array_merge($this->levels, $this->prepareLevel($level));
         }
 
@@ -72,8 +70,7 @@ class ViewResolver {
 
     public function unshiftLevel()
     {
-        foreach (func_get_args() as $level)
-        {
+        foreach (func_get_args() as $level) {
             $this->levels = array_merge($this->prepareLevel($level), $this->levels);
         }
 
@@ -82,12 +79,11 @@ class ViewResolver {
 
     public function nestLevel()
     {
-        foreach (func_get_args() as $nested)
-        {
+        foreach (func_get_args() as $nested) {
             $this->nested[] = $nested;
 
-            $this->levels = array_merge(array_map(function($level) use($nested)
-            {
+            $this->levels = array_merge(array_map(function ($level) use ($nested) {
+            
                 return "$level.$nested";
 
             }, $this->levels), $this->levels);
@@ -111,51 +107,43 @@ class ViewResolver {
         // 1) Local app, with runtime-defined levels and nested levels:
         // - prefix.resources.level.nested(.nested-n).slug
         // - prefix.resources.level-n.nested(.nested-n).slug
-        foreach ($this->levels as $level)
-        {
-            if ($this->view->exists("$domain_path.$level.$slug"))
-            {
+        foreach ($this->levels as $level) {
+            if ($this->view->exists("$domain_path.$level.$slug")) {
                 return "$domain_path.$level.$slug";
             }
         }
 
         // 2) Local app: prefix.resources.slug
-        if ($this->view->exists("$domain_path.$slug"))
-        {
+        if ($this->view->exists("$domain_path.$slug")) {
             return "$domain_path.$slug";
         }
 
         // 3) Local app: prefix.templates.slug
         $prefix = $this->prefix();
-        if ($this->view->exists("$prefix.templates.$slug"))
-        {
+        if ($this->view->exists("$prefix.templates.$slug")) {
             return "$prefix.templates.$slug";
         }
 
         $domain = $domain ? str_plural($domain) : $this->domain;
- 
-        foreach ($this->levels as $level)
-        {
-            // 4) Clumsy package with resource domain, runtime-defined actions and nested actions:
+
+        foreach ($this->levels as $level) {
+        // 4) Clumsy package with resource domain, runtime-defined actions and nested actions:
             // - resources.level.nested(.nested-n).slug
             // - resources.level-n.nested(.nested-n).slug
-            if ($domain && $this->view->exists("clumsy::{$domain}.$level.$slug"))
-            {
+            if ($domain && $this->view->exists("clumsy::{$domain}.$level.$slug")) {
                 return "clumsy::{$domain}.$level.$slug";
             }
 
             // 5) Clumsy templates with runtime-defined levels and nested levels:
             // - level.nested(.nested-n).slug
             // - level-n.nested(.nested-n).slug
-            if ($this->view->exists("clumsy::templates.$level.$slug"))
-            {
+            if ($this->view->exists("clumsy::templates.$level.$slug")) {
                 return "clumsy::templates.$level.$slug";
             }
         }
 
         // 6) Clumsy package with resource domain: resources.slug
-        if ($domain && $this->view->exists("clumsy::{$domain}.$slug"))
-        {
+        if ($domain && $this->view->exists("clumsy::{$domain}.$slug")) {
             return "clumsy::{$domain}.$slug";
         }
 

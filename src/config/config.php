@@ -105,7 +105,7 @@ return array(
      | Object namespaces
      |--------------------------------------------------------------------------
      */
-    
+
     'model_namespace'      => '',
 
     'controller_namespace' => '',
@@ -115,7 +115,7 @@ return array(
      | Base target paths
      |--------------------------------------------------------------------------
      */
-        
+
     'model_path'        => app_path('models'),
 
     'controller_path'   => app_path('controllers'),
@@ -130,7 +130,7 @@ return array(
      | API Keys
      |--------------------------------------------------------------------------
      */
-    
+
     'API_google_maps' => '',
 
 );

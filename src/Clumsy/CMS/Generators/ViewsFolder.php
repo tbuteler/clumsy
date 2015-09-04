@@ -1,7 +1,8 @@
-<?php namespace Clumsy\CMS\Generators;
+<?php
+namespace Clumsy\CMS\Generators;
 
-class ViewsFolder extends Generator {
-
+class ViewsFolder extends Generator
+{
     public function targetName($template_data)
     {
         return array_get($template_data, 'plural');

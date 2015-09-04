@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSentryAuthTables extends Migration {
-
+class CreateSentryAuthTables extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -24,5 +24,4 @@ class CreateSentryAuthTables extends Migration {
     {
         //
     }
-
 }

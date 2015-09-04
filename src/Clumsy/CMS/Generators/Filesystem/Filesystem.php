@@ -1,7 +1,8 @@
-<?php namespace Clumsy\CMS\Generators\Filesystem;
+<?php
+namespace Clumsy\CMS\Generators\Filesystem;
 
-class Filesystem {
-
+class Filesystem
+{
     /**
      * Make a file
      *
@@ -12,8 +13,7 @@ class Filesystem {
      */
     public function make($file, $content)
     {
-        if ( $this->exists($file))
-        {
+        if ($this->exists($file)) {
             throw new FileAlreadyExists;
         }
 
@@ -40,12 +40,10 @@ class Filesystem {
      */
     public function get($file)
     {
-        if ( ! $this->exists($file))
-        {
+        if (! $this->exists($file)) {
             throw new FileNotFound($file);
         }
 
         return file_get_contents($file);
     }
-
-} 
+}

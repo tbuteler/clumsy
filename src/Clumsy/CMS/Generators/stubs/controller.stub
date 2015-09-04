@@ -1,5 +1,7 @@
-<?php{{namespace}}
+<?php
+{{namespace}}
 
-class {{object_name_plural}}Controller extends \Clumsy\CMS\Controllers\AdminController {
+class {{object_name_plural}}Controller extends \Clumsy\CMS\Controllers\AdminController
+{
 
 }

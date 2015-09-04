@@ -1,4 +1,5 @@
-<?php namespace Clumsy\CMS\Controllers;
+<?php
+namespace Clumsy\CMS\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -8,16 +9,13 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Clumsy\Utils\Facades\HTTP;
 
-class BackEndController extends Controller {
-
+class BackEndController extends Controller
+{
     public function reorder($resource)
     {
-        if (Input::get('reset') !== null)
-        {
+        if (Input::get('reset') !== null) {
             Session::forget("clumsy.order.$resource");
-        }
-        else
-        {
+        } else {
             Session::put("clumsy.order.$resource", array(Input::get('column'), Input::get('direction')));
         }
 
@@ -27,8 +25,7 @@ class BackEndController extends Controller {
     public function filter($resource)
     {
         $buffer = array();
-        foreach (Input::except('_token') as $column => $values)
-        {
+        foreach (Input::except('_token') as $column => $values) {
             $column = str_replace(':', '.', $column);
             $buffer[$column] = $values;
         }
@@ -46,9 +43,8 @@ class BackEndController extends Controller {
 
         $entry = $model::findOrFail($id);
 
-        switch ($column_type)
-        {
-            case 'boolean' :
+        switch ($column_type) {
+            case 'boolean':
                 $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
                 break;
         }
@@ -64,9 +60,8 @@ class BackEndController extends Controller {
 
         $resourceObj = new $model;
 
-        foreach ($order as $order => $id)
-        {
-            $resourceObj->where('id','=',$id)->update(array($resourceObj->active_reorder => $order + 1));
+        foreach ($order as $order => $id) {
+            $resourceObj->where('id', '=', $id)->update(array($resourceObj->active_reorder => $order + 1));
         }
 
         return  Redirect::back()->with(array(

@@ -1,4 +1,5 @@
-<?php namespace Clumsy\CMS\Controllers;
+<?php
+namespace Clumsy\CMS\Controllers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
@@ -10,94 +11,91 @@ use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Lang;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
+use Clumsy\CMS\Facades\Overseer;
 use Clumsy\CMS\Controllers\AdminController;
 use Clumsy\CMS\Support\Bakery;
 use Clumsy\CMS\Support\ResourceNameResolver;
 use Clumsy\CMS\Support\ViewResolver;
 
-class UsersController extends AdminController {
-
+class UsersController extends AdminController
+{
     public function __construct(ViewResolver $view, Bakery $bakery, ResourceNameResolver $labeler)
     {
         $this->model_namespace = '\Clumsy\CMS\Models';
 
         parent::__construct($view, $bakery, $labeler);
 
-		$this->beforeFilter('@checkPermissions');
+        $this->beforeFilter('@checkPermissions');
     }
 
-	public function checkPermissions(Route $route, Request $request)
-	{
-		$user = Sentry::getUser();
-		$requested_user_id = $route->getParameter('user');
+    public function checkPermissions(Route $route, Request $request)
+    {
+        $user = Overseer::getUser();
+        $requested_user_id = $route->getParameter('user');
 
-		if (!$user->hasAccess('users'))
-		{
-			if (!in_array($route->getName(), array("{$this->admin_prefix}.user.edit", "{$this->admin_prefix}.user.update")) || $requested_user_id != $user->id)
-			{
-				return Redirect::route("{$this->admin_prefix}.user.edit", $user->id)->with(array(
-					'alert_status' => 'warning',
-					'alert'        => trans('clumsy::alerts.user.forbidden'),
-				));
-			}
-		}
-	}
+        if (!$user->hasAccess('users')) {
+            if (!in_array($route->getName(), array("{$this->admin_prefix}.user.edit", "{$this->admin_prefix}.user.update")) || $requested_user_id != $user->id) {
+                return Redirect::route("{$this->admin_prefix}.user.edit", $user->id)->with(array(
+                    'alert_status' => 'warning',
+                    'alert'        => trans('clumsy::alerts.user.forbidden'),
+                ));
+            }
+        }
+    }
 
-	/**
-	 * Display a listing of users
-	 *
-	 * @return Response
-	 */
-	public function index($data = array())
-	{
-		$data['items'] = Sentry::findAllUsers();
+    /**
+     * Display a listing of users
+     *
+     * @return Response
+     */
+    public function index($data = array())
+    {
+        $data['items'] = Overseer::findAllUsers();
 
         $data['title'] = trans('clumsy::titles.users');
 
         return parent::index();
-	}
+    }
 
-	public function create($data = array())
-	{
-		$data['title'] = trans('clumsy::titles.new_user');
+    public function create($data = array())
+    {
+        $data['title'] = trans('clumsy::titles.new_user');
 
-		$data['edited_user_id'] = 'new';
-		$data['edited_user_group'] = '';
+        $data['edited_user_id'] = 'new';
+        $data['edited_user_group'] = '';
 
-		return $this->edit($id = null, $data);
-	}
+        return $this->edit($id = null, $data);
+    }
 
-	/**
-	 * Store a newly created user in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$rules = array_merge(
-			$this->model->rules,
-			array(
-				'password' => 'required|confirmed|min:6|max:255',
-			)
-		);
+    /**
+     * Store a newly created user in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        $rules = array_merge(
+            $this->model->rules,
+            array(
+                'password' => 'required|confirmed|min:6|max:255',
+            )
+        );
 
-		$rules['email'] .= '|unique:users';
+        $rules['email'] .= '|unique:users';
 
-		$validator = Validator::make($data = Input::all(), $rules);
+        $validator = Validator::make($data = Input::all(), $rules);
 
-		if ($validator->fails())
-		{
-			return Redirect::back()
-				->withErrors($validator)
-				->withInput()
+        if ($validator->fails()) {
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput()
                 ->with(array(
                     'alert_status' => 'warning',
-                    'alert' 	   => trans('clumsy::alerts.invalid'),
+                    'alert'        => trans('clumsy::alerts.invalid'),
                 ));
-		}
+        }
 
-        $new_user = Sentry::register(array(
+        $new_user = Overseer::register(array(
             'first_name' => Input::get('first_name'),
             'last_name'  => Input::get('last_name'),
             'email'      => Input::get('email'),
@@ -105,158 +103,147 @@ class UsersController extends AdminController {
         ));
 
         // Auto-activate
-		$new_user->attemptActivation($new_user->getActivationCode());
+        $new_user->attemptActivation($new_user->getActivationCode());
 
-		$group = Sentry::findGroupByName(Input::get('group'));
-		$new_user->addGroup($group);
+        $group = Overseer::findGroupByName(Input::get('group'));
+        $new_user->addGroup($group);
 
-		return Redirect::route("{$this->admin_prefix}.user.edit", $new_user->id)->with(array(
+        return Redirect::route("{$this->admin_prefix}.user.edit", $new_user->id)->with(array(
            'alert_status' => 'success',
-           'alert'  	  => trans('clumsy::alerts.user.added'),
+           'alert'        => trans('clumsy::alerts.user.added'),
         ));
-	}
+    }
 
-	/**
-	 * Display the specified user.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
+    /**
+     * Display the specified user.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
         return Redirect::route("{$this->admin_prefix}.user.edit", $id);
-	}
+    }
 
-	public function edit($id, $data = array())
-	{
-		$data['throttle'] = Sentry::getThrottleProvider();
+    public function edit($id, $data = array())
+    {
+        $data['throttle'] = Overseer::getThrottleProvider();
 
-		if ($id)
-		{
-			$data['item'] = Sentry::findUserById($id);
-			if ($data['throttle'])
-			{
-				$data['item_status'] = Sentry::findThrottlerByUserId($id);
-			}
+        if ($id) {
+            $data['item'] = Overseer::findUserById($id);
+            if ($data['throttle']) {
+                $data['item_status'] = Overseer::findThrottlerByUserId($id);
+            }
 
-			if ($self = (Sentry::getUser()->id == $id)) {
+            if ($self = (Overseer::getUser()->id == $id)) {
+                $data['suppress_delete'] = true;
+            }
 
-				$data['suppress_delete'] = true;
-			}
+            $data['title'] = $self ? trans('clumsy::titles.profile') : trans('clumsy::titles.edit_user');
 
-	        $data['title'] = $self ? trans('clumsy::titles.profile') : trans('clumsy::titles.edit_user');
+            $data['edited_user_id'] = $id;
+            $data['edited_user_group'] = $data['item']->getGroups()->first()->name;
+        }
 
-	        $data['edited_user_id'] = $id;
-	        $data['edited_user_group'] = $data['item']->getGroups()->first()->name;
-		}
+        $groups = array_map(function ($group) {
 
-		$groups = array_map(function($group)
-		{
-			return $group->name;
+            return $group->name;
 
-		}, Sentry::findAllGroups());
+        }, Overseer::findAllGroups());
 
-		$data['groups'] = array_combine($groups, array_map(function($group)
-		{
-		    if (Lang::has('clumsy::fields.roles.'.Str::lower(str_singular($group))))
-		    {
-		        return trans('clumsy::fields.roles.'.Str::lower(str_singular($group)));
-		    }
+        $data['groups'] = array_combine($groups, array_map(function ($group) {
 
-		    return str_singular($group);
+            if (Lang::has('clumsy::fields.roles.'.Str::lower(str_singular($group)))) {
+                return trans('clumsy::fields.roles.'.Str::lower(str_singular($group)));
+            }
 
-		}, $groups));
+            return str_singular($group);
 
-		return parent::edit($id, $data);
-	}
+        }, $groups));
 
-	/**
-	 * Update the specified user in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$rules = $this->model->rules;
+        return parent::edit($id, $data);
+    }
 
-		if ($new_password = (Input::has('new_password') && Input::get('new_password') != '')) {
+    /**
+     * Update the specified user in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        $rules = $this->model->rules;
 
-			$rules['new_password'] = 'required|confirmed|min:6|max:255';
-		}
+        if ($new_password = (Input::has('new_password') && Input::get('new_password') != '')) {
+            $rules['new_password'] = 'required|confirmed|min:6|max:255';
+        }
 
-		$validator = Validator::make($data = Input::all(), $rules);
+        $validator = Validator::make($data = Input::all(), $rules);
 
-		if ($validator->fails())
-		{
-			return Redirect::back()
-				->withErrors($validator)
-				->withInput()
+        if ($validator->fails()) {
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput()
                 ->with(array(
                     'alert_status' => 'warning',
-                    'alert'  	   => trans('clumsy::alerts.invalid'),
+                    'alert'        => trans('clumsy::alerts.invalid'),
                 ));
-		}
+        }
 
-		if ($new_password) {
+        if ($new_password) {
+            $data['password'] = $data['new_password'];
+        }
+        unset($data['new_password']);
+        unset($data['new_password_confirmation']);
 
-			$data['password'] = $data['new_password'];
-		}
-		unset($data['new_password']);
-		unset($data['new_password_confirmation']);
+        $user = Overseer::findUserById($id);
 
-		$user = Sentry::findUserById($id);
+        if (Input::has('group')) {
+            $groups = Overseer::findAllGroups();
 
-		if (Input::has('group')) {
+            foreach ($groups as $group) {
+                $user->removeGroup($group);
+            }
 
-			$groups = Sentry::findAllGroups();
+            $group = Overseer::findGroupByName(Input::get('group'));
 
-			foreach ($groups as $group) {
+            $user->addGroup($group);
 
-				$user->removeGroup($group);
-			}
+            unset($data['group']);
+        }
 
-			$group = Sentry::findGroupByName(Input::get('group'));
+        $user->update($data);
 
-			$user->addGroup($group);
-
-			unset($data['group']);
-		}
-
-		$user->update($data);
-
-		return Redirect::route("{$this->admin_prefix}.user.edit", $user->id)->with(array(
+        return Redirect::route("{$this->admin_prefix}.user.edit", $user->id)->with(array(
            'alert_status' => 'success',
-           'alert'  	  => trans('clumsy::alerts.user.updated'),
+           'alert'        => trans('clumsy::alerts.user.updated'),
         ));
-	}
+    }
 
-	/**
-	 * Remove the specified user from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		if (Sentry::getUser()->id == $id) {
+    /**
+     * Remove the specified user from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        if (Overseer::getUser()->id == $id) {
+            $status = 'warning';
+            $message = trans('clumsy::alerts.user.suicide');
 
-			$status = 'warning';
-			$message = trans('clumsy::alerts.user.suicide');
+        } else {
+            $user = Overseer::findUserById($id);
 
-		} else {
+            $user->delete();
 
-			$user = Sentry::findUserById($id);
+            $status = 'success';
+            $message = trans('clumsy::alerts.user.deleted');
+        }
 
-		    $user->delete();
-
-			$status = 'success';
-			$message = trans('clumsy::alerts.user.deleted');
-		}
-
-		return Redirect::route("{$this->admin_prefix}.user.index")->with(array(
+        return Redirect::route("{$this->admin_prefix}.user.index")->with(array(
            'alert_status' => $status,
            'alert'        => $message,
         ));
-	}
+    }
 }

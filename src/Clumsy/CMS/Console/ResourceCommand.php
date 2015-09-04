@@ -1,4 +1,5 @@
-<?php namespace Clumsy\CMS\Console;
+<?php
+namespace Clumsy\CMS\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -15,8 +16,8 @@ use Clumsy\CMS\Generators\Filesystem\FileAlreadyExists;
  *
  * @author Tomas Buteler <tbuteler@gmail.com>
  */
-class ResourceCommand extends Command {
-
+class ResourceCommand extends Command
+{
     /**
      * The console command name.
      *
@@ -52,12 +53,10 @@ class ResourceCommand extends Command {
             'ViewsFolder',
         );
 
-        foreach ($generates as $generate)
-        {
-            try
-            {
+        foreach ($generates as $generate) {
+            try {
                 $template_data = $this->getTemplateData();
-                
+
                 $generator = App::make($this->getGeneratorClass($generate));
                 $generator->make($template_data);
 
@@ -65,10 +64,7 @@ class ResourceCommand extends Command {
                 $this->template_data[$generate] = $template_data;
 
                 $this->info("Created {$resource} {$generate}");
-            }
-
-            catch (FileAlreadyExists $e)
-            {
+            } catch (FileAlreadyExists $e) {
                 $this->error("The file for a {$resource} {$generate} already exists! I don't want to overwrite it. Aborting...");
 
                 return false;

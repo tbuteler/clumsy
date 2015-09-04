@@ -1,11 +1,12 @@
-<?php namespace Clumsy\CMS\Routing;
+<?php
+namespace Clumsy\CMS\Routing;
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
 use Illuminate\Routing\Router as BaseRouter;
 
-class Router extends BaseRouter {
-
+class Router extends BaseRouter
+{
     /**
      * The default actions for a resourceful controller.
      *
@@ -46,8 +47,7 @@ class Router extends BaseRouter {
      */
     public function externalResource($name, $controller, array $options = array())
     {
-        if (str_contains($name, '/'))
-        {
+        if (str_contains($name, '/')) {
             $this->prefixedExternalResource($name, $controller, $options);
 
             return;
@@ -57,8 +57,7 @@ class Router extends BaseRouter {
 
         $defaults = $this->externalResourceDefaults;
 
-        foreach ($this->getResourceMethods($defaults, $options) as $m)
-        {
+        foreach ($this->getResourceMethods($defaults, $options) as $m) {
             $this->{'addResource'.studly_case($m)}($name, $base, $controller, $options);
         }
     }
@@ -75,8 +74,8 @@ class Router extends BaseRouter {
     {
         list($name, $prefix) = $this->getResourcePrefix($name);
 
-        $callback = function($me) use ($name, $controller, $options)
-        {
+        $callback = function ($me) use ($name, $controller, $options) {
+
             $me->externalResource($name, $controller, $options);
         };
 

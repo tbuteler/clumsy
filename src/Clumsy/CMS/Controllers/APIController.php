@@ -1,4 +1,5 @@
-<?php namespace Clumsy\CMS\Controllers;
+<?php
+namespace Clumsy\CMS\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
@@ -15,15 +16,14 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use Clumsy\Assets\Facade as Asset;
 use Clumsy\Eminem\Facade as MediaManager;
 use Clumsy\Utils\Facades\HTTP;
 
-class APIController extends Controller {
-
+class APIController extends Controller
+{
     protected $route;
-	protected $request;
+    protected $request;
     protected $action;
 
     protected $resource;
@@ -49,9 +49,8 @@ class APIController extends Controller {
     protected function modelClass($resource = null)
     {
         $base_name = $resource ? studly_case($resource) : $this->model_base_name;
-        
-        if ($this->model_namespace && $base_name)
-        {
+
+        if ($this->model_namespace && $base_name) {
             return "{$this->model_namespace}\\{$base_name}";
         }
 
@@ -60,8 +59,7 @@ class APIController extends Controller {
 
     protected function parseParents($model)
     {
-        if ($model->isNested())
-        {
+        if ($model->isNested()) {
             $parent_model_base_name = $model->parentModel();
 
             $parent_model = new $parent_model_base_name;
@@ -74,10 +72,8 @@ class APIController extends Controller {
 
     protected function parseChildren($model)
     {
-        if ($model->hasChildren())
-        {
-            foreach ($model->childResources() as $child_resource)
-            {
+        if ($model->hasChildren()) {
+            foreach ($model->childResources() as $child_resource) {
                 $child_model_base_name = $model->resourceToModel($child_resource);
 
                 $this->model_hierarchy['children'][] = new $child_model_base_name;
@@ -88,7 +84,7 @@ class APIController extends Controller {
     protected function setContext($context, $value)
     {
         $this->query->withAdminContext($context, $value);
-        
+
         $this->model->setAdminContext($context, $value);
     }
 
@@ -103,8 +99,7 @@ class APIController extends Controller {
         $this->admin_prefix = $this->route->getPrefix();
 
         $indicator = $this->route->getName();
-        if (!str_contains($indicator, '.'))
-        {
+        if (!str_contains($indicator, '.')) {
             $indicator = str_replace('/', '.', $request->path());
         }
 
@@ -112,16 +107,14 @@ class APIController extends Controller {
                      ? str_replace("{$this->admin_prefix}.", '', $indicator)
                      : $indicator;
 
-        if (str_contains($indicator, '.') && !starts_with($indicator, '_'))
-        {
+        if (str_contains($indicator, '.') && !starts_with($indicator, '_')) {
             $indicator_array = explode('.', $indicator);
             $this->action = last($indicator_array);
             $this->resource = head($indicator_array);
 
             $this->model_base_name = studly_case($this->resource);
 
-            if ($this->modelClass())
-            {
+            if ($this->modelClass()) {
                 $model_name = $this->modelClass();
                 $this->model = new $model_name;
 
@@ -135,51 +128,45 @@ class APIController extends Controller {
         }
     }
 
-	protected function content($content, $status_code = 200)
-	{
-		return Response::make($content, $status_code);
-	}
+    protected function content($content, $status_code = 200)
+    {
+        return Response::make($content, $status_code);
+    }
 
-	protected function code($status_code = 200)
-	{
-		return $this->content(array(), $status_code);
-	}
+    protected function code($status_code = 200)
+    {
+        return $this->content(array(), $status_code);
+    }
 
-	protected function getItem($id)
-	{
-		if (!$item = $this->query->where($this->model->getQualifiedKeyName(), '=', $id)->first())
-		{
-			return $this->code(404);
-		}
+    protected function getItem($id)
+    {
+        if (!$item = $this->query->where($this->model->getQualifiedKeyName(), '=', $id)->first()) {
+            return $this->code(404);
+        }
 
-		return $item;
-	}
+        return $item;
+    }
 
-	public function index($data = array())
-	{
-        if (!isset($data['items']))
-        {
+    public function index($data = array())
+    {
+        if (!isset($data['items'])) {
             $query = !isset($data['query']) ? $this->model->select('*') : $data['query'];
-            
-            if (!isset($data['sortable']) || $data['sortable'])
-            {
+
+            if (!isset($data['sortable']) || $data['sortable']) {
                 $query->orderSortable();
             }
-            
+
             $per_page = property_exists($this->model, 'admin_per_page') ? $this->model->admin_per_page : Config::get('clumsy::per_page');
 
-            if ($per_page)
-            {
+            if ($per_page) {
                 $data['items'] = $query->paginate($per_page);
-            }
-            else
-            {
+            } else {
                 $data['items'] = $query->get();
             }
         }
 
-		return $this->content($data['items'], 200);
-	}
+        return $this->content($data['items'], 200);
+    }
 
     /**
      * Store a newly created item in storage.
@@ -190,15 +177,12 @@ class APIController extends Controller {
     {
         $validator = Validator::make($data = Input::all(), $this->model->rules);
 
-        if ($validator->fails())
-        {
-        	return $this->content($validator->messages(), 400);
+        if ($validator->fails()) {
+            return $this->content($validator->messages(), 400);
         }
 
-        foreach ((array)$this->model->booleans() as $check)
-        {
-            if (!Input::has($check))
-            {
+        foreach ((array)$this->model->booleans() as $check) {
+            if (!Input::has($check)) {
                 $data[$check] = 0;
             }
         }
@@ -215,9 +199,9 @@ class APIController extends Controller {
 
     public function show($id)
     {
-		$item = $this->getItem($id);
+        $item = $this->getItem($id);
 
-		return $this->content($item->id, 200);
+        return $this->content($item->id, 200);
     }
 
     /**
@@ -232,15 +216,12 @@ class APIController extends Controller {
 
         $validator = Validator::make($data = Input::all(), $item->rules);
 
-        if ($validator->fails())
-        {
-        	return $this->content($validator->messages(), 400);
+        if ($validator->fails()) {
+            return $this->content($validator->messages(), 400);
         }
 
-        foreach ((array)$this->model->booleans() as $check)
-        {
-            if (!Input::has($check))
-            {
+        foreach ((array)$this->model->booleans() as $check) {
+            if (!Input::has($check)) {
                 $data[$check] = 0;
             }
         }
@@ -263,11 +244,10 @@ class APIController extends Controller {
      */
     public function destroy($id)
     {
-		$item = $this->getItem($id);
+        $item = $this->getItem($id);
 
-        if ($item->isRequiredByOthers())
-        {
-        	return $this->code(400);
+        if ($item->isRequiredByOthers()) {
+            return $this->code(400);
         }
 
         $this->model->destroy($id);

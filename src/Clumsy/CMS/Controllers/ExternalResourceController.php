@@ -1,12 +1,12 @@
-<?php namespace Clumsy\CMS\Controllers;
+<?php
+namespace Clumsy\CMS\Controllers;
 
 use Clumsy\CMS\Models\LocalChange;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-
-class ExternalResourceController extends AdminController {
-
+class ExternalResourceController extends AdminController
+{
     /**
      * Display a listing of items
      *
@@ -40,13 +40,11 @@ class ExternalResourceController extends AdminController {
     {
         $resource = $this->resource;
 
-        $this->model->updating(function($item) use($resource)
-        {
-            foreach ($item->getDirty() as $field => $value)
-            {
-                // Double check for changes by removing whitespace (HMTL content can be sneaky)
-                if (preg_replace('/\s/', '', $item->getOriginal($field)) === preg_replace('/\s/', '', $item->$field))
-                {
+        $this->model->updating(function ($item) use ($resource) {
+
+            foreach ($item->getDirty() as $field => $value) {
+            // Double check for changes by removing whitespace (HMTL content can be sneaky)
+                if (preg_replace('/\s/', '', $item->getOriginal($field)) === preg_replace('/\s/', '', $item->$field)) {
                     continue;
                 }
 
@@ -62,7 +60,7 @@ class ExternalResourceController extends AdminController {
     }
 
     protected function hasImporter()
-    {        
+    {
         return (bool)strpos($this->model->importer, '@');
     }
 
@@ -74,21 +72,16 @@ class ExternalResourceController extends AdminController {
 
     public function import()
     {
-        if ($this->hasImporter())
-        {
+        if ($this->hasImporter()) {
             $import = $this->fireImport();
-            
-            if ($import !== false)
-            {
+
+            if ($import !== false) {
                 if ($import instanceof SymfonyResponse) {
                     return $import;
                 }
 
-                if ($import instanceof \Illuminate\Support\MessageBag && $import->any())
-                {
-
-                    if ($import->has('error'))
-                    {
+                if ($import instanceof \Illuminate\Support\MessageBag && $import->any()) {
+                    if ($import->has('error')) {
                         return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
                             'alert_status' => 'warning',
                             'alert'        => $import->first('error'),
@@ -113,9 +106,7 @@ class ExternalResourceController extends AdminController {
                 'alert_status' => 'warning',
                 'alert'        => trans('clumsy::alerts.import.fail', array('resources' => $this->labeler->displayNamePlural($this->model))),
             ));
-        }
-        else
-        {
+        } else {
             return Redirect::route("{$this->admin_prefix}.{$this->resource}.index")->with(array(
                 'alert_status' => 'warning',
                 'alert'        => trans('clumsy::alerts.import.undefined', array('resources' => $this->labeler->displayNamePlural($this->model))),

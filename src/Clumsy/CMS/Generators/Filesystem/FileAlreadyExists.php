@@ -1,3 +1,6 @@
-<?php namespace Clumsy\CMS\Generators\Filesystem;
+<?php
+namespace Clumsy\CMS\Generators\Filesystem;
 
-class FileAlreadyExists extends \Exception {}
+class FileAlreadyExists extends \Exception
+{
+}

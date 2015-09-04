@@ -1,12 +1,14 @@
-<?php namespace Clumsy\CMS\Contracts;
+<?php
+namespace Clumsy\CMS\Contracts;
 
-interface InternationalInterface {
+interface InternationalInterface
+{
 
     public function setLocale();
-    
-	public function getSupportedLocales();
 
-	public function getCurrentLocale();
+    public function getSupportedLocales();
+
+    public function getCurrentLocale();
 
     public function localizeURL();
 

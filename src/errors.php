@@ -13,18 +13,16 @@ use Clumsy\CMS\Facades\Clumsy;
 |
 */
 
-App::pushError(function(Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception)
-{
-    if (Config::get('clumsy::silent'))
-    {
+App::pushError(function (Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+
+    if (Config::get('clumsy::silent')) {
         return Redirect::to('/');
     }
 });
 
-App::pushError(function(Illuminate\Session\TokenMismatchException $exception)
-{
-    if (Config::get('clumsy::silent') && isAdmin())
-    {
+App::pushError(function (Illuminate\Session\TokenMismatchException $exception) {
+
+    if (Config::get('clumsy::silent') && isAdmin()) {
         return Redirect::back()->with(array(
             'alert_status' => 'warning',
             'alert'        => trans('clumsy::alerts.token_mismatch'),

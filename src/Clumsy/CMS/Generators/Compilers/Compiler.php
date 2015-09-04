@@ -1,7 +1,8 @@
-<?php namespace Clumsy\CMS\Generators\Compilers;
+<?php
+namespace Clumsy\CMS\Generators\Compilers;
 
-interface Compiler {
-
+interface Compiler
+{
     /**
      * Compile the template using
      * the given data
@@ -10,4 +11,4 @@ interface Compiler {
      * @param $data
      */
     public function compile($template, $data);
-} 
+}

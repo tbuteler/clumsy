@@ -1,4 +1,5 @@
-<?php namespace Clumsy\CMS\Models;
+<?php
+namespace Clumsy\CMS\Models;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -10,8 +11,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Clumsy\CMS\Facades\Clumsy;
 
-class BaseModel extends \Eloquent {
-
+class BaseModel extends \Eloquent
+{
     public static $has_slug = false;
 
     protected $guarded = array('id');
@@ -19,10 +20,10 @@ class BaseModel extends \Eloquent {
     public $resource_name;
 
     public $required_by = array();
-    
+
     public $columns;
     public $column_equivalence = array();
-    
+
     public $all_columns = array();
 
     public $rules = array();
@@ -34,21 +35,21 @@ class BaseModel extends \Eloquent {
 
     public $parent_resource = null;
     public $parent_id_column = null;
-    
+
     public $child_resource = null;
     public $child_resources = null;
 
     public $suppress_delete = false;
 
     public $media_slots = array();
-    
+
     public $filters = array();
     public $filter_equivalence = array();
 
     public $toggle_filters = array();
     public $suppress_when_toggled = array();
     public $append_when_toggled = array();
-    
+
     public $active_reorder = false;
     public $reorder_columns = array();
 
@@ -66,11 +67,10 @@ class BaseModel extends \Eloquent {
     protected static function boot()
     {
         parent::boot();
-        
-        if (static::$has_slug)
-        {
-            self::saving(function($model)
-            {
+
+        if (static::$has_slug) {
+            self::saving(function ($model) {
+
                 $model->slug = Str::slug($model->title);
             });
         }
@@ -85,12 +85,9 @@ class BaseModel extends \Eloquent {
     {
         $innerView = $this->getAdminContext('inner_view');
         $viewColumnsMethod = camel_case($innerView).'ViewColumns';
-        if ($innerView && method_exists($this, $viewColumnsMethod))
-        {
+        if ($innerView && method_exists($this, $viewColumnsMethod)) {
             $columns = $this->{$viewColumnsMethod}();
-        }
-        else
-        {
+        } else {
             $columns = (array)($this->columns ? $this->columns : Config::get('clumsy::default_columns'));
         }
 
@@ -98,7 +95,9 @@ class BaseModel extends \Eloquent {
         return $columns;
     }
 
-    public function prepareColumns(&$columns) {}
+    public function prepareColumns(&$columns)
+    {
+    }
 
     public function columnEquivalence()
     {
@@ -116,19 +115,16 @@ class BaseModel extends \Eloquent {
         $equivalences = array_flip($this->columnEquivalence());
         $columns = $this->allColumns() + $this->columns();
 
-        foreach (array_merge(array_keys($equivalences), array_keys($columns)) as $column)
-        {
+        foreach (array_merge(array_keys($equivalences), array_keys($columns)) as $column) {
             $original = $column;
-            
+
             // If we can't find the column name, look for an equivalence
-            if (!isset($columns[$column]))
-            {
+            if (!isset($columns[$column])) {
                 $column = $equivalences[$column];
             }
 
             // If we still can't find it, it could have been added dynamically, so ignore
-            if (!isset($columns[$column]))
-            {
+            if (!isset($columns[$column])) {
                 continue;
             }
 
@@ -219,8 +215,7 @@ class BaseModel extends \Eloquent {
     {
         $required_by = new Collection;
 
-        foreach ((array)$this->required_by as $relationship)
-        {
+        foreach ((array)$this->required_by as $relationship) {
             $required_by = $required_by->merge(
                 $this->$relationship()->first() ? $this->$relationship()->first() : array()
             );
@@ -253,59 +248,45 @@ class BaseModel extends \Eloquent {
     {
         $sorted = false;
 
-        if (Session::has("clumsy.order.{$this->resource_name}"))
-        {
+        if (Session::has("clumsy.order.{$this->resource_name}")) {
             list($column, $direction) = Session::get("clumsy.order.{$this->resource_name}");
 
-            if ($this->hasSorter($column))
-            {
+            if ($this->hasSorter($column)) {
                 return $this->{'sort'.studly_case($column).'Column'}($query, $direction);
             }
-        
-            if (!in_array($column, Schema::getColumnListing($this->getTable())))
-            {
+
+            if (!in_array($column, Schema::getColumnListing($this->getTable()))) {
                 Session::forget("clumsy.order.{$this->resource_name}");
-            }
-            else
-            {
+            } else {
                 $sorted = true;
             }
-        }
-        elseif ($column)
-        {
+        } elseif ($column) {
             $sorted = true;
         }
-        
-        if (!$sorted)
-        {
-            if (sizeof($this->default_order))
-            {
-                foreach ($this->default_order as $column => $direction)
-                {
+
+        if (!$sorted) {
+            if (sizeof($this->default_order)) {
+                foreach ($this->default_order as $column => $direction) {
                     // If current row is not associative, rebuild variables
-                    if (is_numeric($column))
-                    {
+                    if (is_numeric($column)) {
                         $column = $direction;
                         $direction = 'asc';
                     }
-                    
+
                     $query->orderBy($column, $direction);
                 }
 
                 return $query;
-            }
-            else
-            {
+            } else {
                 $column = Config::get('clumsy::default_order.column');
                 $direction = Config::get('clumsy::default_order.direction');
             }
         }
 
-        if ($column && $direction)
-        {
+        if ($column && $direction) {
             return $query->orderBy($column, $direction);
         }
-        
+
         return $query;
     }
 
@@ -323,45 +304,37 @@ class BaseModel extends \Eloquent {
 
     public function scopeFiltered($query)
     {
-        if (Session::has("clumsy.filter.{$this->resource_name}"))
-        {
+        if (Session::has("clumsy.filter.{$this->resource_name}")) {
             $buffer = Session::get("clumsy.filter.{$this->resource_name}");
-            foreach ($buffer as $column => $values)
-            {
+            foreach ($buffer as $column => $values) {
                 $equivalence = $this->filterEquivalence();
                 $column = array_key_exists($column, $equivalence) ? array_get($equivalence, $column) : $column;
 
-                if ($this->hasFilterer($column))
-                {
+                if ($this->hasFilterer($column)) {
                     return $this->{'filter'.studly_case(str_replace('.', '_', $column)).'Column'}($query, $values);
                 }
 
                 // If the column exists in the table, use it
-                if (in_array($column, Schema::getColumnListing($this->getTable())))
-                {
-                    $query->where(function($query) use($values, $column)
-                    {
+                if (in_array($column, Schema::getColumnListing($this->getTable()))) {
+                    $query->where(function ($query) use ($values, $column) {
+
                         $i = 0;
-                        foreach ($values as $item)
-                        {
+                        foreach ($values as $item) {
                             $where = $i === 0 ? 'where' : 'orWhere';
                             $query->$where($column, $item);
                             $i++;
                         }
                     });
-                }
-                // Otherwise, assume it's a nested filter and
+                } // Otherwise, assume it's a nested filter and
                 // look for the column in the child model
-                else
-                {
+                else {
                     list($model, $newColumn) = explode('.', $column);
-                    $query->whereHas($model, function($query) use($newColumn, $values)
-                    {
-                        $query->where(function($query) use($values, $newColumn)
-                        {
+                    $query->whereHas($model, function ($query) use ($newColumn, $values) {
+
+                        $query->where(function ($query) use ($values, $newColumn) {
+
                             $i = 0;
-                            foreach ($values as $item)
-                            {
+                            foreach ($values as $item) {
                                 $where = $i === 0 ? 'where' : 'orWhere';
                                 $query->$where($newColumn, $item);
                                 $i++;
@@ -392,13 +365,12 @@ class BaseModel extends \Eloquent {
     public function getFilterData($query)
     {
         $data = array();
-        
-        foreach ($this->filters() as $column)
-        {
+
+        foreach ($this->filters() as $column) {
             $values = array();
 
             $queryaux = clone $query;
-            
+
             // Remove eager loads from query
             $queryaux->setEagerLoads(array());
 
@@ -410,32 +382,26 @@ class BaseModel extends \Eloquent {
             $index = $column;
 
             // If the column exists in the table, use it
-            if(in_array($column, Schema::getColumnListing($this->getTable())))
-            {
+            if (in_array($column, Schema::getColumnListing($this->getTable()))) {
                 $items = $queryaux->select($column)->distinct()->get();
-            }
-            // Otherwise, assume it's a nested filter and
+            } // Otherwise, assume it's a nested filter and
             // look for the column in the child model
-            else
-            {
+            else {
                 list($model, $column) = explode('.', $column);
                 $items = with(new $model)->select($column)->distinct()->get();
             }
-            
+
             // If the column is a boolean, use 'yes' or 'no' values
-            if (in_array($filter_key, (array)$this->booleans()) && !$this->hasGetMutator($filter_key))
-            {
-                $items->each(function($item) use($column, $filter_key, &$values)
-                {
+            if (in_array($filter_key, (array)$this->booleans()) && !$this->hasGetMutator($filter_key)) {
+                $items->each(function ($item) use ($column, $filter_key, &$values) {
+
                     $attributes = $item->getAttributes();
                     $values[$attributes[$column]] = $item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
                 });
-            }
-            // Otherwise, use the default attribute (will use get mutator, if available)
-            else
-            {
-                $items->each(function($item) use($column, $filter_key, &$values)
-                {
+            } // Otherwise, use the default attribute (will use get mutator, if available)
+            else {
+                $items->each(function ($item) use ($column, $filter_key, &$values) {
+
                     $attributes = $item->getAttributes();
                     $values[$attributes[$column]] = $item->$filter_key;
                 });
@@ -458,8 +424,7 @@ class BaseModel extends \Eloquent {
     {
         $classes[] = 'cell-'.$column;
 
-        if (in_array($column, (array)$this->active_booleans))
-        {
+        if (in_array($column, (array)$this->active_booleans)) {
             $classes[] = 'cell-active-boolean';
         }
 
@@ -469,21 +434,20 @@ class BaseModel extends \Eloquent {
     public function columnValue($column)
     {
         $value = $this->$column;
-        
-        if (!$this->hasGetMutator($column))
-        {
-            if (in_array($column, (array)$this->active_booleans))
-            {
+
+        if (!$this->hasGetMutator($column)) {
+            if (in_array($column, (array)$this->active_booleans)) {
                 return $this->activeBooleanColumnValue($column);
             }
 
-            if (in_array($column, (array)$this->booleans))
-            {
+            if (in_array($column, (array)$this->booleans)) {
                 return $this->booleanColumnValue($column);
             }
         }
 
-        if ($value === false || $value === null) $value = $this->columnValuePlaceHolder();
+        if ($value === false || $value === null) {
+            $value = $this->columnValuePlaceHolder();
+        }
 
         $url = URL::route(Clumsy::prefix().".{$this->resource_name}.edit", $this->id);
 
@@ -539,8 +503,7 @@ class BaseModel extends \Eloquent {
         $context = snake_case($this->adminContextPrefix().$context);
         $value = DB::connection()->getPdo()->quote($value);
 
-        if (!$query->getQuery()->columns)
-        {
+        if (!$query->getQuery()->columns) {
             $query->select('*');
         }
 

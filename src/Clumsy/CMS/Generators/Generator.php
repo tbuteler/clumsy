@@ -1,12 +1,13 @@
-<?php namespace Clumsy\CMS\Generators;
+<?php
+namespace Clumsy\CMS\Generators;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Clumsy\CMS\Generators\Filesystem\Filesystem;
 use Clumsy\CMS\Generators\Compilers\TemplateCompiler;
 
-abstract class Generator {
-
+abstract class Generator
+{
     /**
      * @var Filesystem
      */
@@ -102,8 +103,7 @@ abstract class Generator {
 
     protected function makeFolder($template_data)
     {
-        if (!File::exists($this->targetFolder($template_data)))
-        {
+        if (!File::exists($this->targetFolder($template_data))) {
             File::makeDirectory($this->targetFolder($template_data), 0777, true);
         }
     }
