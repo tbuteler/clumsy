@@ -36,6 +36,42 @@ return array(
 
     /*
      |--------------------------------------------------------------------------
+     | Authentication model
+     |--------------------------------------------------------------------------
+     |
+     | A custom model to use for user management within Clumsy. Leave null to
+     | use default, or specify a namespaced model to override
+     |
+     */
+
+    'authentication-model' => null,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Authentication attribute
+     |--------------------------------------------------------------------------
+     |
+     | Which of the model's attributes, aside from password, should be used when
+     | verifying credentials
+     |
+     */
+
+    'authentication-attribute' => 'email',
+
+    /*
+     |--------------------------------------------------------------------------
+     | Authentication throttling
+     |--------------------------------------------------------------------------
+     |
+     | Throttling is an optional security feature for authentication, which
+     | enables limiting of login attempts and the suspension & banning of users
+     |
+     */
+
+    'authentication-throttling' => true,
+
+    /*
+     |--------------------------------------------------------------------------
      | Admin locale
      |--------------------------------------------------------------------------
      |
