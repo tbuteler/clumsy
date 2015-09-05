@@ -38,6 +38,11 @@ class Overseer
         return $this->app['sentry'];
     }
 
+    public function guest()
+    {
+        return !$this->auth()->check();
+    }
+
     public function attempt(array $credentials, $remember = false)
     {
         return $this->auth()->authenticate($credentials, $remember);
