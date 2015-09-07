@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Lang;
 use Clumsy\CMS\Facades\Overseer;
@@ -50,11 +51,14 @@ class UsersController extends AdminController
      */
     public function index($data = array())
     {
-        $data['items'] = Overseer::findAllUsers();
-
         $data['title'] = trans('clumsy::titles.users');
 
-        return parent::index();
+        $data['items'] = new Collection();
+        foreach (Overseer::findAllUsers() as $user) {
+            $data['items']->push($this->model->newFromBuilder($user->getAttributes()));
+        }
+
+        return parent::index($data);
     }
 
     public function create($data = array())
