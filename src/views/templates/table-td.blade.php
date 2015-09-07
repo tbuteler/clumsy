@@ -1,0 +1,1 @@
+<td class="{{ $item->cellClass($column) }}">{{ $item->columnValue($column) }}</td>
