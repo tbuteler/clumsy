@@ -34,7 +34,7 @@ $(function(){
 
     // If a translatable panel pane has an error that prevents saving, switch to it
     if ($('.panel-translatable').length && $('.panel-translatable .has-error').length) {
-        $('.tab-pane').each(function(i,el){
+        $('.tab-pane-translatable').each(function(i,el){
             if ($('.has-error', el).length) {
                 var target = $(el).attr('id');
                 $('a[href="#'+target+'"], a[data-target="'+target+'"]').tab('show');

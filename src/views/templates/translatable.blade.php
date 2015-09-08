@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default panel-translatable">
 	<div class="panel-heading">
 		<ul class="nav nav-pills" role="tablist">
 		@foreach ($locales as $locale => $language)
@@ -9,9 +9,9 @@
 
 	<div class="panel-body tab-content">
 	@foreach ($locales as $locale => $language)
-		<div class="tab-pane{{ $locale === $first ? ' active' : '' }}" id="{{ $locale }}">
+		<div class="tab-pane-translatable tab-pane{{ $locale === $first ? ' active' : '' }}" id="{{ $locale }}">
 		@foreach ($fields as $column => $label)
-			
+
 			@if(str_contains($column, ':'))
 				<?php list($column, $type) = explode(':', $column); ?>
 			@else
@@ -19,7 +19,7 @@
 			@endif
 
 			@if ($type === 'media')
-				{{ Form::$type($label[$model->localizeColumn($column, $locale)]) }}	
+				{{ Form::$type($label[$model->localizeColumn($column, $locale)]) }}
 			@else
 				{{ Form::$type($model->localizeColumn($column, $locale), $label) }}
 			@endif
