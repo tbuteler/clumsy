@@ -88,7 +88,7 @@ $(function(){
     if ($('.coordinates').length){
 
         $('.coordinates').each(function(){
-            
+
             var $wrapper = $(this),
                 $lat = $wrapper.find('input').eq(0),
                 $lng = $wrapper.find('input').eq(1);
@@ -108,21 +108,31 @@ $(function(){
                         map.panTo(marker.position);
                     }
                 }
-                else
-                {
+                else {
                     marker.setPosition( new google.maps.LatLng(lat, lng) );
                     map.panTo(marker.position);
                 }
             };
 
-            var initialize = function() {
+            var updateMap = function(event) {
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+
+                setMarker(lat,lng);
+
+                $lat.val(lat);
+                $lng.val(lng);
+            };
+
+            var initializeMap = function() {
                 var mapOptions = $.extend(
                     {
                         center: {
                             lat: 38.709792,
                             lng: -9.133609
                         },
-                        zoom: 14
+                        zoom: 14,
+                        disableDoubleClickZoom: true
                     },
                     typeof handover.admin.mapOptions === 'undefined' ? {} : handover.admin.mapOptions
                 );
@@ -132,22 +142,15 @@ $(function(){
                 var lat = $lat.val();
                 var lng = $lng.val();
 
-                if (lat !== null && lng !== null) {
+                if (lat !== '' && lng !== '') {
                     setMarker(lat, lng);
                 }
 
-                google.maps.event.addListener(map, 'rightclick', function(event) {
-                    var lat = event.latLng.lat();
-                    var lng = event.latLng.lng();
-                    
-                    setMarker(lat,lng);
-
-                    $lat.val(lat);
-                    $lng.val(lng);
-                });
+                google.maps.event.addListener(map, 'rightclick',updateMap);
+                google.maps.event.addListener(map, 'dblclick', updateMap);
             };
 
-            google.maps.event.addDomListener(window, 'load', initialize);
+            google.maps.event.addDomListener(window, 'load', initializeMap);
         });
     }
 
