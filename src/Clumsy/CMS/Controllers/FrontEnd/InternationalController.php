@@ -154,7 +154,7 @@ class InternationalController extends Controller
                 return $this->localizedRootURL($locale);
             }
 
-            $route_syntax = URL::route($route_name);
+            $route_syntax = route($route_name);
             if ($this->hasRequiredParameters($route_syntax)) {
                 return $this->translateRouteWithParameters($locale, $route_syntax, $route, $request);
             }

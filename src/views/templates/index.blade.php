@@ -1,4 +1,4 @@
-@extends('clumsy::templates.master')
+@extends($view->resolve('master'))
 
 @section('page-header')
 @stop

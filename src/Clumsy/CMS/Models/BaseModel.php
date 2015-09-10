@@ -189,10 +189,10 @@ class BaseModel extends \Eloquent
         return $this->parent_id_column === null ? $this->parent_resource.'_id' : $this->parent_id_column;
     }
 
-    public function parentItemId($id)
+    public function parentItemId($id = null)
     {
         $id_column = $this->parentIdColumn();
-        return $this->find($id)->$id_column;
+        return $id ? $this->find($id)->$id_column : $this->$id_column;
     }
 
     public function parentItem($id)
@@ -302,10 +302,11 @@ class BaseModel extends \Eloquent
         return method_exists($this, 'filter'.studly_case(str_replace('.', '_', $column)).'Column');
     }
 
-    public function scopeFiltered($query)
+    public function scopeFiltered($query, $parent_id = null)
     {
-        if (Session::has("clumsy.filter.{$this->resource_name}")) {
-            $buffer = Session::get("clumsy.filter.{$this->resource_name}");
+        $identifier = $parent_id ? ".{$parent_id}" : null;
+        if (Session::has("clumsy.filter.{$this->resource_name}{$identifier}")) {
+            $buffer = Session::get("clumsy.filter.{$this->resource_name}{$identifier}");
             foreach ($buffer as $column => $values) {
                 $equivalence = $this->filterEquivalence();
                 $column = array_key_exists($column, $equivalence) ? array_get($equivalence, $column) : $column;
@@ -346,15 +347,15 @@ class BaseModel extends \Eloquent
         }
     }
 
-    public function scopeManaged($query)
+    public function scopeManaged($query, $parent_id = null)
     {
-        return $query->filtered()
+        return $query->filtered($parent_id)
                      ->orderSortable();
     }
 
-    public function scopeGetManaged($query)
+    public function scopeGetManaged($query, $parent_id = null)
     {
-        return $query->managed()->getPaged();
+        return $query->managed($parent_id)->getPaged();
     }
 
     public function scopeOfType($query, $type)
@@ -449,7 +450,7 @@ class BaseModel extends \Eloquent
             $value = $this->columnValuePlaceHolder();
         }
 
-        $url = URL::route(Clumsy::prefix().".{$this->resource_name}.edit", $this->id);
+        $url = route(Clumsy::prefix().".{$this->resource_name}.edit", $this->id);
 
         return HTML::link($url, $value);
     }

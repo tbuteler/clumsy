@@ -1,5 +1,10 @@
 $(function(){
 
+    $('.click-once:not(.must-confirm)').click(function(){
+        $(this).add($(this).siblings('.click-once')).prop('disabled', true);
+        $(this).addClass('loading');
+    });
+
     $('.with-tooltip').tooltip();
     $('.navbar').on('show.bs.dropdown', function(event) {
         $el = $(event.target);
@@ -15,7 +20,15 @@ $(function(){
         $(this).closest('form').next('.delete-form').submit();
     });
     $('.delete-form').submit(function(e){
-        return $(this).hasClass('user') ? confirm(handover.admin.strings.delete_confirm_user) : confirm(handover.admin.strings.delete_confirm);
+        var msg = $(this).hasClass('user') ? handover.admin.strings.delete_confirm_user : handover.admin.strings.delete_confirm;
+        if (confirm(msg)) {
+            $form = $(this).prev('form');
+            $del = $('.delete', $form);
+            $del.add('button[type="submit"]', $form).prop('disabled', true);
+            $del.addClass('loading');
+            return true;
+        }
+        return false;
     });
 
     if ($('.rich-text').length) {
@@ -34,7 +47,7 @@ $(function(){
 
     // If a translatable panel pane has an error that prevents saving, switch to it
     if ($('.panel-translatable').length && $('.panel-translatable .has-error').length) {
-        $('.tab-pane-translatable').each(function(i,el){
+        $('.tab-pane').each(function(i,el){
             if ($('.has-error', el).length) {
                 var target = $(el).attr('id');
                 $('a[href="#'+target+'"], a[data-target="'+target+'"]').tab('show');
@@ -101,15 +114,21 @@ $(function(){
                     if (lat !== null && lng !== null) {
                         marker = new google.maps.Marker({
                             map: map,
-                            draggable: false,
+                            draggable: true,
                             position: new google.maps.LatLng(parseFloat(lat), parseFloat(lng))
                         });
                         map.setZoom(16);
                         map.panTo(marker.position);
+
+                        google.maps.event.addListener(marker, 'dragend', function() {
+                            var position = marker.getPosition();
+                            $lat.val(position.lat());
+                            $lng.val(position.lng());
+                        });
                     }
                 }
                 else {
-                    marker.setPosition( new google.maps.LatLng(lat, lng) );
+                    marker.setPosition(new google.maps.LatLng(lat, lng));
                     map.panTo(marker.position);
                 }
             };
@@ -131,8 +150,7 @@ $(function(){
                             lat: 38.709792,
                             lng: -9.133609
                         },
-                        zoom: 14,
-                        disableDoubleClickZoom: true
+                        zoom: 14
                     },
                     typeof handover.admin.mapOptions === 'undefined' ? {} : handover.admin.mapOptions
                 );
@@ -147,7 +165,6 @@ $(function(){
                 }
 
                 google.maps.event.addListener(map, 'rightclick',updateMap);
-                google.maps.event.addListener(map, 'dblclick', updateMap);
             };
 
             google.maps.event.addDomListener(window, 'load', initializeMap);
@@ -202,7 +219,7 @@ $(function(){
         });
 
         $('#filter-clear-btn').click(function(){
-            $('#filter-form input:not([name="_token"])').remove();
+            $('#filter-form input:not([name="_token"],.filter-nested)').remove();
             $('#filter-form').submit();
         });
     }

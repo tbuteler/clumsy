@@ -1,3 +1,5 @@
+@include($view->resolve('page-header'))
+
 <div class="{{ $resource }}-panel">
 
 @if (count($items))

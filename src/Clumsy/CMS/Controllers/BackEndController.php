@@ -24,15 +24,22 @@ class BackEndController extends Controller
 
     public function filter($resource)
     {
-        $buffer = array();
-        foreach (Input::except('_token') as $column => $values) {
+        $filter = array();
+        foreach (Input::except('_token', 'query_string', 'parent_id') as $column => $values) {
             $column = str_replace(':', '.', $column);
-            $buffer[$column] = $values;
+            $filter[$column] = $values;
         }
 
-        Session::put("clumsy.filter.$resource", $buffer);
+        $identifier = Input::get('parent_id') ? '.'.Input::get('parent_id') : null;
+        Session::put("clumsy.filter.{$resource}{$identifier}", $filter);
 
-        return  Redirect::back();
+        $url = HTTP::queryStringRemove(URL::previous(), 'page');
+        $query_string = Input::get('query_string');
+        if ($query_string && !str_contains($url, $query_string)) {
+            $url = HTTP::queryStringAdd($url, Input::get('query_string'));
+        }
+
+        return Redirect::to($url);
     }
 
     public function update()
@@ -64,7 +71,7 @@ class BackEndController extends Controller
             $resourceObj->where('id', '=', $id)->update(array($resourceObj->active_reorder => $order + 1));
         }
 
-        return  Redirect::back()->with(array(
+        return Redirect::back()->with(array(
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.reorder.success'),
         ));

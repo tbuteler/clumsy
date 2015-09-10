@@ -299,6 +299,54 @@ table {
     background-color: @bg;
 }
 
+.btn {
+    transition: 125ms ease-in-out;
+
+    @keyframes loading {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @-webkit-keyframes loading {
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    &.loading {
+        position: relative;
+        padding-right: 2em;
+        min-width: 24px;
+        min-height: 24px;
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0.7em;
+            right: 0.35em;
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            border: 3px dotted rgba(255,255,255,0.6);
+            border-top-color: rgba(255,255,255,1);
+            animation: loading .9s linear infinite;
+            -webkit-animation: loading .9s linear infinite;
+        }
+    }
+
+    &.btn-default {
+
+        &.loading {
+
+            &:after {
+                border-color: darken(@bg, 30%);
+                border-top-color: darken(@bg, 60%);
+            }
+        }
+    }
+}
+
 /*
 |--------------------------------------------------------------------------
 | Tooltips
@@ -319,6 +367,10 @@ table {
 
 form {
     margin-bottom: 1em;
+}
+
+#main-form {
+    padding-bottom: 3px;
 }
 
 .bottom-buttons {
@@ -390,11 +442,11 @@ form {
     .chosen-container-single {
         height: 30px;
         font-size: 14px;
-    
+
         & > a {
             height: 30px;
             line-height: 28px;
-        
+
             // Caret
             b {
                 position: relative;
@@ -414,7 +466,7 @@ form {
             padding: 3px;
             border: 1px solid #ccc;
             border-radius: 4px;
-        
+
             .search-choice {
                 margin-top: 3px;
                 margin-bottom: 2px;
@@ -424,7 +476,7 @@ form {
         .search-field {
             height: 25px;
             line-height: 27px;
-        
+
             input[type=text] {
                 height: 25px;
             }
@@ -552,21 +604,24 @@ input+.iris-picker{
 */
 
 .title-btn {
-    top: -3px;
+    top: 3px;
     height: 32px;
     width: 32px;
-    border: 2px solid #999;
-    -webkit-border-radius: 20px; 
+    overflow: hidden;
+    border: 2px solid #bbb;
+    -webkit-border-radius: 20px;
     border-radius: 20px;
     cursor: pointer;
-    color: #999;
+    color: #bbb;
     font-size: 15px;
-    line-height: 30px;
+    line-height: 28px;
     text-align: center;
 
-    &:hover {
+    &:hover,
+    &:focus {
         text-decoration: none;
         color: #999;
+        border-color: #999;
     }
 
     &.active {
@@ -661,7 +716,7 @@ input+.iris-picker{
     cursor: -moz-grab;
     cursor: -webkit-grab;
 
-    &:active { 
+    &:active {
         cursor: grabbing;
         cursor: -moz-grabbing;
         cursor: -webkit-grabbing;

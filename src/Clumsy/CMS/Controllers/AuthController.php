@@ -47,7 +47,7 @@ class AuthController extends Controller
 
             $user = Overseer::attempt($credentials, Input::has('remember'));
 
-            return Redirect::intended(URL::route("$admin_prefix.home"));
+            return Redirect::intended(route("$admin_prefix.home"));
         } catch (\Cartalyst\Sentry\Users\LoginRequiredException $e) {
             $alert = trans('clumsy::alerts.auth.login_required');
         } catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e) {
@@ -88,7 +88,7 @@ class AuthController extends Controller
 
                 $resetCode = $user->getResetPasswordCode();
 
-                $url = URL::route('clumsy.do-reset-password', array('user_id' => $user->id, 'code' => $resetCode));
+                $url = route('clumsy.do-reset-password', array('user_id' => $user->id, 'code' => $resetCode));
 
                 Mail::send('clumsy::emails.auth.reset', compact('url'), function ($message) use ($user) {
 

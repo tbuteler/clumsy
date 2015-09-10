@@ -6,7 +6,7 @@
     @if ($item->exists)
         @foreach ($children as $child_resource => $child)
             <div role="tabpanel" class="tab-pane child-resource-pane {{ $show_resource === $child_resource ? 'active' : '' }}" id="{{ $child_resource }}">
-            {{ $child['inner_index'] }}
+            {{ $child['inner-template'] }}
             </div>
         @endforeach
     </div>

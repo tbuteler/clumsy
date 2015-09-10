@@ -1,7 +1,10 @@
-@extends('clumsy::templates.master')
+@extends($view->resolve('master'))
+
+@section('page-header')
+@stop
 
 @section('master')
 
-    @include('clumsy::templates.reorder-table')
+    @include($view->resolve('inner-reorder'))
 
 @stop

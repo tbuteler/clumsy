@@ -58,6 +58,7 @@ class AdminController extends APIController
         View::share('model', $this->model);
         View::share('resource', $this->resource);
         View::share('model_class', $this->modelClass());
+        View::share('is_child', false);
 
         $id = $route->getParameter($this->resource);
         View::share('id', $id);
@@ -139,45 +140,7 @@ class AdminController extends APIController
             $data['columns'] = $this->model->columns();
         }
 
-        if ($this->model->filters()) {
-            $buffer = array();
-            $names = array();
-            $activeFilters = Session::get("clumsy.filter.{$this->model->resource_name}");
-            $hasFilters = false;
-            foreach ($this->model->filters() as $column) {
-                $original = $column;
-
-                $equivalence = $this->model->filterEquivalence();
-                $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
-
-                if ($activeFilters != null && array_key_exists($column, $activeFilters)) {
-                    $hasFilters = true;
-                    $buffer[$column] = $activeFilters[$column];
-                } else {
-                    $buffer[$column] = null;
-                }
-
-                // Names
-                if (strpos($column, '.') !== false) {
-                    $otherBuffer = explode('.', $column);
-                    $modelName = studly_case($otherBuffer[0]);
-                    $model = new $modelName();
-                    $model_column_names = $model->columnNames();
-                    $names[$column] = $model_column_names[$otherBuffer[1]];
-                } else {
-                    $column_names = $this->model->columnNames() + $data['columns'];
-
-                    $names[$column] = isset($column_names[$column]) ? $column_names[$column] : $column;
-                }
-            }
-
-            $data['filtersData'] = array(
-                'data'       => $this->model->getFilterData($this->query),
-                'selected'   => $buffer,
-                'hasFilters' => $hasFilters,
-                'names'      => $names,
-            );
-        }
+        $data['filterData'] = $this->generateFilterData($this->query, $this->model, $data);
 
         if (!isset($data['items'])) {
             if ($this->request->ajax()) {
@@ -279,7 +242,7 @@ class AdminController extends APIController
         }
 
         if (!$url = $this->redirectAfterStore($response->getOriginalContent())) {
-            $url = URL::route("{$this->admin_prefix}.{$this->resource}.edit", $response->getOriginalContent());
+            $url = route("{$this->admin_prefix}.{$this->resource}.edit", $response->getOriginalContent());
         }
 
         return Redirect::to($url)->with(array(
@@ -329,35 +292,63 @@ class AdminController extends APIController
 
                 $data['children'][$child_resource]['resource'] = $child_resource;
 
+                $reorder = false;
+                $reorder_link = false;
+                if ($child->active_reorder) {
+                    if (Input::get('reorder') === $child_resource) {
+                        $reorder = true;
+                    } else {
+                        $reorder_link = HTTP::queryStringAdd(route("{$this->admin_prefix}.{$this->resource}.edit", $id), 'reorder', $child_resource);
+                    }
+                }
+
+                $child->setAdminContext('inner_view', $reorder ? 'reorder' : $child->currentInnerView());
+                $default_query = !isset($data['children'][$child_resource]) || !isset($data['children'][$child_resource]['items']);
+
                 $data['children'][$child_resource] = array_merge(array(
-                    'title'       => $this->labeler->displayNamePlural($child),
-                    'model_class' => $this->modelClass($child_resource),
-                    'columns'     => $child->columns(),
-                    'create_link' => HTTP::queryStringAdd(URL::route("{$this->admin_prefix}.{$child_resource}.create"), 'parent', $id),
-                    'innerView'   => $child->currentInnerView(),
+                    'is_child'     => true,
+                    'title'        => $this->labeler->displayNamePlural($child),
+                    'model_class'  => $this->modelClass($child_resource),
+                    'columns'      => $child->columns(),
+                    'back_link'    => HTTP::queryStringAdd(route("{$this->admin_prefix}.{$this->resource}.edit", $id), 'show', $child_resource),
+                    'create_link'  => HTTP::queryStringAdd(route("{$this->admin_prefix}.{$child_resource}.create"), 'parent', $id),
+                    'innerView'    => $reorder ? 'reorder' : $child->currentInnerView(),
+                    'reorder'      => (bool)$reorder_link,
+                    'reorder_link' => $reorder_link,
 
                 ), $data['children'][$child_resource]);
 
-                if (!isset($data['children'][$child_resource]) || !isset($data['children'][$child_resource]['items'])) {
-                    $query = $child->withAdminContext('innerView', $data['children'][$child_resource]['innerView'])
-                                   ->where($child->parentIdColumn(), $id)
-                                   ->orderSortable();
+                if ($reorder || $default_query) {
+                    $child_query = $child->query();
+                    $child_query->withAdminContext('innerView', $data['children'][$child_resource]['innerView'])
+                                ->where($child->parentIdColumn(), $id);
+                }
 
+                $data['children'][$child_resource]['filterData'] = $this->generateFilterData($child_query, $child, $data['children'][$child_resource], $id);
+
+                if ($reorder) {
+                    $data['children'][$child_resource]['items'] = $child_query->orderBy('order', 'asc')->get();
+                    $data['children'][$child_resource]['tab_title'] = $data['children'][$child_resource]['title'];
+                    $data['children'][$child_resource]['title'] = trans('clumsy::titles.reorder', array('resources' => $this->labeler->displayNamePlural($child)));
+
+                    Asset::enqueue('jquery-ui', 30);
+
+                } elseif ($default_query) {
+                    $child_query->managed($id);
                     $data['children'][$child_resource]['sortable'] = true;
 
                     $per_page = property_exists($child, 'admin_per_page') ? $child->admin_per_page : Config::get('clumsy::per_page');
-
                     if ($per_page) {
-                        $child_items = $query->paginate($per_page);
+                        $child_items = $child_query->paginate($per_page);
                         $data['children'][$child_resource]['items'] = $child_items;
                         $data['children'][$child_resource]['pagination'] = $child_items->appends(array('show' => $child_resource))->links();
                     } else {
-                        $data['children'][$child_resource]['items'] = $query->get();
+                        $data['children'][$child_resource]['items'] = $child_query->get();
                     }
                 }
 
                 $child_view = clone $this->view;
-                $child_view->setDomain($child->resource_name)->clearLevels()->pushLevel('index');
+                $child_view->setDomain($child->resource_name)->clearLevels()->pushLevel($reorder ? 'reorder' : 'index');
                 $data['children'][$child_resource]['view'] = $child_view;
 
                 $child_data = array_merge(
@@ -365,7 +356,9 @@ class AdminController extends APIController
                     $data['children'][$child_resource]
                 );
 
-                $data['children'][$child_resource]['inner_index'] = View::make($child_view->resolve('inner-index'), $child_data)->render();
+                $child_template = $reorder ? 'inner-reorder' : 'inner-index';
+                $data['children'][$child_resource]['child_template'] = $child_template;
+                $data['children'][$child_resource]['inner-template'] = View::make($child_view->resolve($child_template), $child_data)->render();
             }
 
             $view = $this->view->resolve('edit-nested');
@@ -390,15 +383,20 @@ class AdminController extends APIController
         }
 
         if ($this->model->isNested()) {
+            $parent_resource = $this->model->parentResource();
             $parent_id_column = $this->model->parentIdColumn();
-            $data['fields'][] = Form::hidden($parent_id_column, $id ? $data['item']->$parent_id_column : Input::get('parent'));
+            $parent_id = $id ? $data['item']->$parent_id_column : Input::get('parent');
+            $data['fields'][] = Form::hidden($parent_id_column, $parent_id);
+            $data['back_link'] = HTTP::queryStringAdd(route("{$this->admin_prefix}.{$parent_resource}.edit", $parent_id), 'show', $this->resource);
+        } else {
+            $data['back_link'] = route("{$this->admin_prefix}.{$this->resource}.index");
         }
 
         if (!isset($data['suppress_delete'])) {
             $data['suppress_delete'] = $this->model->suppress_delete;
         }
 
-        $data['show_resource'] = Input::get('show');
+        $data['show_resource'] = Input::get('show', Input::get('reorder'));
 
         return View::make($view, $data);
     }
@@ -427,7 +425,7 @@ class AdminController extends APIController
         }
 
         if (!$url = $this->redirectAfterUpdate($id)) {
-            $url = URL::route("{$this->admin_prefix}.{$this->resource}.edit", $id);
+            $url = route("{$this->admin_prefix}.{$this->resource}.edit", $id);
         }
 
         return Redirect::to($url)->with(array(
@@ -446,10 +444,10 @@ class AdminController extends APIController
     {
         $item = $this->model->findOrFail($id);
 
-        $url = URL::route("{$this->admin_prefix}.{$this->resource}.index");
+        $url = route("{$this->admin_prefix}.{$this->resource}.index");
 
         if ($this->model->isNested()) {
-            $url = URL::route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($id));
+            $url = route("{$this->admin_prefix}.".$this->model->parentResource().'.edit', $this->model->parentItemId($id));
         }
 
         $response = parent::destroy($id);
@@ -487,5 +485,55 @@ class AdminController extends APIController
         Asset::enqueue('jquery-ui', 30);
 
         return View::make($this->view->resolve('reorder'), $data);
+    }
+
+    public function generateFilterData($query, $model = null, $data = array(), $parent_id = null)
+    {
+        if (!$model) {
+            $model = $this->model;
+        }
+
+        if (!$model->filters()) {
+            return false;
+        }
+
+        $buffer = array();
+        $names = array();
+        $identifier = $parent_id ? ".{$parent_id}" : null;
+        $activeFilters = Session::get("clumsy.filter.{$model->resource_name}{$identifier}");
+
+        $hasFilters = false;
+        foreach ($model->filters() as $column) {
+            $original = $column;
+
+            $equivalence = $model->filterEquivalence();
+            $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
+
+            if ($activeFilters != null && array_key_exists($column, $activeFilters)) {
+                $hasFilters = true;
+                $buffer[$column] = $activeFilters[$column];
+            } else {
+                $buffer[$column] = null;
+            }
+
+            // Names
+            if (strpos($column, '.') !== false) {
+                $otherBuffer = explode('.', $column);
+                $modelName = studly_case($otherBuffer[0]);
+                $model = new $modelName();
+                $model_column_names = $model->columnNames();
+                $names[$column] = $model_column_names[$otherBuffer[1]];
+            } else {
+                $column_names = $model->columnNames() + (isset($data['columns']) ? $data['columns'] : array());
+                $names[$column] = isset($column_names[$column]) ? $column_names[$column] : $column;
+            }
+        }
+
+        return array(
+            'data'       => $model->getFilterData($query),
+            'selected'   => $buffer,
+            'hasFilters' => $hasFilters,
+            'names'      => $names,
+        );
     }
 }

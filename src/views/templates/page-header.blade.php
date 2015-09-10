@@ -1,10 +1,11 @@
 <h1 class="page-header">
     <div class="row">
         <div class="col-sm-9">
+            @include($view->resolve('title-prepend'))
             @section('title')
                 {{ $title or '' }}
             @show
-            @include($view->resolve('title-buttons'))
+            @include($view->resolve('title-append'))
         </div>
         @include($view->resolve('after-title'))
     </div>

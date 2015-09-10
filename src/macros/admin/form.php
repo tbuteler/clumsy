@@ -19,7 +19,7 @@ Form::macro('delete', function ($resource_type, $id) {
 
     $form_parameters = array(
         'method' => "DELETE",
-        'url'    => URL::route(Clumsy::prefix().".$resource_type.destroy", $id),
+        'url'    => route(Clumsy::prefix().".$resource_type.destroy", $id),
         'class'  => "delete-form btn-outside pull-left $resource_type",
     );
 

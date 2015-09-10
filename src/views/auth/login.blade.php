@@ -5,10 +5,10 @@
 @stop
 
 @section('master')
-    
+
     {{ Form::open() }}
 
-    {{ Form::hidden('intended', $intended ? $intended : URL::route("$admin_prefix.home")) }}
+    {{ Form::hidden('intended', $intended ? $intended : route("$admin_prefix.home")) }}
 
     {{ Form::field('email', trans('clumsy::fields.email'), 'email', array('field' => array('tabindex' => '1'))) }}
 

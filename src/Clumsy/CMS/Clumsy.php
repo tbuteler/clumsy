@@ -99,7 +99,7 @@ class Clumsy
         Asset::json('admin', array(
             'urls' => array(
                 'base'   => URL::to($route->getPrefix()),
-                'update' => URL::route('clumsy.update'),
+                'update' => route('clumsy.update'),
             ),
             'strings' => array(
                 'filter_no_results'   => trans('clumsy::fields.filter-no-results'),
