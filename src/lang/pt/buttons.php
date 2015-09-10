@@ -20,6 +20,8 @@ return array(
 
     'import'        => 'Actualizar :resources',
 
+    'back-to-index' => 'Voltar ao índice',
+
     'toggle_navbar' => 'Mostrar menu de navegação',
 
     'manage_site'   => 'Gerir site',

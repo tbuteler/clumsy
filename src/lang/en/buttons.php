@@ -20,6 +20,8 @@ return array(
 
     'import'        => 'Update :resources',
 
+    'back-to-index' => 'Back to index',
+
     'toggle_navbar' => 'Toggle navigation',
 
     'manage_site'   => 'Manage site',

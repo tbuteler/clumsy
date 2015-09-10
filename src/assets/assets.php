@@ -8,14 +8,14 @@ return array(
         'set'   => 'styles',
         'path'  => 'packages/clumsy/cms/css/admin.css',
         'req'   => 'bootstrap',
-        'v'     => '0.21.0',
+        'v'     => '0.21.1',
     ),
 
     'admin.js' => array(
         'set'   => 'footer',
         'path'  => 'packages/clumsy/cms/js/admin.min.js',
         'req'   => array('bootstrap.js','chosen'),
-        'v'     => '0.21.0',
+        'v'     => '0.21.1',
     ),
 
     'google-maps' => array(

@@ -1,5 +1,11 @@
 $(function(){
 
+    $('form').submit(function(){
+        var $submit = $('button[type="submit"]', this);
+        $submit.add($submit.siblings('button')).prop('disabled', true);
+        $submit.addClass('loading');
+    });
+
     $('.click-once:not(.must-confirm)').click(function(){
         $(this).add($(this).siblings('.click-once')).prop('disabled', true);
         $(this).addClass('loading');
@@ -22,8 +28,8 @@ $(function(){
     $('.delete-form').submit(function(e){
         var msg = $(this).hasClass('user') ? handover.admin.strings.delete_confirm_user : handover.admin.strings.delete_confirm;
         if (confirm(msg)) {
-            $form = $(this).prev('form');
-            $del = $('.delete', $form);
+            var $form = $(this).prev('form');
+            var $del = $('.delete', $form);
             $del.add('button[type="submit"]', $form).prop('disabled', true);
             $del.addClass('loading');
             return true;
