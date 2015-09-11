@@ -1,4 +1,4 @@
-<div class="col-sm-3 after-title">
+<div class="col-sm-4 after-title">
 @section('after-title')
     @if (isset($importer) && $importer)
         <a href="{{ route("$admin_prefix.$resource.import") }}" class="btn btn-primary add-new">
