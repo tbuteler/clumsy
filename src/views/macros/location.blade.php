@@ -17,8 +17,7 @@
         <div class="panel panel-default">
             <div class="map panel-body"></div>
         </div>
-        <button type="button" class="drop-pin btn btn-sm btn-primary col-xs-12">@lang('clumsy::fields.drop-pin-at-center')</button>
-
+        <button type="button" class="drop-pin btn btn-sm btn-primary btn-block">@lang('clumsy::fields.drop-pin-at-center')</button>
     </div>
 
 </div>

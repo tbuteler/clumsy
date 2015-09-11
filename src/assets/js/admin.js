@@ -193,6 +193,7 @@ $(function(){
                 if (lat !== '' && lng !== '') {
                     var position = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
                     setMarker(position, (typeof $geocoderInput.attr('name') === 'undefined'));
+                    map.setZoom(16);
                 }
 
                 google.maps.event.addListener(map, 'rightclick', updateMap);
