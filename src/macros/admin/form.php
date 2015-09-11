@@ -25,3 +25,10 @@ Form::macro('delete', function ($resource_type, $id) {
 
     return Form::open($form_parameters).Form::close();
 });
+
+Form::macro('location', function ($lat, $lng, $address = null) {
+
+    Asset::enqueue('google-maps');
+
+    return View::make('clumsy::macros.location', compact('lat', 'lng', 'address'))->render();
+});

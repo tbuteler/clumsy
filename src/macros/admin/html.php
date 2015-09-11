@@ -66,12 +66,5 @@ HTML::macro('translatable', function ($fields) {
     reset($locales);
     $first = key($locales);
 
-    return View::make('clumsy::templates.translatable', compact('locales', 'first', 'fields'))->render();
-});
-
-HTML::macro('locator', function ($lat, $lng) {
-
-    Asset::enqueue('google-maps');
-
-    return View::make('clumsy::templates.locator', compact('lat', 'lng'))->render();
+    return View::make('clumsy::macros.translatable', compact('locales', 'first', 'fields'))->render();
 });

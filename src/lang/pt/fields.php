@@ -55,7 +55,10 @@ return array(
 
     'filter-no-results' => 'Nenhum resultado com ',
 
-    'latitude'          => 'Latitude',
-
-    'longitude'         => 'Longitude'
+    // Coordinates macro
+    'address'                => 'Morada',
+    'latitude'               => 'Latitude',
+    'longitude'              => 'Longitude',
+    'coordinates-help-block' => 'Selecione o local com o botão direito do rato. Arraste o marcador para ajustar a posição.',
+    'drop-pin-at-center'     => 'Marcar o centro do mapa',
 );

@@ -1,24 +1,18 @@
 $(function(){
 
+    var clickOnce = function($el) {
+        $el.add($el.siblings(':button, :submit')).prop('disabled', true);
+        $el.addClass('loading');
+    };
+
+    $('.click-once').click(function(){
+        clickOnce($(this));
+    });
+
     $('form').submit(function(){
-        var $submit = $('button[type="submit"]', this);
-        $submit.add($submit.siblings('button')).prop('disabled', true);
-        $submit.addClass('loading');
-    });
-
-    $('.click-once:not(.must-confirm)').click(function(){
-        $(this).add($(this).siblings('.click-once')).prop('disabled', true);
-        $(this).addClass('loading');
-    });
-
-    $('.with-tooltip').tooltip();
-    $('.navbar').on('show.bs.dropdown', function(event) {
-        $el = $(event.target);
-        if ($el.hasClass('with-tooltip')){
-            $el.tooltip('destroy');
-            $el.one('hide.bs.dropdown', function(event) {
-                $el.tooltip();
-            });
+        var $submit = $(':submit', this);
+        if ($submit.hasClass('submit-once')) {
+            clickOnce($submit);
         }
     });
 
@@ -30,11 +24,21 @@ $(function(){
         if (confirm(msg)) {
             var $form = $(this).prev('form');
             var $del = $('.delete', $form);
-            $del.add('button[type="submit"]', $form).prop('disabled', true);
-            $del.addClass('loading');
+            clickOnce($del);
             return true;
         }
         return false;
+    });
+
+    $('.with-tooltip').tooltip();
+    $('.navbar').on('show.bs.dropdown', function(event) {
+        $el = $(event.target);
+        if ($el.hasClass('with-tooltip')){
+            $el.tooltip('destroy');
+            $el.one('hide.bs.dropdown', function(event) {
+                $el.tooltip();
+            });
+        }
     });
 
     if ($('.rich-text').length) {
@@ -104,49 +108,70 @@ $(function(){
         });
     }
 
-    if ($('.coordinates').length){
+    if ($('.location').length){
 
-        $('.coordinates').each(function(){
+        $('.location').each(function(){
 
-            var $wrapper = $(this),
+            var $wrapper = $('.coordinates', this),
+                map,
+                marker = null,
+                geocoder = new google.maps.Geocoder(),
                 $lat = $wrapper.find('input').eq(0),
-                $lng = $wrapper.find('input').eq(1);
+                $lng = $wrapper.find('input').eq(1),
+                $geocoderInput = $('.geocoder-btn', this).closest('.form-group').find('input');
 
-            var map,
-                marker = null;
-
-            var setMarker = function(lat, lng) {
+            var setMarker = function(LatLng, updateAddress) {
                 if (marker === null) {
-                    if (lat !== null && lng !== null) {
-                        marker = new google.maps.Marker({
-                            map: map,
-                            draggable: true,
-                            position: new google.maps.LatLng(parseFloat(lat), parseFloat(lng))
-                        });
-                        map.setZoom(16);
-                        map.panTo(marker.position);
+                    marker = new google.maps.Marker({
+                        map: map,
+                        draggable: true,
+                        position: LatLng
+                    });
+                    map.panTo(marker.position);
 
-                        google.maps.event.addListener(marker, 'dragend', function() {
-                            var position = marker.getPosition();
-                            $lat.val(position.lat());
-                            $lng.val(position.lng());
-                        });
-                    }
+                    google.maps.event.addListener(marker, 'dragend', function() {
+                        updateMapInputs(marker.getPosition(), true);
+                    });
                 }
                 else {
-                    marker.setPosition(new google.maps.LatLng(lat, lng));
+                    marker.setPosition(LatLng);
                     map.panTo(marker.position);
                 }
+
+                updateMapInputs(LatLng, updateAddress);
             };
 
             var updateMap = function(event) {
-                var lat = event.latLng.lat();
-                var lng = event.latLng.lng();
+                setMarker(event.latLng);
+            };
 
-                setMarker(lat,lng);
+            var updateMapInputs = function(LatLng, updateAddress) {
+                if (updateAddress) {
+                    geocoder.geocode({
+                        'location': LatLng
+                    }, function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            if (results[0]) {
+                                $geocoderInput.val(results[0].formatted_address);
+                            }
+                        }
+                    });
+                }
 
-                $lat.val(lat);
-                $lng.val(lng);
+                $lat.val(LatLng.lat());
+                $lng.val(LatLng.lng());
+            };
+
+            var updateMapFromAddress = function(address) {
+                if (String(address).trim() !== '') {
+                    geocoder.geocode({
+                        'address': address
+                    }, function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            setMarker(results[0].geometry.location, false);
+                        }
+                    });
+                }
             };
 
             var initializeMap = function() {
@@ -165,15 +190,23 @@ $(function(){
 
                 var lat = $lat.val();
                 var lng = $lng.val();
-
                 if (lat !== '' && lng !== '') {
-                    setMarker(lat, lng);
+                    var position = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                    setMarker(position, (typeof $geocoderInput.attr('name') === 'undefined'));
                 }
 
-                google.maps.event.addListener(map, 'rightclick',updateMap);
+                google.maps.event.addListener(map, 'rightclick', updateMap);
             };
 
             google.maps.event.addDomListener(window, 'load', initializeMap);
+
+            $('.drop-pin', this).click(function(){
+                setMarker(map.getCenter(), true);
+            });
+
+            $('.geocoder-btn', this).click(function(){
+                updateMapFromAddress($geocoderInput.val());
+            });
         });
     }
 

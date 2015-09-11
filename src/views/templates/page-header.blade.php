@@ -1,6 +1,6 @@
 <h1 class="page-header">
     <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-8">
             @include($view->resolve('title-prepend'))
             @section('title')
                 {{ $title or '' }}

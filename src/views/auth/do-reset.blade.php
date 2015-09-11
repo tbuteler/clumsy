@@ -8,11 +8,11 @@
 
     {{ Form::open() }}
 
-    {{ Form::field('password', trans('clumsy::fields.password'), 'password') }}
+        {{ Form::field('password', trans('clumsy::fields.password'), 'password') }}
 
-    {{ Form::field('password_confirmation', trans('clumsy::fields.password_confirmation'), 'password') }}
+        {{ Form::field('password_confirmation', trans('clumsy::fields.password_confirmation'), 'password') }}
 
-    {{ Form::submit(trans('clumsy::buttons.reset'), array('class' => 'btn btn-primary')) }}
+        <button class="btn btn-primary submit-once">@lang('clumsy::buttons.reset')</button>
 
     {{ Form::close() }}
 

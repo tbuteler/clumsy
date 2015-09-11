@@ -55,7 +55,10 @@ return array(
 
     'filter-no-results' => 'No results for ',
 
-    'latitude'          => 'Latitude',
-
-    'longitude'         => 'Longitude'
+    // Location macro
+    'address'                => 'Address',
+    'latitude'               => 'Latitude',
+    'longitude'              => 'Longitude',
+    'coordinates-help-block' => 'Create marker with a right-click. Drag marker to adjust position.',
+    'drop-pin-at-center'     => 'Drop pin at center',
 );

@@ -8,9 +8,9 @@
 
     {{ Form::open() }}
 
-    {{ Form::field('email', trans('clumsy::fields.email')) }}
+        {{ Form::field('email', trans('clumsy::fields.email')) }}
 
-    {{ Form::submit(trans('clumsy::buttons.reset'), array('class' => 'btn btn-primary')) }}
+        <button class="btn btn-primary submit-once">@lang('clumsy::buttons.reset')</button>
 
     {{ Form::close() }}
 
