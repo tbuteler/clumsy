@@ -2,7 +2,7 @@
 namespace Clumsy\CMS;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facade\Route;
+use Illuminate\Support\Facades\Route;
 use Clumsy\Assets\Facade as Asset;
 
 class CMSServiceProvider extends ServiceProvider
