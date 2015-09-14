@@ -79,9 +79,9 @@ class ResourceCommand extends Command
 
     protected function getArguments()
     {
-        return [
-            ['resource_name', InputArgument::REQUIRED, 'The name of the desired Clumsy resource']
-        ];
+        return array(
+            array('resource_name', InputArgument::REQUIRED, 'The name of the desired Clumsy resource')
+        );
     }
 
     protected function getGeneratorClass($model)

@@ -2,6 +2,7 @@
 namespace Clumsy\CMS;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facade\Route;
 use Clumsy\Assets\Facade as Asset;
 
 class CMSServiceProvider extends ServiceProvider
@@ -86,7 +87,7 @@ class CMSServiceProvider extends ServiceProvider
 
     protected function registerAuthRoutes()
     {
-        $this->app['router']->group(
+        Route::group(
             array(
                 'namespace' => 'Clumsy\CMS\Controllers',
                 'prefix'    => $this->app['config']->get('clumsy::authentication-prefix'),
@@ -94,40 +95,40 @@ class CMSServiceProvider extends ServiceProvider
             ),
             function () {
 
-                $this->app['router']->get('login', array(
+                Route::get('login', array(
                     'as'       => 'clumsy.login',
                     'before'   => 'clumsy:assets',
                     'uses'     => 'AuthController@login',
                 ));
 
-                $this->app['router']->post('login', array(
+                Route::post('login', array(
                     'before'   => 'csrf',
                     'uses'     => 'AuthController@postLogin',
                 ));
 
-                $this->app['router']->get('reset', array(
+                Route::get('reset', array(
                     'as'       => 'clumsy.reset-password',
                     'before'   => 'clumsy:assets',
                     'uses'     => 'AuthController@reset',
                 ));
 
-                $this->app['router']->post('reset', array(
+                Route::post('reset', array(
                     'before'   => 'csrf',
                     'uses'     => 'AuthController@postReset',
                 ));
 
-                $this->app['router']->get('do-reset/{user_id}/{code}', array(
+                Route::get('do-reset/{user_id}/{code}', array(
                     'as'       => 'clumsy.do-reset-password',
                     'before'   => 'clumsy:assets',
                     'uses'     => 'AuthController@doReset',
                 ));
 
-                $this->app['router']->post('do-reset/{user_id}/{code}', array(
+                Route::post('do-reset/{user_id}/{code}', array(
                     'before'   => 'csrf',
                     'uses'     => 'AuthController@postDoReset',
                 ));
 
-                $this->app['router']->get('logout', array(
+                Route::get('logout', array(
                     'as'       => 'clumsy.logout',
                     'uses'     => 'AuthController@logout',
                 ));
@@ -139,13 +140,13 @@ class CMSServiceProvider extends ServiceProvider
                 |
                 */
 
-                $this->app['router']->group(
+                Route::group(
                     array(
                         'before' => 'clumsy',
                     ),
                     function () {
 
-                        $this->app['router']->resource('user', 'UsersController');
+                        Route::resource('user', 'UsersController');
                     }
                 );
             }
@@ -154,7 +155,7 @@ class CMSServiceProvider extends ServiceProvider
 
     protected function registerBackEndRoutes()
     {
-        $this->app['router']->group(
+        Route::group(
             array(
                 'namespace' => 'Clumsy\CMS\Controllers',
                 'before' => 'clumsy:auth+user',
@@ -168,7 +169,7 @@ class CMSServiceProvider extends ServiceProvider
                 |
                 */
 
-                $this->app['router']->get('_reorder/{resource}', array(
+                Route::get('_reorder/{resource}', array(
                     'as'   => 'clumsy.reorder',
                     'uses' => 'BackEndController@reorder',
                 ));
@@ -180,7 +181,7 @@ class CMSServiceProvider extends ServiceProvider
                 |
                 */
 
-                $this->app['router']->post('_filter/{resource}', array(
+                Route::post('_filter/{resource}', array(
                     'as'   => 'clumsy.filter',
                     'uses' => 'BackEndController@filter',
                 ));
@@ -192,7 +193,7 @@ class CMSServiceProvider extends ServiceProvider
                 |
                 */
 
-                $this->app['router']->post('_update', array(
+                Route::post('_update', array(
                     'as'     => 'clumsy.update',
                     'before' => 'csrf',
                     'uses'   => 'BackEndController@update',
@@ -205,7 +206,7 @@ class CMSServiceProvider extends ServiceProvider
                 |
                 */
 
-                $this->app['router']->post('_reorder/{resource}', array(
+                Route::post('_reorder/{resource}', array(
                     'as'   => 'clumsy.save-active-reorder',
                     'uses' => 'BackEndController@saveOrder',
                 ));
