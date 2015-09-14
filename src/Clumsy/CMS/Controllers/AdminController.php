@@ -520,8 +520,8 @@ class AdminController extends APIController
             if (strpos($column, '.') !== false) {
                 $otherBuffer = explode('.', $column);
                 $modelName = studly_case($otherBuffer[0]);
-                $model = new $modelName();
-                $model_column_names = $model->columnNames();
+                $relatedModel = new $modelName();
+                $model_column_names = $relatedModel->columnNames();
                 $names[$column] = $model_column_names[$otherBuffer[1]];
             } else {
                 $column_names = $model->columnNames() + (isset($data['columns']) ? $data['columns'] : array());
