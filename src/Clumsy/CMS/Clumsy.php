@@ -49,6 +49,9 @@ class Clumsy
         require $path.'/macros/admin/html.php';
         require $path.'/macros/admin/form.php';
 
+        $admin_assets = include($path.'/assets/assets.php');
+        Asset::batchRegister($admin_assets);
+
         $this->admin_prefix = $this->app->runningInConsole() ? null : RouteFacade::getCurrentRoute()->getPrefix();
 
         $this->app['clumsy.admin'] = true;

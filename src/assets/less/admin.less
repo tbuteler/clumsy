@@ -277,19 +277,6 @@ table {
 
 /*
 |--------------------------------------------------------------------------
-| Inputs
-|--------------------------------------------------------------------------
-|
-*/
-
-.editable-html {
-    font-size: 0.75em;
-    font-family: Monaco, monospace;
-    white-space: pre;
-}
-
-/*
-|--------------------------------------------------------------------------
 | Buttons
 |--------------------------------------------------------------------------
 |
@@ -301,6 +288,10 @@ table {
 
 .btn {
     transition: 125ms ease-in-out;
+
+    &:focus {
+        outline: none;
+    }
 
     @keyframes loading {
         to {
@@ -353,7 +344,7 @@ table {
 
 /*
 |--------------------------------------------------------------------------
-| Form
+| Form & inputs
 |--------------------------------------------------------------------------
 |
 */
@@ -383,6 +374,19 @@ form {
             top: 0;
         }
     }
+}
+
+.form-control:focus {
+    border-color: #66afe9;
+    box-shadow: 0 0 7px rgba(39,128,248,.15);
+    outline-offset: 0;
+    outline: 0;
+}
+
+.editable-html {
+    font-size: 0.75em;
+    font-family: Monaco, monospace;
+    white-space: pre;
 }
 
 /*

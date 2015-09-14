@@ -61,9 +61,6 @@ class CMSServiceProvider extends ServiceProvider
         $this->registerAuthRoutes();
         $this->registerBackEndRoutes();
 
-        $admin_assets = include($path.'/assets/assets.php');
-        Asset::batchRegister($admin_assets);
-
         require $path.'/helpers.php';
         require $path.'/errors.php';
         require $path.'/filters.php';

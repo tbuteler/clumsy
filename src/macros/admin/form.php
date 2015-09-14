@@ -28,7 +28,7 @@ Form::macro('delete', function ($resource_type, $id) {
 
 Form::macro('location', function ($lat, $lng, $address = null) {
 
-    Asset::enqueue('google-maps');
+    Asset::enqueue('google-maps-admin');
 
     return View::make('clumsy::macros.location', compact('lat', 'lng', 'address'))->render();
 });
