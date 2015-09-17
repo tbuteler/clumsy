@@ -322,9 +322,9 @@ class AdminController extends APIController
                     $child_query = $child->query();
                     $child_query->withAdminContext('innerView', $data['children'][$child_resource]['innerView'])
                                 ->where($child->parentIdColumn(), $id);
-                }
 
-                $data['children'][$child_resource]['filterData'] = $this->generateFilterData($child_query, $child, $data['children'][$child_resource], $id);
+                    $data['children'][$child_resource]['filterData'] = $this->generateFilterData($child_query, $child, $data['children'][$child_resource], $id);
+                }
 
                 if ($reorder) {
                     $data['children'][$child_resource]['items'] = $child_query->orderBy('order', 'asc')->get();

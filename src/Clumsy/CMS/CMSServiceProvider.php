@@ -29,23 +29,13 @@ class CMSServiceProvider extends ServiceProvider
         // Override the default router so we can add more methods to resource controllers
         $this->app['router'] = $this->app->make('Clumsy\CMS\Routing\Router');
 
-        $this->app['command.clumsy.publish'] = $this->app->share(function ($app) {
-
-                // Make sure the asset publisher is registered.
-                $app->register('Illuminate\Foundation\Providers\PublisherServiceProvider');
-                return new Console\PublishCommand($app['asset.publisher']);
-        });
-
-        $this->app['command.clumsy.resource'] = $this->app->share(function ($app) {
-
-                return new Console\ResourceCommand();
-        });
-
-        $this->commands(array('command.clumsy.publish', 'command.clumsy.resource'));
-
         $this->app->bind('\Clumsy\CMS\Contracts\ShortcodeInterface', '\Clumsy\CMS\Library\Shortcode');
 
         $this->app['clumsy.admin'] = false;
+
+        if ($this->app->runningInConsole()) {
+            $this->registerCommands();
+        }
     }
 
     /**
@@ -83,6 +73,21 @@ class CMSServiceProvider extends ServiceProvider
             'clumsy.admin',
             'clumsy.shortcode',
         );
+    }
+
+    protected function registerCommands()
+    {
+        $this->app['command.clumsy.publish'] = $this->app->share(function ($app) {
+            // Make sure the asset publisher is registered.
+            $app->register('Illuminate\Foundation\Providers\PublisherServiceProvider');
+            return new Console\PublishCommand($app['asset.publisher']);
+        });
+
+        $this->app['command.clumsy.resource'] = $this->app->share(function ($app) {
+            return new Console\ResourceCommand();
+        });
+
+        $this->commands(array('command.clumsy.publish', 'command.clumsy.resource'));
     }
 
     protected function registerAuthRoutes()
