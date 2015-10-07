@@ -218,7 +218,7 @@ $(function(){
             $.post(handover.admin.urls.update,
             {
                 _token: $('input[name="_token"]').val(),
-                model: $(this).closest('table').data('model'),
+                model: $(this).closest('[data-model]').data('model'),
                 id: $(this).data('id'),
                 column: $(this).data('column'),
                 column_type: 'boolean',

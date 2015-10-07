@@ -40,9 +40,18 @@ HTML::macro('columnTitle', function ($resource, $column, $name) {
     return $html;
 });
 
-HTML::macro('booleanCell', function ($name, $checked, $attributes) {
+HTML::macro('booleanCell', function ($name, $checked, array $attributes = array()) {
 
     return Form::checkbox($name, 1, $checked, $attributes);
+});
+
+HTML::macro('booleanCaption', function ($name, $checked, array $attributes = array(), $label = null) {
+
+    $attributes['field'] = $attributes;
+    $attributes['class'] = 'form-group checkbox';
+    $attributes['checked'] = $checked;
+
+    return Form::boolean($name, $label, $attributes);
 });
 
 HTML::macro('breadcrumb', function ($breadcrumb) {

@@ -56,6 +56,7 @@ class BaseModel extends \Eloquent
     public $innerViews = 'table';
 
     public $galleryThumbnailSlot = null;
+    public $galleryColumnsPerRow = 4;
 
     public function __construct(array $attributes = array())
     {
@@ -132,6 +133,11 @@ class BaseModel extends \Eloquent
         }
 
         return $columnNames;
+    }
+
+    public function columnName($column)
+    {
+        return array_get($this->columnNames(), $column);
     }
 
     public function booleans()
@@ -452,7 +458,7 @@ class BaseModel extends \Eloquent
 
         $url = route(Clumsy::prefix().".{$this->resource_name}.edit", $this->id);
 
-        return HTML::link($url, $value);
+        return $this->getAdminContext('inner_view') === 'gallery' ? $value : HTML::link($url, $value);
     }
 
     public function columnValuePlaceHolder()
@@ -462,17 +468,30 @@ class BaseModel extends \Eloquent
 
     public function activeBooleanColumnValue($column)
     {
-        return HTML::booleanCell($column, $this->$column, array(
-            'id'          => 'ab-'.$this->id,
+        $macro = $this->getAdminContext('inner_view') === 'gallery' ? 'booleanCaption' : 'booleanCell';
+
+        return HTML::$macro($column, $this->$column, array(
+
+            'id'          => "ab-{$column}-{$this->id}",
             'class'       => 'active-boolean',
             'data-id'     => $this->id,
             'data-column' => $column,
-        ));
+
+        ), $this->columnName($column));
     }
 
     public function booleanColumnValue($column)
     {
         return $this->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+    }
+
+    public function galleryColumnsPerRow()
+    {
+        if (!in_array($this->galleryColumnsPerRow, array(1,2,3,4,6,12))) {
+            return 4;
+        }
+
+        return $this->galleryColumnsPerRow;
     }
 
     public function galleryThumbnail()
