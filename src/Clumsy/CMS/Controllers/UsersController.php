@@ -2,6 +2,7 @@
 namespace Clumsy\CMS\Controllers;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
@@ -112,6 +113,9 @@ class UsersController extends AdminController
         $group = Overseer::findGroupByName(Input::get('group'));
         $new_user->addGroup($group);
 
+        Event::fire("clumsy.created: User", array($new_user));
+        Event::fire("clumsy.saved: User", array($new_user));
+
         return Redirect::route("{$this->admin_prefix}.user.edit", $new_user->id)->with(array(
            'alert_status' => 'success',
            'alert'        => trans('clumsy::alerts.user.added'),
@@ -217,6 +221,9 @@ class UsersController extends AdminController
         }
 
         $user->update($data);
+
+        Event::fire("clumsy.updated: User", array($user));
+        Event::fire("clumsy.saved: User", array($user));
 
         return Redirect::route("{$this->admin_prefix}.user.edit", $user->id)->with(array(
            'alert_status' => 'success',

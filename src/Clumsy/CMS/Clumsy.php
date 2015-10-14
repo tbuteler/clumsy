@@ -89,7 +89,9 @@ class Clumsy
         View::share(array(
             'admin_prefix'   => $route->getPrefix(),
             'navbar_wrapper' => $this->view->resolve('navbar-wrapper'),
+            'navbar_home'    => $this->view->resolve('navbar-home-link'),
             'navbar'         => $this->view->resolve('navbar'),
+            'navbar_buttons' => $this->view->resolve('navbar-buttons'),
             'view'           => $this->view,
             'columns'        => $this->app['config']->get('clumsy::default_columns'),
             'alert'          => Session::get('alert', false),
