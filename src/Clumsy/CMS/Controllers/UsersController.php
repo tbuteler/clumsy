@@ -100,18 +100,27 @@ class UsersController extends AdminController
                 ));
         }
 
-        $new_user = Overseer::register(array(
+        $registration_array = array(
             'first_name' => Input::get('first_name'),
             'last_name'  => Input::get('last_name'),
             'email'      => Input::get('email'),
             'password'   => Input::get('password'),
-        ));
+        );
+
+        $new_user = Overseer::register($registration_array);
 
         // Auto-activate
         $new_user->attemptActivation($new_user->getActivationCode());
 
         $group = Overseer::findGroupByName(Input::get('group'));
         $new_user->addGroup($group);
+
+        $extra_fields = Input::except(array_merge(array_keys($registration_array), array(
+            '_token', 'group', 'password_confirmation'
+        )));
+        if (count($extra_fields)) {
+            $new_user->update($extra_fields);
+        }
 
         Event::fire("clumsy.created: User", array($new_user));
         Event::fire("clumsy.saved: User", array($new_user));
