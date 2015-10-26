@@ -99,8 +99,8 @@ class Clumsy
             'body_class'     => str_replace('.', '-', $route->getName()),
         ));
 
-        Asset::enqueue('admin.css');
-        Asset::enqueue('admin.js');
+        Asset::enqueue('admin.css', 10);
+        Asset::enqueue('admin.js', 10);
         Asset::json('admin', array(
             'urls' => array(
                 'base'   => URL::to($route->getPrefix()),
