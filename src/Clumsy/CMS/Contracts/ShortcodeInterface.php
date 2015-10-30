@@ -3,7 +3,7 @@ namespace Clumsy\CMS\Contracts;
 
 interface ShortcodeInterface
 {
-    public function wrap($string);
+    public function regex($string);
 
     public function add($key, $description);
 

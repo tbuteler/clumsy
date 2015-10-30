@@ -20,9 +20,9 @@ class Shortcode implements ShortcodeInterface
         return str_replace('_', ' ', snake_case($method));
     }
 
-    public function wrap($string)
+    public function regex($string)
     {
-        return "{$this->start_delimiter}$string{$this->end_delimiter}";
+        return "/\\{$this->start_delimiter}$string(.*)\\{$this->end_delimiter}/i";
     }
 
     public function add($key, $description)
@@ -53,9 +53,15 @@ class Shortcode implements ShortcodeInterface
     public function parse($content)
     {
         foreach (array_keys($this->availableCodes()) as $shortcode) {
-            if (str_contains($content, $this->wrap($shortcode))) {
+            if (preg_match($this->regex($shortcode), $content, $matches)) {
+                parse_str(trim(last($matches)), $shortcode_params);
                 $method = $this->decode($shortcode);
-                $content = str_replace($this->wrap($shortcode), call_user_func_array(array($this, $method), func_get_args()), $content);
+                if (method_exists($this, $method)) {
+                    $args = func_get_args();
+                    array_shift($args);
+                    array_unshift($args, $shortcode_params);
+                    $content = preg_replace($this->regex($shortcode), call_user_func_array(array($this, $method), $args), $content);
+                }
             }
         }
 
@@ -65,17 +71,11 @@ class Shortcode implements ShortcodeInterface
     public function ignore($content)
     {
         foreach (array_keys($this->availableCodes()) as $shortcode) {
-            if (str_contains($content, $this->wrap($shortcode))) {
-                $method = $this->decode($shortcode);
-                $content = str_replace($this->wrap($shortcode), '', $content);
+            if (preg_match($this->regex($shortcode), $content)) {
+                $content = preg_replace($this->regex($shortcode), '', $content);
             }
         }
 
         return $content;
-    }
-
-    public function __call($name, $arguments)
-    {
-        return $this->wrap($this->encode($name));
     }
 }
