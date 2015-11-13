@@ -53,14 +53,19 @@ class Shortcode implements ShortcodeInterface
     public function parse($content)
     {
         foreach (array_keys($this->availableCodes()) as $shortcode) {
-            if (preg_match($this->regex($shortcode), $content, $matches)) {
-                parse_str(trim(last($matches)), $shortcode_params);
-                $method = $this->decode($shortcode);
-                if (method_exists($this, $method)) {
-                    $args = func_get_args();
-                    array_shift($args);
-                    array_unshift($args, $shortcode_params);
-                    $content = preg_replace($this->regex($shortcode), call_user_func_array(array($this, $method), $args), $content);
+            $regex = $this->regex($shortcode);
+            if (preg_match_all($regex, $content, $matches)) {
+                $params = last($matches);
+                $matches = head($matches);
+                foreach ($matches as $i => $match) {
+                    parse_str(trim($params[$i]), $shortcode_params);
+                    $method = $this->decode($shortcode);
+                    if (method_exists($this, $method)) {
+                        $args = func_get_args();
+                        array_shift($args);
+                        array_unshift($args, $shortcode_params);
+                        $content = preg_replace($regex, call_user_func_array(array($this, $method), $args), $content, 1);
+                    }
                 }
             }
         }
@@ -71,8 +76,9 @@ class Shortcode implements ShortcodeInterface
     public function ignore($content)
     {
         foreach (array_keys($this->availableCodes()) as $shortcode) {
-            if (preg_match($this->regex($shortcode), $content)) {
-                $content = preg_replace($this->regex($shortcode), '', $content);
+            $regex = $this->regex($shortcode);
+            if (preg_match($regex, $content)) {
+                $content = preg_replace($regex, '', $content);
             }
         }
 
