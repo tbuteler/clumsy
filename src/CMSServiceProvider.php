@@ -117,6 +117,10 @@ class CMSServiceProvider extends ServiceProvider
         ], 'views');
 
         $this->publishes([
+            __DIR__.'/../database/migrations' => database_path('migrations')
+        ], 'migrations');
+
+        $this->publishes([
             __DIR__.'/../public' => public_path('vendor/clumsy/cms'),
         ], 'public');
     }

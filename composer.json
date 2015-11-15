@@ -18,7 +18,7 @@
     },
     "autoload": {
         "classmap": [
-            "src/migrations"
+            "database/migrations"
         ],
         "psr-4": {
             "Clumsy\\CMS\\": "src/"
