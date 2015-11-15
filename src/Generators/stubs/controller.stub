@@ -1,0 +1,10 @@
+<?php
+
+namespace {{namespace}};
+
+use Clumsy\CMS\Controllers\AdminController;
+
+class {{object_name_plural}}Controller extends AdminController
+{
+
+}

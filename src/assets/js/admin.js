@@ -45,7 +45,7 @@ $(function(){
         tinymce.init($.extend(
         {
             selector: ".rich-text",
-            content_css: handover.admin.urls.base+'/../packages/clumsy/cms/css/tinymce.css',
+            content_css: handover.admin.urls.base+'/../vendor/clumsy/cms/css/tinymce.css',
             menubar : false,
             toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist | removeformat",
             statusbar : false,
@@ -211,22 +211,18 @@ $(function(){
         });
     }
 
-    $booleans = $('.active-boolean');
-    if ($booleans.length) {
-        $booleans.click(function(e){
+    $editableInline = $('.editable-inline');
+    if ($editableInline.length) {
+        $editableInline.click(function(e){
             e.stopPropagation();
-            $.post(handover.admin.urls.update,
-            {
-                _token: $('input[name="_token"]').val(),
-                model: $(this).closest('[data-model]').data('model'),
-                id: $(this).data('id'),
-                column: $(this).data('column'),
-                column_type: 'boolean',
-                value: $(this).prop('checked')
-            });
+            var data = {};
+            data._method = 'PUT';
+            data._token = $('input[name="_token"]').val();
+            data[$(this).data('column')] = $(this).is(':checkbox') ? ($(this).prop('checked') ? 1 : 0) : $(this).val();
+            $.post($(this).closest('[data-update-url]').data('update-url').replace('{id}', $(this).data('id')), data);
         });
-        $booleans.closest('td').click(function(){
-            $(this).find('.active-boolean').click();
+        $editableInline.closest('td').click(function(){
+            $(this).find('.editable-inline').click();
         });
     }
 

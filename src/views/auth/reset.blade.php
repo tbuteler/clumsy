@@ -6,12 +6,12 @@
 
 @section('master')
 
-    {{ Form::open() }}
+    {!! Form::open() !!}
 
-        {{ Form::field('email', trans('clumsy::fields.email')) }}
+        {!! field('email', trans('clumsy::fields.email'))->type('email')->tabindex(1)->beforeLabel('<a tabindex="3" href="'.route('clumsy.login').'" class="pull-right">'.trans('clumsy::fields.back-to-login').'</a>') !!}
 
-        <button class="btn btn-primary submit-once">@lang('clumsy::buttons.reset')</button>
+        <button class="btn btn-primary submit-once" tabindex="2">@lang('clumsy::buttons.reset')</button>
 
-    {{ Form::close() }}
+    {!! Form::close() !!}
 
 @stop

@@ -1,1 +1,1 @@
-<td class="{{ $item->cellClass($column) }}">{{ $item->columnValue($column) }}</td>
+<td class="{{ $panel->cellClass($item, $column) }}">{!! $panel->columnValue($item, $column) !!}</td>

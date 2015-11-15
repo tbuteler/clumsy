@@ -4,7 +4,7 @@
 
 @if (count($items))
 
-{{ Form::open(array('url' => route('clumsy.save-active-reorder', $resource))) }}
+{!! Form::open(['url' => route("$routePrefix.update-order")]) !!}
 
 <table class="reorder-table">
     <tbody>
@@ -20,7 +20,7 @@
                         @foreach ($columns as $column => $name)
                             {{ $item->$column }}
                         @endforeach
-                        {{ Form::hidden('order[]', $item->id) }}
+                        {!! Form::hidden('order[]', $item->id) !!}
                     </span>
                 </td>
             </tr>
@@ -30,18 +30,14 @@
 </table>
 
 <div class="bottom-buttons">
-    {{ Form::button(trans('clumsy::buttons.save'), array('type' => 'submit', 'class' => 'btn btn-lg btn-success')) }}
+    {!! Form::button(trans('clumsy::buttons.save'), ['type' => 'submit', 'class' => 'btn btn-lg btn-success']) !!}
 </div>
 
-{{ Form::close() }}
+{!! Form::close() !!}
 
 @else
 
-    <div class="panel-body">
-        <h5>
-            {{ trans_choice('clumsy::alerts.count', 0, array('resource' => trans_choice('clumsy::alerts.items', 1), 'resources' => trans_choice('clumsy::alerts.items', 2))) }}
-        </h5>
-    </div>
+    @include($view->resolve('table-empty'))
 
 @endif
 

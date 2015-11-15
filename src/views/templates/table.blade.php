@@ -4,12 +4,12 @@
 
     <div class="table-responsive">
 
-        {{ Form::token() }}
+        {!! csrf_field() !!}
 
-        <table class="table {{ $resource }}-table" data-model="{{ $model_class }}" data-resource="{{ $resource }}">
+        <table class="table {{ $resource }}-table"  data-update-url="{{ $updateUrl }}">
             <thead>
             @foreach ($columns as $column => $name)
-                <?php if (array_key_exists($column, $order_equivalence)) $column = $order_equivalence[$column]; ?>
+                <?php if (array_key_exists($column, $orderEquivalence)) $column = $orderEquivalence[$column]; ?>
                 @include($view->resolve('table-th'))
             @endforeach
             </thead>

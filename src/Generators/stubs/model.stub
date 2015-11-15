@@ -1,0 +1,24 @@
+<?php
+
+namespace {{namespace}};
+
+use Clumsy\CMS\Models\BaseModel;
+use Clumsy\Eminem\Traits\Mediable;
+
+class {{object_name}} extends BaseModel
+{
+    use Mediable;
+
+    public $rules = [];
+    public $casts = [];
+
+    public function mediaSlots()
+    {
+        return false;
+    }
+
+    public function mediaPlaceholder($position = null)
+    {
+        return '';
+    }
+}

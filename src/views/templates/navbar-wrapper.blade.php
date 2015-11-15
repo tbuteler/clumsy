@@ -8,14 +8,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @include($navbar_home)
+            @include($navbarHome)
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
             @include($navbar)
 
-            @include($navbar_buttons)
+            @include($navbarButtons)
 
         </div>
     </div>

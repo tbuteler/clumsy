@@ -4,26 +4,25 @@
     @lang('clumsy::titles.login')
 @stop
 
+@section('alert')
+    @include('clumsy::templates.alert')
+    @include('clumsy::templates.alert-errors')
+@stop
+
 @section('master')
 
-    {{ Form::open() }}
+    {!! Form::open() !!}
 
-        {{ Form::hidden('intended', $intended ? $intended : route("$admin_prefix.home")) }}
+        {!! Form::hidden('intended', $intended ? $intended : route("$adminPrefix.home")) !!}
 
-        {{ Form::field('email', trans('clumsy::fields.email'), 'email', array('field' => array('tabindex' => '1'))) }}
+        {!! field('email', trans('clumsy::fields.email'))->type('email')->tabindex(1) !!}
 
-        <div class="form-group">
-            <a tabindex="5" href="{{ route('clumsy.reset-password') }}" class="pull-right">
-                {{ trans('clumsy::fields.reset-password') }}
-            </a>
-            {{ Form::label('password', trans('clumsy::fields.password')) }}
-            {{ Form::password('password', array('class' => 'form-control', 'tabindex' => '2')) }}
-        </div>
+        {!! field('password', trans('clumsy::fields.password'))->type('password')->tabindex(2)->beforeLabel('<a tabindex="5" href="'.route('clumsy.reset-password').'" class="pull-right">'.trans('clumsy::fields.reset-password').'</a>') !!}
 
-        {{ Form::boolean('remember', trans('clumsy::fields.remember'), array('field' => array('tabindex' => '3'))) }}
+        {!! checkbox('remember', trans('clumsy::fields.remember'))->tabindex(3) !!}
 
         <button class="btn btn-primary submit-once" tabindex="4">@lang('clumsy::buttons.login')</button>
 
-    {{ Form::close() }}
+    {!! Form::close() !!}
 
 @stop

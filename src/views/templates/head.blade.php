@@ -12,12 +12,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
     </head>
-    <body class="{{ $body_class or '' }}">
+    <body class="{{ $bodyClass or '' }}">
 
-    @include('clumsy::templates.alert')
+    @section('alert')
+        @include('clumsy::templates.alert')
+    @show
 
     @if (Clumsy\CMS\Facades\Overseer::check())
 
-        @include($navbar_wrapper)
+        @include($navbarWrapper)
 
     @endif

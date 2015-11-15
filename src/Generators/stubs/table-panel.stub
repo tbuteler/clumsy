@@ -1,0 +1,21 @@
+<?php
+
+namespace {{namespace}};
+
+use Clumsy\CMS\Panels\Table as BaseTable;
+
+class Table extends BaseTable
+{
+    public $columns = [
+        'title' => 'Title',
+    ];
+
+    public $columnEquivalence = [];
+
+    public $editableInline = [];
+
+    public function beforeRender()
+    {
+
+    }
+}

@@ -1,8 +1,14 @@
 /*
 |--------------------------------------------------------------------------
-| TinyMCE textarea styles
+| TinyMCE textarea styles and mixins
 |--------------------------------------------------------------------------
 |
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Styles
+|--------------------------------------------------------------------------
 */
 
 #tinymce {
@@ -10,4 +16,28 @@
 	font-size: 14px;
 	color: #555;
 	padding-bottom: 0!important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mixins
+|--------------------------------------------------------------------------
+*/
+
+.section() {
+    border: 1px dashed #ccc;
+    padding: 0 14px;
+    border-radius: 4px;
+    position: relative;
+    margin-top: 20px;
+}
+
+.section-label(@content) {
+    position: absolute;
+    top: -16px;
+    left: 0;
+    font-size: 11px;
+    font-family: sans-serif;
+    color: #bbb;
+    content: @content;
 }

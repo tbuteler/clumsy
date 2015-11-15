@@ -1,5 +1,5 @@
 @foreach ($columns as $column => $label)
 
-	{{ Form::field($column, $label) }}
+	{!! field($column, $label) !!}
 
 @endforeach

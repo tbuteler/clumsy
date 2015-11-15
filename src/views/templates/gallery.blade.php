@@ -1,27 +1,22 @@
-<?php
-$columns_per_row = $model->galleryColumnsPerRow();
-$column_size = 12/$columns_per_row;
-?>
+<div class="row {{ $resource }}-gallery" data-update-url="{{ $updateUrl }}">
 
-<div class="row {{ $resource }}-gallery" data-model="{{ $model_class }}" data-resource="{{ $resource }}">
-
-    {{ Form::token() }}
+    {!! csrf_field() !!}
 
 	@foreach ($items as $i => $item)
-		<div class="col-md-{{ $column_size }}">
-			<div class="thumbnail gallery-item {{ $item->rowClass() }}">
-				<a href="{{ route("$admin_prefix.$resource.edit", $item->id) }}">
-					{{ $item->galleryThumbnail() }}
+		<div class="col-md-{{ $columnSize }}">
+			<div class="thumbnail gallery-item {{ $panel->rowClass($item) }}">
+				<a href="{{ route("$routePrefix.edit", $item->id) }}">
+					{!! $panel->galleryThumbnail($item) !!}
 				</a>
 				<div class="caption">
 					@foreach ($columns as $column => $name)
-	                    <p>{{ $item->columnValue($column) }}</p>
+	                    <p>{!! $panel->columnValue($item, $column) !!}</p>
 	                @endforeach
 				</div>
 			</div>
 		</div>
 
-		@if (($i+1) % $columns_per_row == 0)
+		@if (($i+1) % $columnsPerRow == 0)
 			<div class="clearfix"></div>
 		@endif
 

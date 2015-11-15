@@ -1,0 +1,13 @@
+<?php
+
+namespace {{namespace}};
+
+use Clumsy\CMS\Panels\Edit as BaseEdit;
+
+class Edit extends BaseEdit
+{
+    public function beforeRender()
+    {
+
+    }
+}

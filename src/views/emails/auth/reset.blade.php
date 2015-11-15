@@ -6,6 +6,6 @@
 	<body>
 		<h2>@lang('clumsy::titles.reset-password')</h2>
 
-		<div>@lang('clumsy::emails.content.reset-password', array('url' => $url))</div>
+		<div>@lang('clumsy::emails.content.reset-password', ['url' => route('clumsy.do-reset-password', $token)])</div>
 	</body>
 </html>

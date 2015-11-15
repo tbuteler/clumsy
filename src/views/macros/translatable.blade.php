@@ -19,9 +19,9 @@
 			@endif
 
 			@if ($type === 'media')
-				{{ Form::$type($label[$model->localizeColumn($column, $locale)]) }}
+				{!! Form::$type($label[$model->localizeColumn($column, $locale)]) !!}
 			@else
-				{{ Form::$type($model->localizeColumn($column, $locale), $label) }}
+				{!! Form::$type($model->localizeColumn($column, $locale), $label) !!}
 			@endif
 
 		@endforeach

@@ -1,0 +1,13 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class {{object_name_plural}}Seeder extends Seeder
+{
+	public function run()
+	{
+        factory({{model}}::class, 50)->create()->each(function($item) {
+
+        });
+	}
+}

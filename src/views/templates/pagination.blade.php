@@ -1,6 +1,6 @@
 @if ($pagination)
 <div class="pull-right">
-    {{ $pagination }}
+    {!! $pagination !!}
 </div>
 
 @endif

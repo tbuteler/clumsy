@@ -1,12 +1,12 @@
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" {{ !$show_resource || $show_resource === $resource ? 'class="active"' : '' }}>
+    <li role="presentation" {!! !$showResource || $showResource === $resource ? 'class="active"' : '' !!}>
         <a href="#{{ $resource }}" aria-controls="{{ $resource }}" role="tab" data-toggle="tab">{{ $title or '' }}</a>
     </li>
     @if ($item->exists)
-        @foreach ($children as $child_resource => $child)
-            <li role="presentation" {{ $show_resource === $child_resource ? 'class="active"' : '' }}>
-                <a href="#{{ $child_resource }}" aria-controls="{{ $child_resource }}" role="tab" data-toggle="tab">{{ $child['tab_title'] or $child['title'] }}</a>
-            </li>
+        @foreach ($panel->getChildren() as $child)
+        <li role="presentation" {!! $showResource === $child->resourceName() ? 'class="active"' : '' !!}>
+            <a href="#{{ $child->resourceName() }}" aria-controls="{{ $child->resourceName() }}" role="tab" data-toggle="tab">{{ $child->title }}</a>
+        </li>
         @endforeach
     @endif
 </ul>

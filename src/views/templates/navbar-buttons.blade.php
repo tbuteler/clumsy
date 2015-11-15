@@ -10,15 +10,17 @@
             {{ trans('clumsy::buttons.session') }} <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-                <li role="presentation" class="dropdown-header">{{ $usergroup }}</li>
+                @if ($user->isGroupable())
+                    <li role="presentation" class="dropdown-header">{{ $user->usergroup }}</li>
+                @endif
                 <li role="presentation">
-                <a href="{{ route("$admin_prefix.user.edit", $user->id) }}">{{ $username }}</a>
+                    <a href="{{ route("$adminPrefix.user.edit", $user->id) }}">{{ $user->username }}</a>
                 </li>
             </ul>
         </li>
     </ul>
 
-    @if ($user->hasAccess('users'))
+    @if (Overseer::canManageUsers())
     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown with-tooltip" title="{{ trans('clumsy::buttons.manage_site') }}" data-placement="bottom">
             <a href="#" class="glyphicon glyphicon-cog dropdown-toggle hidden-xs" data-toggle="dropdown"></a>
@@ -27,7 +29,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li role="presentation">
-                    <a href="{{ route("$admin_prefix.user.index") }}">{{ trans('clumsy::buttons.manage_users') }}</a>
+                    <a href="{{ route("$adminPrefix.user.index") }}">{{ trans('clumsy::buttons.manage_users') }}</a>
                 </li>
             </ul>
         </li>
