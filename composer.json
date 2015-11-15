@@ -12,16 +12,16 @@
     "require": {
         "laravel/framework": "5.1.*",
         "laravelcollective/html": "5.1.*",
-        "clumsy/assets": "@dev",
-        "clumsy/utils": "@dev",
-        "clumsy/eminem": "@dev"
+        "clumsy/assets": "0.7.*",
+        "clumsy/utils": "0.9.*",
+        "clumsy/eminem": "0.9.*"
     },
     "autoload": {
         "classmap": [
             "src/migrations"
         ],
         "psr-4": {
-            "Clumsy\\CMS": "src/"
+            "Clumsy\\CMS\\": "src/"
         }
     },
     "extra": {
