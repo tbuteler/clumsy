@@ -4,11 +4,6 @@
     @lang('clumsy::titles.login')
 @stop
 
-@section('alert')
-    @include('clumsy::templates.alert')
-    @include('clumsy::templates.alert-errors')
-@stop
-
 @section('master')
 
     {!! Form::open() !!}

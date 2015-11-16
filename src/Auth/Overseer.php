@@ -27,9 +27,9 @@ class Overseer
 
         $this->userModel = $this->auth->getEloquentModel();
 
-        $this->registerGate();
-        $this->registerPasswordBroker();
-        $this->registerTokenRepository();
+        $this->bindGate();
+        $this->bindPasswordBroker();
+        $this->bindTokenRepository();
 
         $app['request']->setUserResolver(function () use ($app) {
             return $app['clumsy.auth']->user();
@@ -43,7 +43,7 @@ class Overseer
         }
     }
 
-    protected function registerGate()
+    protected function bindGate()
     {
         $this->gate = new Gate(
             $this->app,
@@ -65,7 +65,7 @@ class Overseer
         $this->app->instance(GateContract::class, $this->gate);
     }
 
-    protected function registerPasswordBroker()
+    protected function bindPasswordBroker()
     {
         $this->app->singleton('clumsy.password', function ($app) {
 
@@ -81,7 +81,7 @@ class Overseer
         });
     }
 
-    protected function registerTokenRepository()
+    protected function bindTokenRepository()
     {
         $this->app->singleton('clumsy.password.tokens', function ($app) {
 
@@ -115,6 +115,12 @@ class Overseer
     public function getUserModel()
     {
         return $this->userModel;
+    }
+
+    public function register(array $user)
+    {
+        array_set($user, 'password', array_get($user, 'password', str_random(9)));
+        return with(new $this->userModel)->create($user);
     }
 
     public function getAvailableGroups()
