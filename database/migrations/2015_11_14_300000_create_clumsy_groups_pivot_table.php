@@ -15,8 +15,8 @@ class CreateClumsyGroupsPivotTable extends Migration
         Schema::create('clumsy_groups_pivot', function (Blueprint $table) {
             $table->integer('group_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('group_id')->references('id')->on('clumsy_groups')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('clumsy_users')->onDelete('cascade');
         });
     }
 
