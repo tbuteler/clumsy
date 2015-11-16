@@ -70,7 +70,12 @@ trait Editable
 
     public function suppressDelete()
     {
-        return property_exists($this, 'suppressDelete') ? $this->suppressDelete : false;
+        return property_exists($this, 'suppressDelete') ? $this->suppressDelete : $this->isExternalResource();
+    }
+
+    public function isExternalResource()
+    {
+        return $this->model->importable;
     }
 
     public function fields()
