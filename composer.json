@@ -17,9 +17,6 @@
         "clumsy/eminem": "0.9.*"
     },
     "autoload": {
-        "classmap": [
-            "database/migrations"
-        ],
         "psr-4": {
             "Clumsy\\CMS\\": "src/"
         }
