@@ -78,7 +78,7 @@ class APIController extends Controller
     {
         $this->adminPrefix = Clumsy::prefix();
 
-        $indicator = $this->route->getName();
+        $indicator = $this->route ? $this->route->getName() : null;
 
         if (!str_contains($indicator, '.')) {
             $indicator = ltrim(str_replace('/', '.', request()->path()), '.');
