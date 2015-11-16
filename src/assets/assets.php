@@ -1,6 +1,6 @@
 <?php
 
-$google_api = config('clumsy/utils.api-google-maps');
+$google_api = config('clumsy.utils.api-google-maps');
 
 return [
 

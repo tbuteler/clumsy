@@ -12,7 +12,7 @@ class AuthManager extends BaseAuthManager
     public function __construct($app)
     {
         $this->app = $app;
-        $this->model = $app['config']['clumsy.authentication-model'];
+        $this->model = $app['config']['clumsy.cms.authentication-model'];
     }
 
     public function createEloquentDriver()

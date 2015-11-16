@@ -91,7 +91,7 @@ class Overseer
 
             $key = $app['config']['app.key'];
 
-            $expire = $app['config']->get('clumsy.password-reset-expiration', 60);
+            $expire = $app['config']->get('clumsy.cms.password-reset-expiration', 60);
 
             return new DbRepository($connection, $table, $key, $expire);
         });

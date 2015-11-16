@@ -22,7 +22,7 @@ class Clumsy
         $this->app = $app;
         $this->session = $this->app['session'];
 
-        $adminLocale = $this->app['config']->get('clumsy.admin-locale');
+        $adminLocale = $this->app['config']->get('clumsy.cms.admin-locale');
         $this->app['config']->set('app.locale', $adminLocale);
         $this->app->setLocale($adminLocale);
 
@@ -127,7 +127,7 @@ class Clumsy
         if (str_contains($identifier, '.')) {
             $sections = array_map('studly_case', explode('.', $identifier));
             $panel = array_pop($sections);
-            $namespace = $this->app['config']->get('clumsy.panel-namespace');
+            $namespace = $this->app['config']->get('clumsy.cms.panel-namespace');
             $namespace .= '\\'.implode('\\', $sections);
             $class = "{$namespace}\\{$panel}";
             if (!class_exists($class)) {

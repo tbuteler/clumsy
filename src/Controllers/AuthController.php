@@ -28,23 +28,23 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->routePrefix = config('clumsy.authentication-prefix');
+        $this->routePrefix = config('clumsy.cms.authentication-prefix');
 
-        $this->username = config('clumsy.authentication-attribute');
+        $this->username = config('clumsy.cms.authentication-attribute');
 
         $this->loginPath = "{$this->routePrefix}/login";
         $this->redirectPath = Clumsy::prefix();
         $this->redirectAfterLogout = $this->loginPath;
 
         if ($this->throttles()) {
-            $this->maxLoginAttempts = config('clumsy.throttling-max-attempts');
-            $this->lockoutTime = config('clumsy.throttling-lockout-time');
+            $this->maxLoginAttempts = config('clumsy.cms.throttling-max-attempts');
+            $this->lockoutTime = config('clumsy.cms.throttling-lockout-time');
         }
     }
 
     protected function throttles()
     {
-        return config('clumsy.authentication-throttling');
+        return config('clumsy.cms.authentication-throttling');
     }
 
     /**

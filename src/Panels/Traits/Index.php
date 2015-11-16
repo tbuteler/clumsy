@@ -76,7 +76,7 @@ trait Index
 
     public function itemsPerPage()
     {
-        return property_exists($this, 'itemsPerPage') ? $this->itemsPerPage : config('clumsy.per-page');
+        return property_exists($this, 'itemsPerPage') ? $this->itemsPerPage : config('clumsy.cms.per-page');
     }
 
     public function rowClass($item)

@@ -6,7 +6,7 @@ class Panel extends Generator
 {
     public function getConfigNamespace()
     {
-        return config('clumsy.panel-namespace');
+        return config('clumsy.cms.panel-namespace');
     }
 
     public function getNamespace()

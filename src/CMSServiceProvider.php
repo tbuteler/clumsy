@@ -28,7 +28,7 @@ class CMSServiceProvider extends ServiceProvider
         $this->app->register('Clumsy\Utils\UtilsServiceProvider');
         $this->app->register('Clumsy\Eminem\EminemServiceProvider');
 
-        $this->mergeConfigFrom(__DIR__.'/Support/config/config.php', 'clumsy');
+        $this->mergeConfigFrom(__DIR__.'/config/config.php', 'clumsy.cms');
 
         $loader = AliasLoader::getInstance();
         $loader->alias('Overseer', Overseer::class);
@@ -60,8 +60,6 @@ class CMSServiceProvider extends ServiceProvider
 
         $this->registerAuthRoutes();
         $this->registerPublishers();
-
-        require __DIR__.'/Support/helpers.php';
 
         if ($this->app->runningInConsole()) {
             $this->app->make('Clumsy\CMS\Clumsy');
@@ -105,7 +103,7 @@ class CMSServiceProvider extends ServiceProvider
     protected function registerPublishers()
     {
         $this->publishes([
-            __DIR__.'/Support/config/config.php' => config_path('vendor/clumsy/cms.php'),
+            __DIR__.'/config/config.php' => config_path('clumsy/cms.php'),
         ], 'config');
 
         $this->publishes([
@@ -130,7 +128,7 @@ class CMSServiceProvider extends ServiceProvider
         $this->app['router']->group(
             [
                 'namespace'  => 'Clumsy\CMS\Controllers',
-                'prefix'     => $this->app['config']->get('clumsy.authentication-prefix'),
+                'prefix'     => $this->app['config']->get('clumsy.cms.authentication-prefix'),
                 'middleware' => 'clumsy:init',
             ],
             function () {

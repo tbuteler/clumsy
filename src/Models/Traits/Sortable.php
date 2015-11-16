@@ -47,8 +47,8 @@ trait Sortable
 
                 return $query;
             } else {
-                $column = config('clumsy.default-order.column');
-                $direction = config('clumsy.default-order.direction');
+                $column = config('clumsy.cms.default-order.column');
+                $direction = config('clumsy.cms.default-order.direction');
             }
         }
 

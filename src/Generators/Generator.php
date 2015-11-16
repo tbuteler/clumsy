@@ -25,7 +25,7 @@ abstract class Generator
             $slug = $this->getSlug();
         }
 
-        return config("clumsy.{$slug}-namespace");
+        return config("clumsy.cms.{$slug}-namespace");
     }
 
     public function getNamespace($slug = null)
@@ -78,7 +78,7 @@ abstract class Generator
             return app_path(str_replace('\\', DIRECTORY_SEPARATOR, $namespace));
         }
 
-        $base = config('clumsy.'.$this->getSlug().'-path');
+        $base = config('clumsy.cms.'.$this->getSlug().'-path');
         return $this->normalizeDirectory($base);
     }
 

@@ -17,6 +17,9 @@
         "clumsy/eminem": "0.9.*"
     },
     "autoload": {
+        "files": [
+            "src/Support/helpers.php"
+        ],
         "psr-4": {
             "Clumsy\\CMS\\": "src/"
         }
