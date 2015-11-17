@@ -56,24 +56,26 @@ class Bakery
                 // Fall through
             case 'edit':
 
-                if (sizeof($parents)) {
+                if (count($parents)) {
 
                     $parentCrumbs = [];
 
                     foreach (array_reverse($parents) as $parent) {
 
                         $parentResourceName = $parent->resourceName();
+                        $parentRoutePrefix = $this->prefix ? "{$this->prefix}.{$parentResourceName}" : $parentResourceName;
 
-                        $parentCrumbs[$this->labeler->displayNamePlural($current)] = HTTP::queryStringAdd($this->url->route("{$this->prefix}.{$parentResourceName}.edit", $parent->id), 'show', $resourceName);
-                        $parentCrumbs[trans('clumsy::titles.edit_item', ['resource' => $this->labeler->displayName($parent)])] = $this->url->route("{$this->prefix}.{$parentResourceName}.edit", $parent->id);
-                        $parentCrumbs[$this->labeler->displayNamePlural($parent)] = $this->url->route("{$this->prefix}.{$parentResourceName}.index");
+                        $parentCrumbs[$this->labeler->displayNamePlural($current)] = HTTP::queryStringAdd($this->url->route("{$parentRoutePrefix}.edit", $parent->id), 'show', $resourceName);
+                        $parentCrumbs[trans('clumsy::titles.edit_item', ['resource' => $this->labeler->displayName($parent)])] = $this->url->route("{$parentRoutePrefix}.edit", $parent->id);
+                        $parentCrumbs[$this->labeler->displayNamePlural($parent)] = $this->url->route("{$parentRoutePrefix}.index");
 
                         $current = $parent;
                     }
 
                     $this->breadcrumb = $this->breadcrumb + array_reverse($parentCrumbs);
                 } else {
-                    $this->breadcrumb[$this->labeler->displayNamePlural($current)] = $this->url->route("{$this->prefix}.{$resourceName}.index");
+                    $routePrefix = $this->prefix ? "{$this->prefix}.{$resourceName}" : $resourceName;
+                    $this->breadcrumb[$this->labeler->displayNamePlural($current)] = $this->url->route("{$routePrefix}.index");
                 }
 
                 $this->breadcrumb[trans("clumsy::breadcrumb.{$this->action}")] = '';
@@ -82,7 +84,8 @@ class Bakery
 
             case 'reorder':
 
-                $this->breadcrumb[$this->labeler->displayNamePlural($current)] = $this->url->route("{$this->prefix}.{$resourceName}.index");
+                $routePrefix = $this->prefix ? "{$this->prefix}.{$resourceName}" : $resourceName;
+                $this->breadcrumb[$this->labeler->displayNamePlural($current)] = $this->url->route("{$routePrefix}.index");
                 $this->breadcrumb[trans('clumsy::titles.reorder', ['resources' => $this->labeler->displayNamePlural($current)])] = '';
                 break;
 

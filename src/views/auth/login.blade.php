@@ -8,8 +8,6 @@
 
     {!! Form::open() !!}
 
-        {!! Form::hidden('intended', $intended ? $intended : route("$adminPrefix.home")) !!}
-
         {!! field('email', trans('clumsy::fields.email'))->type('email')->tabindex(1) !!}
 
         {!! field('password', trans('clumsy::fields.password'))->type('password')->tabindex(2)->beforeLabel('<a tabindex="5" href="'.route('clumsy.reset-password').'" class="pull-right">'.trans('clumsy::fields.reset-password').'</a>') !!}

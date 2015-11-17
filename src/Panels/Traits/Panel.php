@@ -64,7 +64,11 @@ trait Panel
 
         $this->model = $this->hierarchy['current'];
 
-        $this->routePrefix = $this->prefix.'.'.$this->resourceName();
+        $this->routePrefix = $this->resourceName();
+        if ($this->prefix) {
+            $this->routePrefix = $this->prefix.'.'.$this->routePrefix;
+        }
+
         $this->view->clearLevels()->setDomain($this->resourceName())->pushLevel($this->action);
 
         return $this;
@@ -92,7 +96,8 @@ trait Panel
     {
         $parentModel = $this->getParentModel();
         $parentResourceName = $parentModel->resourceName();
-        return route("{$this->prefix}.{$parentResourceName}.{$action}", $params);
+        $routePrefix = $this->prefix ? "{$this->prefix}.{$parentResourceName}" : $parentResourceName;
+        return route("{$routePrefix}.{$action}", $params);
     }
 
     public function getParentModelEditUrl()

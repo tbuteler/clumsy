@@ -1,4 +1,4 @@
-{!! Form::model($item, ['method' => ($item->exists ? 'put' : 'post'), 'route' => ($item->exists ? ["$adminPrefix.$resource.update", $item->id] : "$routePrefix.store"), 'id' => 'main-form', 'autocomplete' => 'off']) !!}
+{!! Form::model($item, ['method' => ($item->exists ? 'put' : 'post'), 'route' => ($item->exists ? ["$routePrefix.update", $item->id] : "$routePrefix.store"), 'id' => 'main-form', 'autocomplete' => 'off']) !!}
 
 @include($view->resolve('fields'))
 

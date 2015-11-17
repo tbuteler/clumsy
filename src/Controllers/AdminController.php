@@ -278,7 +278,8 @@ class AdminController extends APIController
 
         if ($this->model->isNested()) {
             $parentResource = $this->model->parentResourceName();
-            $url = route("{$this->adminPrefix}.$parentResource.edit", $this->model->parentItemId($id));
+            $parentRoutePrefix = $this->adminPrefix ? "{$this->adminPrefix}.{$parentResource}" : $parentResource;
+            $url = route("{$parentRoutePrefix}.edit", $this->model->parentItemId($id));
             $url = HTTP::queryStringAdd($url, 'show', $this->resource);
         }
 
@@ -313,7 +314,7 @@ class AdminController extends APIController
     public function reorder()
     {
         if (!$this->model->activeReorder()) {
-            return redirect()->route("{$this->adminPrefix}.home");
+            return abort(404);
         }
 
         $this->loadPanel();

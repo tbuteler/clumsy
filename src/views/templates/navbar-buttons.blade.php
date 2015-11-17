@@ -14,7 +14,7 @@
                     <li role="presentation" class="dropdown-header">{{ $user->usergroup }}</li>
                 @endif
                 <li role="presentation">
-                    <a href="{{ route("$adminPrefix.user.edit", $user->id) }}">{{ $user->username }}</a>
+                    <a href="{{ route("$userRoutePrefix.edit", $user->id) }}">{{ $user->username }}</a>
                 </li>
             </ul>
         </li>
@@ -29,7 +29,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li role="presentation">
-                    <a href="{{ route("$adminPrefix.user.index") }}">{{ trans('clumsy::buttons.manage_users') }}</a>
+                    <a href="{{ route("$userRoutePrefix.index") }}">{{ trans('clumsy::buttons.manage_users') }}</a>
                 </li>
             </ul>
         </li>

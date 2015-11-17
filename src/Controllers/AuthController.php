@@ -58,7 +58,6 @@ class AuthController extends Controller
             return $this->redirectPath();
         }
 
-        $data['intended'] = session('intended');
         $data['bodyClass'] = 'login';
 
         return view('clumsy::auth.login', $data);

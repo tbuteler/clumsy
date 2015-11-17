@@ -16,13 +16,16 @@ use Clumsy\Assets\Facade as Asset;
 |
 */
 
-Form::macro('delete', function ($resource_type, $id) {
+Form::macro('delete', function ($resource, $id) {
 
-    $prefix = Clumsy::prefix();
+    $routePrefix = $resource;
+    if ($prefix = Clumsy::prefix()) {
+        $routePrefix = $prefix.'.'.$routePrefix;
+    }
     $form_parameters = [
         'method' => "DELETE",
-        'url'    => route("$prefix.$resource_type.destroy", $id),
-        'class'  => "delete-form btn-outside pull-left $resource_type",
+        'url'    => route("$routePrefix.destroy", $id),
+        'class'  => "delete-form btn-outside pull-left $resource",
     ];
 
     return Form::open($form_parameters).Form::close();

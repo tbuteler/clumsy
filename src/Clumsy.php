@@ -81,15 +81,18 @@ class Clumsy
 
     public function assets($request, Closure $next)
     {
+        $userRoutePrefix = $this->prefix() ? $this->prefix().'.user' : 'user';
+
         view()->share([
-            'adminPrefix'   => $this->prefix(),
-            'navbarWrapper' => $this->view->resolve('navbar-wrapper'),
-            'navbarHome'    => $this->view->resolve('navbar-home-link'),
-            'navbar'        => $this->view->resolve('navbar'),
-            'navbarButtons' => $this->view->resolve('navbar-buttons'),
-            'view'          => $this->view,
-            'alert'         => $this->session->get('alert', false),
-            'bodyClass'     => str_replace('.', '-', $request->route()->getName()),
+            'adminPrefix'     => $this->prefix(),
+            'userRoutePrefix' => $userRoutePrefix,
+            'navbarWrapper'   => $this->view->resolve('navbar-wrapper'),
+            'navbarHome'      => $this->view->resolve('navbar-home-link'),
+            'navbar'          => $this->view->resolve('navbar'),
+            'navbarButtons'   => $this->view->resolve('navbar-buttons'),
+            'view'            => $this->view,
+            'alert'           => $this->session->get('alert', false),
+            'bodyClass'       => str_replace('.', '-', $request->route()->getName()),
         ]);
 
         Asset::enqueue('admin.css', 10);

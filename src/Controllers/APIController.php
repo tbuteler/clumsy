@@ -100,7 +100,10 @@ class APIController extends Controller
 
                 $this->query = $this->model->select('*');
 
-                $this->routePrefix = $this->adminPrefix.'.'.$this->model->resourceName();
+                $this->routePrefix = $this->model->resourceName();
+                if ($this->adminPrefix) {
+                    $this->routePrefix = $this->adminPrefix.'.'.$this->routePrefix;
+                }
             }
         }
     }

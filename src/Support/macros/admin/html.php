@@ -9,8 +9,11 @@ use Clumsy\Utils\Facades\HTTP;
 
 HTML::macro('columnTitle', function ($resource, $column, $name) {
 
-    $prefix = Clumsy::prefix();
-    $url = route("$prefix.$resource.sort");
+    $routePrefix = $resource;
+    if ($prefix = Clumsy::prefix()) {
+        $routePrefix = $prefix.'.'.$routePrefix;
+    }
+    $url = route("$routePrefix.sort");
     $attributes = [];
     $html = '';
 
