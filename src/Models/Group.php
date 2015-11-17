@@ -2,6 +2,8 @@
 
 namespace Clumsy\CMS\Models;
 
+use Clumsy\CMS\Facades\Overseer;
+
 class Group extends BaseModel
 {
     /**
