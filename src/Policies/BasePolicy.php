@@ -6,8 +6,6 @@ class BasePolicy
 {
     public function before($user, $ability)
     {
-        if (!$user->isGroupable() || $user->inGroup('Administrators', 'Editors')) {
-            return true;
-        }
+        return (!$user->isGroupable() || $user->inGroup('Administrators', 'Editors'));
     }
 }
