@@ -7,7 +7,6 @@ class UserPolicy
     public function before($user, $ability)
     {
         if ($ability !== 'destroy') {
-
             if ($user->isGroupable() && $user->inGroup('Administrators')) {
                 return true;
             }
@@ -16,15 +15,11 @@ class UserPolicy
 
     public function update($user, $model)
     {
-        if ($user->id === $model->id) {
-            return true;
-        }
+        return ($user->id === $model->id);
     }
 
     public function destroy($user, $model)
     {
-        if ($user->id !== $model->id) {
-            return true;
-        }
+        return ($user->id !== $model->id);
     }
 }
