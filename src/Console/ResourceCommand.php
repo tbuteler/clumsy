@@ -47,11 +47,11 @@ class ResourceCommand extends Command
         $resource_plural = $this->getPluralResourceName();
 
         $generates = [
-            //'model',
+            'model',
             'seed',
-            //'controller',
-            //'views folder',
-            //'table panel',
+            'controller',
+            'views folder',
+            'table panel',
         ];
 
         foreach ($generates as $generate) {
@@ -75,11 +75,11 @@ class ResourceCommand extends Command
             }
         }
 
-        //$this->call('make:migration', ['name' => "create_{$resource_plural}_table"]);
+        $this->call('make:migration', ['name' => "create_{$resource_plural}_table"]);
 
-        //$controller = $this->generators['controller']->targetName();
-        //$seed = $this->generators['seed']->targetName();
-        //$this->info("All done!\n- Add this to routes.php: [Route::resource('{$resource}', '{$controller}');]\n- Add this to DatabaseSeeder.php: [\$this->call({$seed}::class);]");
+        $controller = $this->generators['controller']->targetName();
+        $seed = $this->generators['seed']->targetName();
+        $this->info("All done!\n- Add this to routes.php: [Route::resource('{$resource}', '{$controller}');]\n- Add this to DatabaseSeeder.php: [\$this->call({$seed}::class);]");
     }
 
     protected function getArguments()
