@@ -21,14 +21,14 @@ trait Hashid
         });
     }
 
-    public function minimumHashIdSize()
-    {
-        return property_exists($this, 'minimumHashIdSize') ? $this->minimumHashIdSize : 5;
-    }
-
     public function hasher()
     {
         return new Hashids(config('app.key'), $this->minimumHashIdSize());
+    }
+
+    public function minimumHashIdSize()
+    {
+        return property_exists($this, 'minimumHashIdSize') ? $this->minimumHashIdSize : 4;
     }
 
     public function hashIdBeforeCreating()
@@ -47,12 +47,12 @@ trait Hashid
             $datetime->minute,
             $datetime->second,
             round(head(explode(' ', microtime()))*1000),
-            rand(0,9)
+            rand(0,999)
         );
     }
 
     public function hashByPrimaryKey()
     {
-        return $this->hasher()->encode($this->getKey());
+        return $this->hasher()->encode($this->getKey(), rand(0,999));
     }
 }
