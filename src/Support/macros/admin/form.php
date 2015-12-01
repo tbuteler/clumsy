@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\URL;
 use Clumsy\CMS\Facades\Clumsy;
 use Clumsy\Assets\Facade as Asset;
 

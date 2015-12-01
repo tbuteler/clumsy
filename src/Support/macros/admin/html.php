@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\View;
 use Clumsy\CMS\Facades\Clumsy;
 use Clumsy\CMS\Facades\International;
 use Clumsy\Utils\Facades\HTTP;
@@ -17,9 +14,9 @@ HTML::macro('columnTitle', function ($resource, $column, $name) {
     $attributes = [];
     $html = '';
 
-    if (Session::has("clumsy.order.$resource")) {
-        if ($column === head(Session::get("clumsy.order.$resource"))) {
-        $direction = last(Session::get("clumsy.order.$resource"));
+    if (session()->has("clumsy.order.$resource")) {
+        if ($column === head(session("clumsy.order.$resource"))) {
+        $direction = last(session("clumsy.order.$resource"));
 
             $attributes['class'] = "active $direction";
             $html = '<span class="caret"></span>';
@@ -69,14 +66,4 @@ HTML::macro('breadcrumb', function ($breadcrumb) {
     $html .= '</ol>';
 
     return $html;
-});
-
-HTML::macro('translatable', function ($fields) {
-
-    $locales = International::getSupportedLocales();
-
-    reset($locales);
-    $first = key($locales);
-
-    return View::make('clumsy::macros.translatable', compact('locales', 'first', 'fields'))->render();
 });
