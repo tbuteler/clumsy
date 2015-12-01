@@ -75,7 +75,7 @@ class ResourceCommand extends Command
             }
         }
 
-        $this->call('make:migration', ['name' => "create_{$resource_plural}_table"]);
+        $this->call('make:migration', ['name' => str_replace('-', '_', "create_{$resource_plural}_table")]);
 
         $controller = $this->generators['controller']->targetName();
         $seed = $this->generators['seed']->targetName();
