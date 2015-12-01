@@ -131,7 +131,7 @@ class APIController extends Controller
     {
         try {
 
-            $this->authorize('update', $this->getPolicyItem($item));
+            $this->authorize($action, $this->getPolicyItem($item));
 
         } catch (HttpException $e) {
 
