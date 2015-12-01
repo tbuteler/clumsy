@@ -1,7 +1,6 @@
 <?php
 
 use Clumsy\CMS\Facades\Clumsy;
-use Clumsy\CMS\Facades\International;
 use Clumsy\Utils\Facades\HTTP;
 
 HTML::macro('columnTitle', function ($resource, $column, $name) {

@@ -2,13 +2,11 @@
 
 namespace Clumsy\CMS\Support;
 
-use Illuminate\Support\Str;
-
 class ResourceNameResolver
 {
     public static function display($label)
     {
-        return Str::title(str_replace('_', ' ', snake_case($label)));
+        return title_case(str_replace(['_', '-'], ' ', $label));
     }
 
     public static function singular($model)
