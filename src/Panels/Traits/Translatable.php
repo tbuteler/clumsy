@@ -13,9 +13,14 @@ trait Translatable
         reset($locales);
         $first = key($locales);
 
+        $fieldColumns = [];
+        array_walk($translatable, function ($field) use (&$fieldColumns) {
+            $fieldColumns[] = $field instanceof Clumsy\Utils\Library\Field ? $field->getName() : '';
+        });
+
         $data = array_merge(
             $this->getData(),
-            compact('locales', 'first', 'translatable')
+            compact('locales', 'first', 'fieldColumns', 'translatable')
         );
 
         return view('clumsy::macros.translatable', $data)->render();

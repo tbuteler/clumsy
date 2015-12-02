@@ -10,20 +10,12 @@
 	<div class="panel-body tab-content">
 	@foreach ($locales as $locale => $language)
 		<div class="tab-pane-translatable tab-pane{{ $locale === $first ? ' active' : '' }}" id="{{ $locale }}">
-		@foreach ($translatable as $column => $label)
-
-			@if (str_contains($column, ':'))
-				<?php list($column, $type) = explode(':', $column); ?>
-			@else
-				<?php $type = 'field'; ?>
+		@foreach ($translatable as $i => $field)
+			@if ($field instanceof Clumsy\Utils\Library\Field)
+				{!! $field->name($model->localizeColumn($fieldColumns[$i], $locale)) !!}
+			@elseif ($field instanceof Illuminate\View\View)
+				{!! $field->with(compact('locale'))->render() !!}
 			@endif
-
-			@if ($type === 'media')
-				{!! Form::media($label[$model->localizeColumn($column, $locale)]) !!}
-			@else
-				{!! $type($model->localizeColumn($column, $locale), $label) !!}
-			@endif
-
 		@endforeach
 		</div>
 	@endforeach
