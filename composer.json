@@ -12,9 +12,9 @@
     "require": {
         "laravel/framework": "5.1.*",
         "laravelcollective/html": "5.1.*",
-        "clumsy/assets": "0.7.*",
-        "clumsy/utils": "0.9.*",
-        "clumsy/eminem": "0.9.*"
+        "clumsy/assets": ">=0.7.0",
+        "clumsy/utils": ">=0.9.0",
+        "clumsy/eminem": ">=0.9.0"
     },
     "autoload": {
         "files": [
