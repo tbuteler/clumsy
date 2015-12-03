@@ -27,7 +27,7 @@ class CreateClumsyGroupsPivotTable extends Migration
      */
     public function down()
     {
-        Schema::table('clumsy_groups_pivot', function($table)
+        Schema::table('clumsy_groups_pivot', function(Blueprint $table)
         {
             $table->dropForeign('clumsy_groups_pivot_group_id_foreign');
             $table->dropForeign('clumsy_groups_pivot_user_id_foreign');

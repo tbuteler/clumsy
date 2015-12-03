@@ -3,6 +3,7 @@
 namespace Clumsy\CMS\Panels\Traits;
 
 use Clumsy\CMS\Facades\International;
+use Clumsy\Utils\Library\Field;
 
 trait Translatable
 {
@@ -15,7 +16,7 @@ trait Translatable
 
         $fieldColumns = [];
         array_walk($translatable, function ($field) use (&$fieldColumns) {
-            $fieldColumns[] = $field instanceof Clumsy\Utils\Library\Field ? $field->getName() : '';
+            $fieldColumns[] = $field instanceof Field ? $field->getName() : '';
         });
 
         $data = array_merge(
@@ -24,5 +25,10 @@ trait Translatable
         );
 
         return view('clumsy::macros.translatable', $data)->render();
+    }
+
+    public function translatedMedia($slot)
+    {
+        return view('clumsy::macros.translated-media', array_merge($this->getData(), ['baseSlot' => $slot]));
     }
 }

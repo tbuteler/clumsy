@@ -6,11 +6,12 @@ use UnexpectedValueException;
 use Collective\Html\FormFacade as Form;
 use Clumsy\CMS\Panels\Traits\Panel;
 use Clumsy\CMS\Panels\Traits\Translatable;
+use Clumsy\CMS\Panels\Traits\Location;
 use Clumsy\Eminem\Facade as MediaManager;
 
 trait Editable
 {
-    use Panel, Translatable;
+    use Panel, Translatable, Location;
 
     protected $item;
 

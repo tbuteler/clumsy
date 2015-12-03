@@ -56,7 +56,7 @@ class CMSServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadTranslationsFrom(__DIR__.'/Support/lang', 'clumsy');
+        $this->loadTranslationsFrom(__DIR__.'/lang', 'clumsy');
 
         $this->registerAuthRoutes();
         $this->registerPublishers();
@@ -107,7 +107,7 @@ class CMSServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes([
-            __DIR__.'/Support/lang' => base_path('resources/lang/vendor/clumsy'),
+            __DIR__.'/lang' => base_path('resources/lang/vendor/clumsy'),
         ], 'translations');
 
         $this->publishes([

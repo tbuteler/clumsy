@@ -1,7 +1,6 @@
 <?php
 
 use Clumsy\CMS\Facades\Clumsy;
-use Clumsy\Assets\Facade as Asset;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +26,4 @@ Form::macro('delete', function ($resource, $id) {
     ];
 
     return Form::open($form_parameters).Form::close();
-});
-
-Form::macro('location', function ($lat, $lng, $address = null) {
-
-    Asset::enqueue('google-maps-admin');
-
-    return View::make('clumsy::macros.location', compact('lat', 'lng', 'address'))->render();
 });

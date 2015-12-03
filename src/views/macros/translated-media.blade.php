@@ -1,0 +1,1 @@
+{!! mediaBox($media[$model->localizeColumn($baseSlot, $locale)]) !!}

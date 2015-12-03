@@ -6,7 +6,7 @@ class ResourceNameResolver
 {
     public static function display($label)
     {
-        return title_case(str_replace(['_', '-'], ' ', $label));
+        return title_case(str_replace(['_', '-'], ' ', snake_case(str_replace(' ', '_', $label))));
     }
 
     public static function singular($model)
