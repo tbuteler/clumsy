@@ -1,1 +1,1 @@
-{!! mediaBox($media[$model->localizeColumn($baseSlot, $locale)]) !!}
+{!! $item->mediaBox($model->localizeColumn($baseSlot, $locale)) !!}
