@@ -7,7 +7,6 @@ use Collective\Html\FormFacade as Form;
 use Clumsy\CMS\Panels\Traits\Panel;
 use Clumsy\CMS\Panels\Traits\Translatable;
 use Clumsy\CMS\Panels\Traits\Location;
-use Clumsy\Eminem\Facade as MediaManager;
 
 trait Editable
 {
@@ -46,8 +45,6 @@ trait Editable
             array_push($fields, Form::hidden($this->model->parentIdColumn(), $this->getParentModelId()));
             $this->setData(compact('backLink', 'fields'));
         }
-
-        $this->setData('media', MediaManager::slots($this->item, $this->item->id));
     }
 
     public function loadItemById($id = null)
