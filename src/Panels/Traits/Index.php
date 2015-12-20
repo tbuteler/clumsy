@@ -36,10 +36,11 @@ trait Index
         }
 
         $this->setData([
-            'title'            => $this->getLabelPlural(),
-            'updateUrl'        => $updateUrl,
-            'addResourceUrl'   => $addResourceUrl,
-            'addResourceLabel' => $addResourceLabel,
+            'title'               => $this->getLabelPlural(),
+            'updateUrl'           => $updateUrl,
+            'suppressAddResource' => $this->suppressAddResource(),
+            'addResourceUrl'      => $addResourceUrl,
+            'addResourceLabel'    => $addResourceLabel,
         ]);
     }
 
@@ -162,5 +163,10 @@ trait Index
     public function booleanColumnValue($item, $column)
     {
         return $item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
+    }
+
+    public function suppressAddResource()
+    {
+        return property_exists($this, 'suppressAddResource') ? $this->suppressAddResource : false;
     }
 }
