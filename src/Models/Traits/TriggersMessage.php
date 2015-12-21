@@ -10,7 +10,7 @@ trait TriggersMessage
     {
         self::creating(function ($model) {
 
-            if (!count($model->getRecipients('to'))) {
+            if (!count($model->getRecipients('to')) || !$model->shouldSendMessage()) {
                 return;
             }
 
@@ -27,6 +27,11 @@ trait TriggersMessage
     public function originatorName()
     {
         return $this->name;
+    }
+
+    public function shouldSendMessage()
+    {
+        return request()->method() === 'POST';
     }
 
     public function getRecipients($method)
