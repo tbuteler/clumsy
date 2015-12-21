@@ -46,7 +46,6 @@ trait Filterable
 
         $hasFilters = false;
         foreach ($this->filters() as $column) {
-            $original = $column;
 
             $filterKey = str_contains($column, '.') ? last(explode('.', $column)) : $column;
 

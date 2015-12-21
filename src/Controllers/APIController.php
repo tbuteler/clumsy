@@ -112,7 +112,7 @@ class APIController extends Controller
     {
         try {
 
-            $policy = policy($item);
+            policy($item);
 
         } catch (InvalidArgumentException $e) {
 

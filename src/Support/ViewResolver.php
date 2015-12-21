@@ -24,7 +24,7 @@ class ViewResolver
         return 'admin';
     }
 
-    protected function domainPath($domain = false)
+    protected function domainPath()
     {
         $prefix = $this->prefix();
 

@@ -13,7 +13,7 @@ trait Groupable
             if (isset($model->group_ids)) {
                 $groups = array_filter((array)$model->group_ids);
                 unset($model->group_ids);
-                Event::listen('clumsy.saved: User', function ($user) use ($groups, $model) {
+                Event::listen('clumsy.saved: User', function ($user) use ($groups) {
                     $user->groups()->sync($groups);
                 }, 100);
             }

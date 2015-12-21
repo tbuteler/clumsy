@@ -150,7 +150,7 @@ class AdminController extends APIController
      */
     public function create()
     {
-        return $this->edit($id = null);
+        return $this->edit(null);
     }
 
     /**
@@ -271,8 +271,6 @@ class AdminController extends APIController
      */
     public function destroy($id)
     {
-        $item = $this->model->findOrFail($id);
-
         $url = route("{$this->routePrefix}.index");
 
         if ($this->model->isNested()) {

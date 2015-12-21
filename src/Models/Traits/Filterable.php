@@ -83,7 +83,7 @@ trait Filterable
 
             // If the column is a boolean, use 'yes' or 'no' values
             if (in_array($filterKey, $this->booleans()) && !$this->hasGetMutator($filterKey)) {
-                $items->each(function ($item) use ($column, $filterKey, &$values) {
+                $items->each(function ($item) use ($column, &$values) {
                     $attributes = $item->getAttributes();
                     $values[$attributes[$column]] = $item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
                 });

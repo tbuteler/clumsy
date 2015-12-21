@@ -30,7 +30,7 @@ trait Editable
     public function loadItems()
     {
         if (!$this->itemsLoaded()) {
-            $item = $this->loadItemById();
+            $this->loadItemById();
         }
 
         foreach ($this->item->requiredBy() as $required) {

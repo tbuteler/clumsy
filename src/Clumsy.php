@@ -79,7 +79,7 @@ class Clumsy
         }
     }
 
-    public function assets($request, Closure $next)
+    public function assets($request)
     {
         $userRoutePrefix = $this->prefix() ? $this->prefix().'.user' : 'user';
 
@@ -110,7 +110,7 @@ class Clumsy
         ], true);
     }
 
-    public function user($request, Closure $next)
+    public function user()
     {
         view()->share('user', $this->auth->user());
     }
