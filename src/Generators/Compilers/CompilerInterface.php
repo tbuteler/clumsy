@@ -1,7 +1,8 @@
 <?php
+
 namespace Clumsy\CMS\Generators\Compilers;
 
-interface Compiler
+interface CompilerInterface
 {
     /**
      * Compile the template using

@@ -120,6 +120,11 @@ class Clumsy
         return $this->adminPrefix;
     }
 
+    public function isAdmin()
+    {
+        return (bool) $this->app->offsetGet('clumsy.admin');
+    }
+
     public function panel($identifier)
     {
         if (class_exists($identifier)) {

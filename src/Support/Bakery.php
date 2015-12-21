@@ -4,7 +4,6 @@ namespace Clumsy\CMS\Support;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
-use Illuminate\Support\Facades\Input;
 use Clumsy\CMS\Support\ResourceNameResolver;
 use Clumsy\Utils\Facades\HTTP;
 

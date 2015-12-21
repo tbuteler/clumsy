@@ -3,7 +3,6 @@
 /bower_components
 composer.phar
 composer.lock
-.DS_Store
 
 bower_components/
 node_modules/

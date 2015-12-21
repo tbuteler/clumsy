@@ -5,7 +5,6 @@ namespace Clumsy\CMS\Controllers;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
-use Collective\Html\FormFacade as Form;
 use Clumsy\Utils\Facades\HTTP;
 use Clumsy\CMS\Facades\Clumsy;
 

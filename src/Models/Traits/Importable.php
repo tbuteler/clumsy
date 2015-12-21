@@ -2,6 +2,8 @@
 
 namespace Clumsy\CMS\Models\Traits;
 
+use Clumsy\CMS\Models\LocalChange;
+
 trait Importable
 {
     public $importable = true;

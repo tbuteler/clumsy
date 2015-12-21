@@ -324,8 +324,6 @@ trait Panel
     public function inner()
     {
         return $this->template("inner-{$this->action}");
-
-        return $this;
     }
 
     public function getTemplate()

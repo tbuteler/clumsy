@@ -2,13 +2,7 @@
 namespace Clumsy\CMS\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Artisan;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Clumsy\CMS\Generators\Controller;
-use Clumsy\CMS\Generators\Model;
-use Clumsy\CMS\Generators\Seed;
 use Clumsy\CMS\Generators\Filesystem\FileAlreadyExists;
 
 /**

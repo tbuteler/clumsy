@@ -2,8 +2,6 @@
 
 namespace Clumsy\CMS\Routing;
 
-use Illuminate\Events\Dispatcher;
-use Illuminate\Container\Container;
 use Illuminate\Routing\ResourceRegistrar as BaseResourceRegistrar;
 
 class ResourceRegistrar extends BaseResourceRegistrar

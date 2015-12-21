@@ -54,7 +54,7 @@ trait Filterable
             $column = array_key_exists($column, $equivalence) ? array_pull($equivalence, $column) : $column;
             $columns[$column] = $filterKey;
 
-            if ($activeFilters != null && array_key_exists($column, $activeFilters)) {
+            if (!is_null($activeFilters) && array_key_exists($column, $activeFilters)) {
                 $hasFilters = true;
                 $selected[$column] = $activeFilters[$column];
             } else {
