@@ -3,6 +3,7 @@
 namespace Clumsy\CMS\Auth;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Auth\Passwords\DatabaseTokenRepository as DbRepository;
 use Illuminate\Auth\Passwords\PasswordBroker;
@@ -22,10 +23,18 @@ class Overseer
     public function __construct(Application $app)
     {
         $this->app = $app;
+        $this->userModel = $this->app['config']['clumsy.cms.authentication-model'];
 
         $this->auth = new AuthManager($app);
-
-        $this->userModel = $this->auth->getEloquentModel();
+        $this->auth->shouldUse('clumsy');
+        $this->app['config']['auth.guards.clumsy'] = [
+            'driver'   => 'session',
+            'provider' => 'clumsy',
+        ];
+        $this->app['config']['auth.providers.clumsy'] = [
+            'driver' => 'eloquent',
+            'model'  => $this->userModel,
+        ];
 
         $this->bindGate();
         $this->bindPasswordBroker();

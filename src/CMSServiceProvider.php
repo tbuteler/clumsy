@@ -129,7 +129,10 @@ class CMSServiceProvider extends ServiceProvider
             [
                 'namespace'  => 'Clumsy\CMS\Controllers',
                 'prefix'     => $this->app['config']->get('clumsy.cms.authentication-prefix'),
-                'middleware' => 'clumsy:init',
+                'middleware' => array_merge(
+                    ['clumsy:init'],
+                    (array)$this->app['config']->get('clumsy.cms.authentication-middleware')
+                ),
             ],
             function () {
 

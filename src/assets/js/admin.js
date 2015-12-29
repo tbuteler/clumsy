@@ -219,7 +219,7 @@ $(function(){
             data._method = 'PUT';
             data._token = $('input[name="_token"]').val();
             data[$(this).data('column')] = $(this).is(':checkbox') ? ($(this).prop('checked') ? 1 : 0) : $(this).val();
-            $.post($(this).closest('[data-update-url]').data('update-url').replace('{id}', $(this).data('id')), data);
+            $.post($(this).closest('[data-update-url]').data('update-url').replace(':id', $(this).data('id')), data);
         });
         $editableInline.closest('td').click(function(){
             $(this).find('.editable-inline').click();

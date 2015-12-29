@@ -20,8 +20,7 @@ trait Index
 
     public function prepareIndex()
     {
-        $updateUrl = route("{$this->routePrefix}.update");
-        $updateUrl = str_replace(urlencode('{'.$this->model->resourceParameter().'}'), '{id}', $updateUrl);
+        $updateUrl = route("{$this->routePrefix}.update", ':id');
 
         if ($this->model->importable) {
             $addResourceUrl = route("{$this->routePrefix}.import");
