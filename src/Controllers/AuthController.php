@@ -55,7 +55,7 @@ class AuthController extends Controller
     public function getLogin()
     {
         if (Overseer::check()) {
-            return $this->redirectPath();
+            return redirect($this->redirectPath());
         }
 
         $data['bodyClass'] = 'login';
@@ -122,7 +122,7 @@ class AuthController extends Controller
     public function reset()
     {
         if (Overseer::check()) {
-            return $this->redirectPath();
+            return redirect($this->redirectPath());
         }
 
         $data['bodyClass'] = 'login';
@@ -166,7 +166,7 @@ class AuthController extends Controller
     public function doReset($token)
     {
         if (Overseer::check()) {
-            return $this->redirectPath();
+            return redirect($this->redirectPath());
         }
 
         $bodyClass = 'login';

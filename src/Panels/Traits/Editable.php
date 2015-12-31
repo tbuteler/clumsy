@@ -16,8 +16,9 @@ trait Editable
 
     public function prepareEditable()
     {
+        $title = $this->action === 'create' ? 'clumsy::titles.new_item' : 'clumsy::titles.edit_item';
         $this->setData([
-            'title'          => trans('clumsy::titles.edit_item', ['resource' => $this->getLabel()]),
+            'title'          => trans($title, ['resource' => $this->getLabel()]),
             'id'             => request()->route()->getParameter($this->resourceParameter()),
             'backLink'       => route("{$this->routePrefix}.index"),
             'showResource'   => request('show', request('reorder')),

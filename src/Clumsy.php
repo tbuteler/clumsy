@@ -6,6 +6,7 @@ use Closure;
 use InvalidArgumentException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Clumsy\CMS\Auth\Overseer;
 use Clumsy\Assets\Facade as Asset;
@@ -125,37 +126,62 @@ class Clumsy
         return (bool) $this->app->offsetGet('clumsy.admin');
     }
 
-    public function panel($identifier)
+    public function panel($identifier, $fallback = true)
     {
-        if (class_exists($identifier)) {
-            return $this->app->make($identifier);
+        if ($class = $this->panelClass($identifier)) {
+            return $this->app->make($class);
         }
 
-        $fallback = false;
-        if (str_contains($identifier, '.')) {
-            $sections = array_map('studly_case', explode('.', $identifier));
-            $panel = array_pop($sections);
-            $namespace = $this->app['config']->get('clumsy.cms.panel-namespace');
-            $namespace .= '\\'.implode('\\', $sections);
-            $class = "{$namespace}\\{$panel}";
-            if (!class_exists($class)) {
-                $fallback = true;
+        // Before proceeding to generic Clumsy panel, check for app-specific inherited panels
+        $inheritance = [
+            'create' => 'edit',
+        ];
+        foreach ($inheritance as $from => $to) {
+            if (ends_with(Str::lower($identifier), ".{$from}")) {
+                $identifier = preg_replace("/\.{$from}$/i", ".{$to}", $identifier);
+                if ($this->panelExists($identifier)) {
+                    $inherited = $this->app->make($this->panelClass($identifier));
+                    if ($inherited->isInheritable()) {
+                        $inherited->action($from);
+                        return $inherited;
+                    }
+                }
             }
         }
 
-        if (!str_contains($identifier, '.') || $fallback) {
-            if ($fallback) {
-                $identifier = last(explode('.', $identifier));
-            }
+        if ($fallback) {
+            $identifier = last(explode('.', $identifier));
             $namespace = 'Clumsy\\CMS\\Panels';
             $panel = studly_case($identifier);
             $class = "{$namespace}\\{$panel}";
+            if (class_exists($class)) {
+                return $this->app->make($class);
+            }
         }
 
-        if (!class_exists($class)) {
-            throw new InvalidArgumentException("Panel [{$class}] not found.");
+        throw new InvalidArgumentException("Panel [{$identifier}] not found.");
+    }
+
+    public function panelClass($identifier)
+    {
+        if (class_exists($identifier)) {
+            return $identifier;
         }
 
-        return $this->app->make($class);
+        $sections = array_map('studly_case', explode('.', $identifier));
+        $panel = array_pop($sections);
+        $namespace = $this->app['config']->get('clumsy.cms.panel-namespace');
+        $namespace .= '\\'.implode('\\', $sections);
+        $class = "{$namespace}\\{$panel}";
+        if (class_exists($class)) {
+            return $class;
+        }
+
+        return false;
+    }
+
+    public function panelExists($identifier)
+    {
+        return (bool) $this->panelClass($identifier);
     }
 }

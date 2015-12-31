@@ -270,7 +270,6 @@ $(function(){
     if ($('.reorder-table').length) {
 
         var reorder = $(".reorder-table tbody").sortable({
-            revert: true,
             helper: "clone",
             scroll: false,
             axis: "y",
@@ -288,5 +287,4 @@ $(function(){
             });
         });
     }
-
 });
