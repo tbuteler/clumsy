@@ -138,9 +138,9 @@ class Clumsy
         ];
         foreach ($inheritance as $from => $to) {
             if (ends_with(Str::lower($identifier), ".{$from}")) {
-                $identifier = preg_replace("/\.{$from}$/i", ".{$to}", $identifier);
-                if ($this->panelExists($identifier)) {
-                    $inherited = $this->app->make($this->panelClass($identifier));
+                $inherited = preg_replace("/\.{$from}$/i", ".{$to}", $identifier);
+                if ($this->panelExists($inherited)) {
+                    $inherited = $this->app->make($this->panelClass($inherited));
                     if ($inherited->isInheritable()) {
                         $inherited->action($from);
                         return $inherited;
