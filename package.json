@@ -1,7 +1,7 @@
 {
   "name": "ClumsyCMS",
   "description": "A CMS for Laravel",
-  "version": "0.23.2",
+  "version": "0.24.0",
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "*",
