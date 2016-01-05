@@ -9,4 +9,6 @@ class Edit
     use Editable;
 
     protected $action = 'edit';
+
+    protected $inheritable = true;
 }

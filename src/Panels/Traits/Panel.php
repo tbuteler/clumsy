@@ -137,6 +137,11 @@ trait Panel
         return (bool)$this->parent;
     }
 
+    public function isInheritable()
+    {
+        return property_exists($this, 'inheritable') ? $this->inheritable : false;
+    }
+
     public function prepare()
     {
         if ($this->isChild()) {
@@ -281,6 +286,13 @@ trait Panel
     {
         $this->query->withAdminContext($key, $value);
         $this->model->setAdminContext($key, $value);
+
+        return $this;
+    }
+
+    public function action($action)
+    {
+        $this->action = $action;
 
         return $this;
     }
