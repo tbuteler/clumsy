@@ -91,7 +91,7 @@ class AuthController extends Controller
             $this->incrementLoginAttempts($request);
         }
 
-        return redirect($this->loginPath())
+        return redirect($this->loginPath)
                 ->withInput($request->only($this->loginUsername(), 'remember'))
                 ->withAlert([
                     'warning' => $this->getFailedLoginMessage(),
