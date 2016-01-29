@@ -2,6 +2,7 @@
 
 namespace Clumsy\CMS\Models\Traits;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 
@@ -57,5 +58,23 @@ trait Sortable
         }
 
         return $query;
+    }
+
+    public function sortChildrenCount($query, $childModel, $direction)
+    {
+        if (!is_object($childModel)) {
+            $childModel = new $childModel;
+        }
+
+        $parentIdColumn = $childModel->parentIdColumn();
+        $childKey = $childModel->getKeyName();
+        $parentTableAndKey = $this->getTable().'.'.$this->getKeyName();
+
+        $orderQuery = $childModel->select($parentIdColumn, DB::raw("count(`{$childKey}`) as `quantity`"))
+                                 ->groupBy($parentIdColumn)
+                                 ->toSql();
+
+        return $query->leftJoin(DB::raw("($orderQuery) as orderQuery"), "orderQuery.{$parentIdColumn}", '=', $parentTableAndKey)
+                     ->orderBy('orderQuery.quantity', $direction);
     }
 }

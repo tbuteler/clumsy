@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 trait AdminResource
 {
-    use Relatable, Paged, Sortable, Reorderable, Filterable, Toggable;
+    use Relatable, Paged, Sortable, Reorderable, Filterable, Toggable, ActiveOrNot;
 
     public function resourceParameter()
     {
