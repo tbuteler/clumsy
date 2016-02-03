@@ -6,6 +6,7 @@ trait ActiveOrNot
 {
     public function scopeActive($query, $active = true)
     {
-        return $query->where('active', $active);
+        $table = $this->getTable();
+        return $query->where("{$table}.active", $active);
     }
 }
