@@ -8,7 +8,7 @@ trait TriggersMessage
 {
     public static function bootTriggersMessage()
     {
-        self::creating(function ($model) {
+        self::created(function ($model) {
 
             if (!count($model->getRecipients('to')) || !$model->shouldSendMessage()) {
                 return;
