@@ -224,6 +224,10 @@ class AdminController extends APIController
                 // Limit all queries on children to the parent beign edited
                 $panel->query($child->query()->where($child->parentIdColumn(), $id));
 
+                if (request()->has("{$childResource}-type")) {
+                    $panel->toggle(request("{$childResource}-type"));
+                }
+
                 $this->panel->nest($panel);
             }
         }

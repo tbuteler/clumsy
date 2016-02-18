@@ -2,6 +2,8 @@
 
 namespace Clumsy\CMS\Panels\Traits;
 
+use Clumsy\Utils\Facades\HTTP;
+
 trait Toggable
 {
     protected $toggled;
@@ -10,7 +12,7 @@ trait Toggable
     {
         $this->setData([
             'toggleFilters' => $this->toggleFilters(),
-            'indexType'     => $this->toggled,
+            'indexType'     => $this->toggled ?: 'all',
         ]);
 
         if ($this->isUsingToggles()) {
@@ -41,12 +43,37 @@ trait Toggable
 
     public function toggleFilters()
     {
-        return property_exists($this, 'toggleFilters') ? $this->toggleFilters : [];
+        $toggles = property_exists($this, 'toggleFilters') ? $this->toggleFilters : [];
+
+        if (count($toggles) && !$this->suppressToggleAll()) {
+            $toggles = array_prepend($toggles, array_get($toggles, 'all', trans('clumsy::buttons.all_resources')), 'all');
+        }
+
+        return $toggles;
+    }
+
+    public function toggleUrl($index)
+    {
+        if ($this->isChild()) {
+            $baseUrl = $this->persistResourceOn($this->getParentModelEditUrl());
+
+            if ($index === 'all') {
+                return $baseUrl;
+            }
+
+            return HTTP::queryStringAdd($baseUrl, $this->resourceName().'-type', $index);
+        }
+
+        if ($index === 'all') {
+            return route("{$this->routePrefix}.index");
+        }
+
+        return route("{$this->routePrefix}.index-of-type", $index);
     }
 
     public function isUsingToggles()
     {
-        return (bool)$this->toggleFilters();
+        return (bool) count($this->toggleFilters());
     }
 
     public function suppressWhenToggled()
@@ -98,5 +125,10 @@ trait Toggable
         }
 
         return $counts;
+    }
+
+    public function suppressToggleAll()
+    {
+        return property_exists($this, 'suppressToggleAll') ? $this->suppressToggleAll : false;
     }
 }

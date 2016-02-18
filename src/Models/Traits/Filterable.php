@@ -2,6 +2,7 @@
 
 namespace Clumsy\CMS\Models\Traits;
 
+use InvalidArgumentException;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 
@@ -75,6 +76,10 @@ trait Filterable
             if (in_array($column, Schema::getColumnListing($this->getTable()))) {
                 // If the column exists in the table, use it
                 $items = $queryaux->select($column)->distinct()->get();
+            } elseif (!str_contains($column, '.')) {
+
+                throw new InvalidArgumentException("Filter column [{$column}] not found on [".$this->getTable()."] database table. Use the 'columnEquivalence' property on the filterable panel when filtering with accessors.");
+
             } else {
                 // Otherwise, assume it's a nested filter and look for the column in the relationship
                 list($model, $column) = explode('.', $column);
@@ -91,7 +96,9 @@ trait Filterable
                 // Otherwise, use the default attribute (will use get mutator, if available)
                 $items->each(function ($item) use ($column, $filterKey, &$values) {
                     $attributes = $item->getAttributes();
-                    $values[$attributes[$column]] = $item->$filterKey;
+                    if ($attributes[$column]) {
+                        $values[$attributes[$column]] = $item->$filterKey;
+                    }
                 });
             }
 
