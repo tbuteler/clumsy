@@ -356,7 +356,7 @@ class AdminController extends APIController
         $url = HTTP::queryStringRemove(URL::previous(), 'page');
         $query_string = $this->request->get('query_string');
         if ($query_string && !str_contains($url, $query_string)) {
-            $url = HTTP::queryStringAdd($url, $this->request->get('query_string'));
+            $url = HTTP::queryStringAdd($url, $this->request->get('query_string'), false);
         }
 
         return redirect($url);
