@@ -1,7 +1,7 @@
 @if (isset($filterData) && $filterData)
 
 <div class="panel panel-default filter-panel collapse {{ $filterData['hasFilters'] ? 'in' : '' }}" id="filter-collapse">
-	{!! Form::open(['url' => route("$routePrefix.filter"), 'id' => 'filter-form']) !!}
+	@form(['url' => route("$routePrefix.filter"), 'id' => 'filter-form'])
 	<div class="panel-heading">
 		<h4 class="panel-title">{{ trans('clumsy::titles.filters') }}</h4>
 	</div>
@@ -11,7 +11,7 @@
 				<tr>
 					<th>{{ $filterData['names'][$column] }}</th>
 					<td>
-					{!!	dropdown()->noLabel()->options($items)->selected($filterData['selected'][$column])->multiple()->data('name', str_replace('.', ':', $column))->data('placeholder', ' ') !!}
+					{!!	Field::dropdown()->noLabel()->options($items)->selected($filterData['selected'][$column])->multiple()->dataName(str_replace('.', ':', $column))->dataPlaceholder(' ') !!}
 					</td>
 				</tr>
 			@endforeach
@@ -26,17 +26,17 @@
 	        @foreach ($filterData['selected'] as $column => $values)
 	            @if ($values != null)
 	                @foreach ($values as $value)
-	                    {!! Form::hidden(str_replace('.', ':', $column).'[]', $value) !!}
+	                    @hidden(str_replace('.', ':', $column).'[]', $value)
 	                @endforeach
 	            @endif
 	        @endforeach
 	    @endif
 		@if ($isChild)
-	    	{!! Form::hidden('query_string', http_build_query(['show' => $resource]), ['class' => 'filter-nested']) !!}
-	    	{!! Form::hidden('parent_id', $id, ['class' => 'filter-nested']) !!}
+	    	@hidden('query_string', http_build_query(['show' => $resource]), ['class' => 'filter-nested'])
+	    	@hidden('parent_id', $id, ['class' => 'filter-nested'])
 	    @endif
     </div>
-	{!! Form::close() !!}
+	@endform
 </div>
 
 @endif

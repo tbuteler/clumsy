@@ -1,15 +1,15 @@
 <div class="location">
 
-    {!! field($address, trans('clumsy::fields.address'))->append('<button class="btn btn-primary geocoder-btn" type="button"><span class="glyphicon glyphicon-map-marker"></span></button>') !!}
+    {!! Field::make($address, trans('clumsy::fields.address'))->append('<button class="btn btn-primary geocoder-btn" type="button"><span class="glyphicon glyphicon-map-marker"></span></button>') !!}
 
     <div class="coordinates">
 
         <div class="row">
             <div class="col-md-6">
-                {!! field($lat, trans('clumsy::fields.latitude')) !!}
+                @field($lat, trans('clumsy::fields.latitude'))
             </div>
             <div class="col-md-6">
-                {!! field($lng, trans('clumsy::fields.longitude')) !!}
+                @field($lng, trans('clumsy::fields.longitude'))
             </div>
         </div>
 

@@ -280,6 +280,17 @@ table {
 
 /*
 |--------------------------------------------------------------------------
+| Tooltips
+|--------------------------------------------------------------------------
+|
+*/
+
+.tooltip {
+    white-space: nowrap;
+}
+
+/*
+|--------------------------------------------------------------------------
 | Buttons
 |--------------------------------------------------------------------------
 |
@@ -336,17 +347,6 @@ table {
 
 /*
 |--------------------------------------------------------------------------
-| Tooltips
-|--------------------------------------------------------------------------
-|
-*/
-
-.tooltip {
-    white-space: nowrap;
-}
-
-/*
-|--------------------------------------------------------------------------
 | Form & inputs
 |--------------------------------------------------------------------------
 |
@@ -386,10 +386,27 @@ form {
     outline: 0;
 }
 
+.form-control-feedback {
+    right: 8px;
+}
+
 .editable-html {
     font-size: 0.75em;
     font-family: Monaco, monospace;
     white-space: pre;
+}
+
+.password-toggle-label {
+    margin-bottom: 0;
+    font-weight: normal;
+    margin-top: 2px;
+    cursor: pointer;
+
+    input {
+        margin-right: 5px;
+        position: relative;
+        top: -1px;
+    }
 }
 
 /*
@@ -539,28 +556,29 @@ input+.iris-picker{
 */
 
 .embed-video-wrapper{
-    input.has-error{
-        border-color: #ff0000;
+
+    .has-error{
+        border-color: #a94442;
+        box-shadow: none;
     }
 
     .preview-box{
         min-height: 200px;
         position: relative;
-        margin-bottom: 15px;
-        padding: 3px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 0;
         text-align: center;
         color: #ccc;
 
-        .placeholders .glyphicon {
-            top: 74px;
-            font-size: 48px;
-        }
-        .placeholders .error {
-            display: none;
-            color: #ff0000;
+        .placeholders {
+
+            .glyphicon {
+                top: 74px;
+                font-size: 48px;
+            }
+
+            .error {
+                display: none;
+                color: #ff4500;
+            }
         }
 
         iframe{

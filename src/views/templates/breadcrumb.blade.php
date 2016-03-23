@@ -1,3 +1,3 @@
 @if (isset($breadcrumb) && $breadcrumb)
-    {!! HTML::breadcrumb($breadcrumb) !!}
+    @breadcrumb($breadcrumb)
 @endif

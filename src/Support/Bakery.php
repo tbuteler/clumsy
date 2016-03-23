@@ -100,4 +100,22 @@ class Bakery
 
         return $this->breadcrumb;
     }
+
+    public function render(array $breadcrumb = [])
+    {
+        if (empty($breadcrumb)) {
+            $breadcrumb = $this->breadcrumb;
+        }
+
+        $last = key(array_slice($breadcrumb, -1, 1));
+        array_pop($breadcrumb);
+        $html = '<ol class="breadcrumb">';
+        foreach ($breadcrumb as $crumb => $crumb_link) {
+            $html .= '<li><a href="'.$crumb_link.'">'.$crumb.'</a></li>';
+        }
+        $html .= '<li class="active">'.$last.'</li>';
+        $html .= '</ol>';
+
+        return $html;
+    }
 }

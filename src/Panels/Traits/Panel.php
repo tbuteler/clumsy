@@ -58,6 +58,11 @@ trait Panel
         $this->bakery->setPrefix($this->prefix);
     }
 
+    public function getBakery()
+    {
+        return $this->bakery;
+    }
+
     public function hierarchy($hierarchy)
     {
         $this->hierarchy = $hierarchy;

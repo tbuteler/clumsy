@@ -50,7 +50,7 @@ trait Editable
 
     public function loadItemById($id = null)
     {
-        $item = is_null($id) ? $this->model : $this->query->find($id);
+        $item = is_null($id) ? $this->model : $this->query->findOrFail($id);
         $this->setItem($item);
         $this->setData('item', $item);
     }
@@ -71,6 +71,17 @@ trait Editable
     public function suppressDelete()
     {
         return property_exists($this, 'suppressDelete') ? $this->suppressDelete : $this->isExternalResource();
+    }
+
+    public function deleteButton()
+    {
+        $parameters = [
+            'method' => "DELETE",
+            'url'    => route("{$this->routePrefix}.destroy", $this->item->id),
+            'class'  => "delete-form btn-outside pull-left ".$this->resourceName(),
+        ];
+
+        return Form::open($parameters).Form::close();
     }
 
     public function isExternalResource()

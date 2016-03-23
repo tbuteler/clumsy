@@ -107,11 +107,11 @@ class CMSServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes([
-            __DIR__.'/lang' => base_path('resources/lang/vendor/clumsy'),
+            __DIR__.'/lang' => resource_path('lang/vendor/clumsy'),
         ], 'translations');
 
         $this->publishes([
-            __DIR__.'/views' => base_path('resources/views/vendor/clumsy'),
+            __DIR__.'/views' => resource_path('views/vendor/clumsy'),
         ], 'views');
 
         $this->publishes([

@@ -6,8 +6,8 @@ use Clumsy\CMS\Contracts\ShortcodeInterface;
 
 class Shortcode implements ShortcodeInterface
 {
-    protected $start_delimiter = '[';
-    protected $end_delimiter = ']';
+    protected $startDelimiter = '[';
+    protected $endDelimiter = ']';
 
     protected $shortcodes = [];
 
@@ -21,9 +21,14 @@ class Shortcode implements ShortcodeInterface
         return str_replace('_', ' ', snake_case($method));
     }
 
+    public function wrap($string)
+    {
+        return "{$this->startDelimiter}$string{$this->endDelimiter}";
+    }
+
     public function regex($string)
     {
-        return "/\\{$this->start_delimiter}$string(.*)\\{$this->end_delimiter}/i";
+        return "/\\{$this->startDelimiter}$string(.*)\\{$this->endDelimiter}/i";
     }
 
     public function add($key, $description)

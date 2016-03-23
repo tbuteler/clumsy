@@ -2,25 +2,25 @@
 
     <div class="col-md-{{ $item->exists ? '8' : '12' }}">
 
-        {!! field('name', trans('clumsy::fields.name')) !!}
+        @field('name', trans('clumsy::fields.name'))
 
-        {!! field('email', trans('clumsy::fields.email')) !!}
+        @field('email', trans('clumsy::fields.email'))
 
         @if ($item->isGroupable() && $item->exists && $item->id != $user->id)
-            {!! dropdown('group_ids', trans('clumsy::fields.role'))->options($groups)->selected($item->getGroupIds()) !!}
+            @dropdown('group_ids', trans('clumsy::fields.role'), ['options' => $groups, 'selected' => $item->getGroupIds()])
         @endif
 
         @if (!$item->exists)
 
             @if ($item->isGroupable())
-                {!! dropdown('group', trans('clumsy::fields.role'))->options($groups) !!}
+                @dropdown('group', trans('clumsy::fields.role'), ['options' => $groups])
             @endif
 
             <h3 class="page-header">@lang('clumsy::fields.password')</h3>
 
-            {!! field('password', trans('clumsy::fields.password'))->type('password') !!}
+            @field('password', trans('clumsy::fields.password'), 'type:password')
 
-            {!! field('password_confirmation', trans('clumsy::fields.password_confirmation'))->type('password') !!}
+            @field('password_confirmation', trans('clumsy::fields.password_confirmation'), 'type:password')
 
         @elseif ($item->isGroupable() &&$item->id == $user->id)
 
@@ -31,9 +31,14 @@
 
         <h3 class="page-header">@lang('clumsy::fields.change_password')</h3>
 
-            {!! field('new_password', trans('clumsy::fields.new_password'))->type('password') !!}
-
-            {!! field('new_password_confirmation', trans('clumsy::fields.new_password_confirmation'))->type('password') !!}
+            <div class="row">
+                <div class="col-md-6">
+                    @password('new_password', trans('clumsy::fields.new_password'))
+                </div>
+                <div class="col-md-6">
+                    @password('new_password_confirmation', trans('clumsy::fields.new_password_confirmation'))
+                </div>
+            </div>
 
         @endif
 

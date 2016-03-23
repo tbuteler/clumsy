@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Blade;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Clumsy\CMS\Auth\Overseer;
 use Clumsy\Assets\Facade as Asset;
@@ -23,10 +24,6 @@ class Clumsy
         $this->app = $app;
         $this->session = $this->app['session'];
 
-        $adminLocale = $this->app['config']->get('clumsy.cms.admin-locale');
-        $this->app['config']->set('app.locale', $adminLocale);
-        $this->app->setLocale($adminLocale);
-
         $this->auth = $auth;
         $this->app->instance('clumsy.auth', $auth);
 
@@ -36,19 +33,24 @@ class Clumsy
         $this->app->instance('clumsy', $this);
 
         AliasLoader::getInstance()->alias('Form', 'Collective\Html\FormFacade');
-        AliasLoader::getInstance()->alias('HTML', 'Collective\Html\HtmlFacade');
-        require __DIR__.'/Support/macros/admin/html.php';
-        require __DIR__.'/Support/macros/admin/form.php';
+        AliasLoader::getInstance()->alias('Field', 'Clumsy\Utils\Facades\Field');
 
-        $admin_assets = include(__DIR__.'/assets/assets.php');
-        Asset::batchRegister($admin_assets);
+        $adminAssets = include(__DIR__.'/assets/assets.php');
+        Asset::batchRegister($adminAssets);
 
         $this->adminPrefix = null;
         if (!$this->app->runningInConsole()) {
+
             $this->adminPrefix = ltrim(str_replace('/', '.', $this->app['request']->route()->getPrefix()), '.');
+
+            $adminLocale = $this->app['config']->get('clumsy.cms.admin-locale');
+            $this->app['config']->set('app.locale', $adminLocale);
+            $this->app->setLocale($adminLocale);
+
+            $this->app['clumsy.admin'] = true;
         }
 
-        $this->app['clumsy.admin'] = true;
+        $this->registerBladeDirectives();
     }
 
     public function handle($request, Closure $next, $methods = null)
@@ -183,5 +185,20 @@ class Clumsy
     public function panelExists($identifier)
     {
         return (bool) $this->panelClass($identifier);
+    }
+
+    protected function registerBladeDirectives()
+    {
+        Blade::directive('mediaBox', function ($expression) {
+            return "<?php echo \$panel->getItem()->mediaBox{$expression}; ?>";
+        });
+
+        Blade::directive('location', function ($expression) {
+            return "<?php echo \$panel->location{$expression}; ?>";
+        });
+
+        Blade::directive('breadcrumb', function ($expression) {
+            return "<?php echo isset(\$panel) ? \$panel->getBakery()->render{$expression} : with(app()->make('Clumsy\CMS\Support\Bakery'))->render{$expression}; ?>";
+        });
     }
 }

@@ -5,7 +5,7 @@
 
     @if ($item->exists && !$suppressDelete)
 
-        {!! Form::delete($resource, $item->id) !!}
+        {!! $panel->deleteButton() !!}
 
     @endif
 

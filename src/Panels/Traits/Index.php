@@ -3,7 +3,6 @@
 namespace Clumsy\CMS\Panels\Traits;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use Collective\Html\HtmlFacade as HTML;
 use Clumsy\CMS\Panels\Traits\Panel;
 use Clumsy\CMS\Panels\Traits\Sortable;
 use Clumsy\CMS\Panels\Traits\Reorderable;
@@ -109,6 +108,40 @@ trait Index
         return in_array($column, $this->editableInline());
     }
 
+
+    public function columnTitle($resource, $column, $name)
+    {
+        $url = route("{$this->routePrefix}.sort");
+        $class = '';
+        $html = '';
+
+        if (session()->has("clumsy.order.$resource")) {
+            if ($column === head(session("clumsy.order.$resource"))) {
+            $direction = last(session("clumsy.order.$resource"));
+
+                $class = "active $direction";
+                $html = '<span class="caret"></span>';
+
+                if ('desc' === $direction) {
+                    $url = HTTP::queryStringAdd($url, 'reset');
+                } else {
+                    $url = HTTP::queryStringAdd($url, 'column', $column);
+                    $url = HTTP::queryStringAdd($url, 'direction', 'desc');
+                }
+            } else {
+                $url = HTTP::queryStringAdd($url, 'column', $column);
+                $url = HTTP::queryStringAdd($url, 'direction', 'asc');
+            }
+        } else {
+            $url = HTTP::queryStringAdd($url, 'column', $column);
+            $url = HTTP::queryStringAdd($url, 'direction', 'asc');
+        }
+
+        $html = "<a href=\"{$url}\" class=\"{$class}\">{$name}</a>{$html}";
+
+        return $html;
+    }
+
     public function columnValue($item, $column)
     {
         $value = $item->$column;
@@ -135,7 +168,7 @@ trait Index
 
         $url = route("{$this->routePrefix}.edit", $item->id);
 
-        return $this->is('gallery') ? $value : HTML::link($url, $value);
+        return $this->is('gallery') ? $value : "<a href=\"{$url}\">{$value}</a>";
     }
 
     public function columnValuePlaceHolder()
@@ -145,18 +178,32 @@ trait Index
 
     public function inlineBooleanColumnValue($item, $column)
     {
-        $macro = $this->is('gallery') ? 'booleanCaption' : 'booleanCell';
+        $method = $this->is('gallery') ? 'booleanCaption' : 'booleanCell';
 
-        return HTML::$macro($column, $item->$column, [
+        return $this->{$method}($column, $item->$column, [
 
-            'id'    => "ei-{$column}-{$item->id}",
-            'field' => [
-                'class'       => 'editable-inline',
-                'data-id'     => $item->id,
-                'data-column' => $column,
-            ]
+            "id:ei-{$column}-{$item->id}",
+            "setClass:editable-inline",
+            "dataId:{$item->id}",
+            "dataColumn:{$column}",
 
         ], $this->columnName($column));
+    }
+
+    public function booleanCell($name, $checked, $options = '')
+    {
+        return app('clumsy.field')
+                ->checkbox($name, null, $options)
+                ->checked($checked)
+                ->setGroupClass(null)
+                ->noLabel();
+    }
+
+    public function booleanCaption($name, $checked, $options = '', $label = null)
+    {
+        return app('clumsy.field')
+                ->checkbox($name, $label, $options)
+                ->checked($checked);
     }
 
     public function booleanColumnValue($item, $column)

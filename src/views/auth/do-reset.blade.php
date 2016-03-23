@@ -6,16 +6,16 @@
 
 @section('master')
 
-    {!! Form::open() !!}
+    @form
 
-        {!! field('email', trans('clumsy::fields.email'))->type('email') !!}
+        @field('email', trans('clumsy::fields.email'), 'type:email')
 
-        {!! field('password', trans('clumsy::fields.password'))->type('password') !!}
+        @password('password', trans('clumsy::fields.password'))
 
-        {!! field('password_confirmation', trans('clumsy::fields.password_confirmation'))->type('password') !!}
+        @password('password_confirmation', trans('clumsy::fields.password_confirmation'))
 
         <button class="btn btn-primary submit-once">@lang('clumsy::buttons.reset')</button>
 
-    {!! Form::close() !!}
+    @endform
 
 @stop
