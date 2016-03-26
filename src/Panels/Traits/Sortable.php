@@ -18,12 +18,12 @@ trait Sortable
 
     public function isSortable()
     {
-        return property_exists($this, 'sortable') ? $this->sortable : true;
+        return $this->getOptionalProperty('sortable', true);
     }
 
     public function orderEquivalence()
     {
-        $orderEquivalence = property_exists($this, 'orderEquivalence') ? $this->orderEquivalence : [];
+        $orderEquivalence = $this->getOptionalProperty('orderEquivalence', []);
         return array_merge($this->columnEquivalence(), $orderEquivalence);
     }
 }

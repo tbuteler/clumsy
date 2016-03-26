@@ -14,7 +14,7 @@ class Gallery
 
     public function galleryColumnsPerRow()
     {
-        $columnsPerRow = property_exists($this, 'columnsPerRow') ? $this->columnsPerRow : 4;
+        $columnsPerRow = $this->getOptionalProperty('columnsPerRow', 4);
 
         if (!in_array($columnsPerRow, [1,2,3,4,6,12])) {
             return 4;
@@ -25,7 +25,7 @@ class Gallery
 
     public function thumbnailSlot()
     {
-        return property_exists($this, 'thumbnailSlot') ? $this->thumbnailSlot : null;
+        return $this->getOptionalProperty('thumbnailSlot');
     }
 
     public function galleryThumbnail($item)

@@ -58,6 +58,15 @@ trait Panel
         $this->bakery->setPrefix($this->prefix);
     }
 
+    protected function getOptionalProperty($key, $default = null)
+    {
+        if (property_exists($this, $key)) {
+            return $this->{$key};
+        }
+
+        return $this->getData($key, $default);
+    }
+
     public function getBakery()
     {
         return $this->bakery;
@@ -144,7 +153,7 @@ trait Panel
 
     public function isInheritable()
     {
-        return property_exists($this, 'inheritable') ? $this->inheritable : false;
+        return $this->getOptionalProperty('inheritable', false);
     }
 
     public function prepare()
@@ -191,7 +200,7 @@ trait Panel
 
     public function getType()
     {
-        return property_exists($this, 'type') ? $this->type : str_slug(class_basename($this));
+        return $this->getOptionalProperty('type', str_slug(class_basename($this)));
     }
 
     public function is($type)
@@ -231,12 +240,12 @@ trait Panel
 
     public function columnEquivalence()
     {
-        return property_exists($this, 'columnEquivalence') ? $this->columnEquivalence : [];
+        return $this->getOptionalProperty('columnEquivalence', []);
     }
 
     public function allColumns()
     {
-        return property_exists($this, 'allColumns') ? $this->allColumns : [];
+        return $this->getOptionalProperty('allColumns', []);
     }
 
     public function columnNames()
@@ -322,13 +331,13 @@ trait Panel
         return $this;
     }
 
-    public function getData($key = null)
+    public function getData($key = null, $default = null)
     {
         if (is_null($key)) {
             return $this->data;
-        } elseif (!is_null($key) && array_key_exists($key, $this->data)) {
-            return $this->data[$key];
         }
+
+        return array_get($this->data, $key, $default);
     }
 
     public function template($template)

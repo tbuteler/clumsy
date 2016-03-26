@@ -75,7 +75,7 @@ trait Index
 
     public function itemsPerPage()
     {
-        return property_exists($this, 'itemsPerPage') ? $this->itemsPerPage : config('clumsy.cms.per-page');
+        return $this->getOptionalProperty('itemsPerPage', config('clumsy.cms.per-page'));
     }
 
     public function rowClass($item)
@@ -100,7 +100,7 @@ trait Index
 
     public function editableInline()
     {
-        return property_exists($this, 'editableInline') ? $this->editableInline : [];
+        return $this->getOptionalProperty('editableInline', []);
     }
 
     public function isEditableInline($column)
@@ -213,6 +213,6 @@ trait Index
 
     public function suppressAddResource()
     {
-        return property_exists($this, 'suppressAddResource') ? $this->suppressAddResource : false;
+        return $this->getOptionalProperty('suppressAddResource', false);
     }
 }

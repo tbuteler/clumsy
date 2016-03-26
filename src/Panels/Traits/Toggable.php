@@ -43,7 +43,7 @@ trait Toggable
 
     public function toggleFilters()
     {
-        $toggles = property_exists($this, 'toggleFilters') ? $this->toggleFilters : [];
+        $toggles = $this->getOptionalProperty('toggleFilters', []);
 
         if (count($toggles) && !$this->suppressToggleAll()) {
             $toggles = array_prepend($toggles, array_get($toggles, 'all', trans('clumsy::buttons.all_resources')), 'all');
@@ -78,12 +78,12 @@ trait Toggable
 
     public function suppressWhenToggled()
     {
-        return property_exists($this, 'suppressWhenToggled') ? $this->suppressWhenToggled : [];
+        return $this->getOptionalProperty('suppressWhenToggled', []);
     }
 
     public function appendWhenToggled()
     {
-        return property_exists($this, 'appendWhenToggled') ? $this->appendWhenToggled : [];
+        return $this->getOptionalProperty('appendWhenToggled', []);
     }
 
     public function toggle($type)
@@ -129,6 +129,6 @@ trait Toggable
 
     public function suppressToggleAll()
     {
-        return property_exists($this, 'suppressToggleAll') ? $this->suppressToggleAll : false;
+        return $this->getOptionalProperty('suppressToggleAll', false);
     }
 }

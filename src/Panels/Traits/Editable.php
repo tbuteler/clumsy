@@ -70,7 +70,7 @@ trait Editable
 
     public function suppressDelete()
     {
-        return property_exists($this, 'suppressDelete') ? $this->suppressDelete : $this->isExternalResource();
+        return $this->getOptionalProperty('suppressDelete', $this->isExternalResource());
     }
 
     public function deleteButton()

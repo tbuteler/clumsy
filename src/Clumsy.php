@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Blade;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Clumsy\CMS\Auth\Overseer;
-use Clumsy\Assets\Facade as Asset;
 
 class Clumsy
 {
@@ -36,7 +35,7 @@ class Clumsy
         AliasLoader::getInstance()->alias('Field', 'Clumsy\Utils\Facades\Field');
 
         $adminAssets = include(__DIR__.'/assets/assets.php');
-        Asset::batchRegister($adminAssets);
+        $this->app['clumsy.assets']->batchRegister($adminAssets);
 
         $this->adminPrefix = null;
         if (!$this->app->runningInConsole()) {
@@ -98,9 +97,9 @@ class Clumsy
             'bodyClass'       => str_replace('.', '-', $request->route()->getName()),
         ]);
 
-        Asset::enqueue('admin.css', 10);
-        Asset::enqueue('admin.js', 10);
-        Asset::json('admin', [
+        $this->app['clumsy.assets']->load('admin.css', 10);
+        $this->app['clumsy.assets']->load('admin.js', 10);
+        $this->app['clumsy.assets']->json('admin', [
             'prefix' => $this->prefix(),
             'urls' => [
                 'base'   => url($this->prefix()),

@@ -63,6 +63,6 @@ class Reorder
 
     public function reorderColumns()
     {
-        return property_exists($this, 'reorderColumns') ? $this->reorderColumns : false;
+        return $this->getOptionalProperty('reorderColumns', false);
     }
 }

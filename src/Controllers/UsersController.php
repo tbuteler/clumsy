@@ -26,6 +26,17 @@ class UsersController extends AdminController
                 ]);
     }
 
+    public function edit($id)
+    {
+        $this->loadPanel();
+
+        if (Overseer::user()->id == $id) {
+            $this->panel->suppressDelete = true;
+        }
+
+        return parent::edit($id);
+    }
+
     public function destroy($id)
     {
         if (Overseer::user()->id == $id) {

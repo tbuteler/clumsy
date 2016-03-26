@@ -10,6 +10,8 @@ use Clumsy\CMS\Facades\Clumsy;
 
 class AdminController extends APIController
 {
+    protected $panel;
+
     protected $modelHierarchy = [
         'current'  => null,
         'parents'  => [],
@@ -90,6 +92,10 @@ class AdminController extends APIController
 
     protected function loadPanel($action = null)
     {
+        if (!is_null($this->panel)) {
+            return;
+        }
+
         if (is_null($action)) {
             $action = $this->action;
         }

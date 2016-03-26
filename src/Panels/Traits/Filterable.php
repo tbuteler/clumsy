@@ -15,7 +15,7 @@ trait Filterable
 
     public function filters()
     {
-        return property_exists($this, 'filters') ? $this->filters : [];
+        return $this->getOptionalProperty('filters', []);
     }
 
     public function isUsingFilters()
@@ -25,7 +25,7 @@ trait Filterable
 
     public function filterEquivalence()
     {
-        $filterEquivalence = property_exists($this, 'filterEquivalence') ? $this->filterEquivalence : [];
+        $filterEquivalence = $this->getOptionalProperty('filterEquivalence', []);
         return array_merge($this->columnEquivalence(), $filterEquivalence);
     }
 
