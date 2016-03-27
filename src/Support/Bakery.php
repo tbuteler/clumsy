@@ -5,7 +5,6 @@ namespace Clumsy\CMS\Support;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
 use Clumsy\CMS\Support\ResourceNameResolver;
-use Clumsy\Utils\Facades\HTTP;
 
 class Bakery
 {
@@ -64,7 +63,7 @@ class Bakery
                         $parentResourceName = $parent->resourceName();
                         $parentRoutePrefix = $this->prefix ? "{$this->prefix}.{$parentResourceName}" : $parentResourceName;
 
-                        $parentCrumbs[$this->labeler->displayNamePlural($current)] = HTTP::queryStringAdd($this->url->route("{$parentRoutePrefix}.edit", $parent->id), 'show', $resourceName);
+                        $parentCrumbs[$this->labeler->displayNamePlural($current)] = app('clumsy.http')->queryStringAdd($this->url->route("{$parentRoutePrefix}.edit", $parent->id), 'show', $resourceName);
                         $parentCrumbs[trans('clumsy::titles.edit_item', ['resource' => $this->labeler->displayName($parent)])] = $this->url->route("{$parentRoutePrefix}.edit", $parent->id);
                         $parentCrumbs[$this->labeler->displayNamePlural($parent)] = $this->url->route("{$parentRoutePrefix}.index");
 

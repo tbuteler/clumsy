@@ -2,8 +2,6 @@
 
 namespace Clumsy\CMS\Panels\Traits;
 
-use Clumsy\Utils\Facades\HTTP;
-
 trait Toggable
 {
     protected $toggled;
@@ -61,7 +59,7 @@ trait Toggable
                 return $baseUrl;
             }
 
-            return HTTP::queryStringAdd($baseUrl, $this->resourceName().'-type', $index);
+            return app('clumsy.http')->queryStringAdd($baseUrl, $this->resourceName().'-type', $index);
         }
 
         if ($index === 'all') {

@@ -8,7 +8,6 @@ use Clumsy\CMS\Support\ResourceNameResolver;
 use Clumsy\CMS\Support\ViewResolver;
 use Clumsy\CMS\Facades\Clumsy;
 use Clumsy\Assets\Facade as Asset;
-use Clumsy\Utils\Facades\HTTP;
 
 trait Panel
 {
@@ -359,7 +358,7 @@ trait Panel
 
     public function persistResourceOn($url, $key = 'show')
     {
-        return HTTP::queryStringAdd($url, $key, $this->resourceName());
+        return app('clumsy.http')->queryStringAdd($url, $key, $this->resourceName());
     }
 
     public function prepareAndRender($eager = false)

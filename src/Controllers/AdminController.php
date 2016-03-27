@@ -3,10 +3,6 @@
 namespace Clumsy\CMS\Controllers;
 
 use InvalidArgumentException;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
-use Clumsy\Utils\Facades\HTTP;
-use Clumsy\CMS\Facades\Clumsy;
 
 class AdminController extends APIController
 {
@@ -104,7 +100,7 @@ class AdminController extends APIController
             $panel = studly_case($action);
         }
 
-        $this->panel = Clumsy::panel("{$this->resource}.{$panel}");
+        $this->panel = app('clumsy')->panel("{$this->resource}.{$panel}");
 
         $this->panel->hierarchy($this->modelHierarchy);
         $this->panel->query($this->query);
@@ -223,7 +219,7 @@ class AdminController extends APIController
             foreach ($this->modelHierarchy['children'] as $child) {
                 $childResource = $child->resourceName();
                 $panel = $this->request->get('reorder') === $childResource ? 'reorder' : 'table';
-                $panel = Clumsy::panel("{$childResource}.{$panel}")->inner();
+                $panel = app('clumsy')->panel("{$childResource}.{$panel}")->inner();
 
                 $panel->hierarchy(['parents' => $parents, 'current' => $child]);
 
@@ -287,7 +283,7 @@ class AdminController extends APIController
             $parentResource = $this->model->parentResourceName();
             $parentRoutePrefix = $this->adminPrefix ? "{$this->adminPrefix}.{$parentResource}" : $parentResource;
             $url = route("{$parentRoutePrefix}.edit", $this->model->parentItemId($id));
-            $url = HTTP::queryStringAdd($url, 'show', $this->resource);
+            $url = app('clumsy.http')->queryStringAdd($url, 'show', $this->resource);
         }
 
         $response = parent::destroy($id);
@@ -310,12 +306,12 @@ class AdminController extends APIController
     public function sort()
     {
         if ($this->request->get('reset') !== null) {
-            Session::forget("clumsy.order.{$this->resource}");
+            session()->forget("clumsy.order.{$this->resource}");
         } else {
-            Session::put("clumsy.order.{$this->resource}", [$this->request->get('column'), $this->request->get('direction')]);
+            session(["clumsy.order.{$this->resource}" => [$this->request->get('column'), $this->request->get('direction')]]);
         }
 
-        return redirect(HTTP::queryStringAdd(URL::previous(), 'show', $this->resource));
+        return redirect(app('clumsy.http')->queryStringAdd(app('url')->previous(), 'show', $this->resource));
     }
 
     public function reorder()
@@ -357,12 +353,12 @@ class AdminController extends APIController
         }
 
         $identifier = $this->request->get('parent_id') ? '.'.$this->request->get('parent_id') : null;
-        Session::put("clumsy.filter.{$this->resource}{$identifier}", $filter);
+        session(["clumsy.filter.{$this->resource}{$identifier}" => $filter]);
 
-        $url = HTTP::queryStringRemove(URL::previous(), 'page');
+        $url = app('clumsy.http')->queryStringRemove(app('url')->previous(), 'page');
         $query_string = $this->request->get('query_string');
         if ($query_string && !str_contains($url, $query_string)) {
-            $url = HTTP::queryStringAdd($url, $this->request->get('query_string'), false);
+            $url = app('clumsy.http')->queryStringAdd($url, $this->request->get('query_string'));
         }
 
         return redirect($url);

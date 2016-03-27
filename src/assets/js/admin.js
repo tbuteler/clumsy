@@ -16,10 +16,10 @@ $(function(){
         }
     });
 
-    $('.delete').click(function(e){
+    $('.delete').click(function(){
         $(this).closest('form').next('.delete-form').submit();
     });
-    $('.delete-form').submit(function(e){
+    $('.delete-form').submit(function(){
         var msg = $(this).hasClass('user') ? handover.admin.strings.delete_confirm_user : handover.admin.strings.delete_confirm;
         if (confirm(msg)) {
             var $form = $(this).prev('form');
@@ -35,7 +35,7 @@ $(function(){
         $el = $(event.target);
         if ($el.hasClass('with-tooltip')){
             $el.tooltip('destroy');
-            $el.one('hide.bs.dropdown', function(event) {
+            $el.one('hide.bs.dropdown', function() {
                 $el.tooltip();
             });
         }

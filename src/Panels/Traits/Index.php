@@ -8,8 +8,6 @@ use Clumsy\CMS\Panels\Traits\Sortable;
 use Clumsy\CMS\Panels\Traits\Reorderable;
 use Clumsy\CMS\Panels\Traits\Filterable;
 use Clumsy\CMS\Panels\Traits\Toggable;
-use Clumsy\CMS\Facades\Clumsy;
-use Clumsy\Utils\Facades\HTTP;
 
 trait Index
 {
@@ -30,7 +28,7 @@ trait Index
         }
 
         if ($this->isChild()) {
-            $addResourceUrl = HTTP::queryStringAdd($addResourceUrl, 'parent', $this->getParentModelId());
+            $addResourceUrl = app('clumsy.http')->queryStringAdd($addResourceUrl, 'parent', $this->getParentModelId());
         }
 
         $this->setData([
@@ -123,18 +121,18 @@ trait Index
                 $html = '<span class="caret"></span>';
 
                 if ('desc' === $direction) {
-                    $url = HTTP::queryStringAdd($url, 'reset');
+                    $url = app('clumsy.http')->queryStringAdd($url, 'reset');
                 } else {
-                    $url = HTTP::queryStringAdd($url, 'column', $column);
-                    $url = HTTP::queryStringAdd($url, 'direction', 'desc');
+                    $url = app('clumsy.http')->queryStringAdd($url, 'column', $column);
+                    $url = app('clumsy.http')->queryStringAdd($url, 'direction', 'desc');
                 }
             } else {
-                $url = HTTP::queryStringAdd($url, 'column', $column);
-                $url = HTTP::queryStringAdd($url, 'direction', 'asc');
+                $url = app('clumsy.http')->queryStringAdd($url, 'column', $column);
+                $url = app('clumsy.http')->queryStringAdd($url, 'direction', 'asc');
             }
         } else {
-            $url = HTTP::queryStringAdd($url, 'column', $column);
-            $url = HTTP::queryStringAdd($url, 'direction', 'asc');
+            $url = app('clumsy.http')->queryStringAdd($url, 'column', $column);
+            $url = app('clumsy.http')->queryStringAdd($url, 'direction', 'asc');
         }
 
         $html = "<a href=\"{$url}\" class=\"{$class}\">{$name}</a>{$html}";
