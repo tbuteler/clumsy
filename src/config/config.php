@@ -43,7 +43,7 @@ return [
      |
      */
 
-    'authentication-middleware' => [],
+    'authentication-middleware' => ['web'],
 
     /*
      |--------------------------------------------------------------------------
