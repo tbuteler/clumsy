@@ -199,7 +199,7 @@ trait Panel
 
     public function getType()
     {
-        return $this->getOptionalProperty('type', str_slug(class_basename($this)));
+        return property_exists($this, 'type') ? $this->type : str_slug(class_basename($this));
     }
 
     public function is($type)
