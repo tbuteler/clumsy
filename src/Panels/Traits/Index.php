@@ -180,10 +180,10 @@ trait Index
 
         return $this->{$method}($column, $item->$column, [
 
-            "id:ei-{$column}-{$item->id}",
-            "setClass:editable-inline",
-            "dataId:{$item->id}",
-            "dataColumn:{$column}",
+            'id'         => "ei-{$column}-{$item->id}",
+            'setClass'   => 'editable-inline',
+            'dataId'     => "{$item->id}",
+            'dataColumn' => "{$column}",
 
         ], $this->columnName($column));
     }

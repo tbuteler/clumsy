@@ -2,7 +2,9 @@
 	<div class="panel-heading">
 		<ul class="nav nav-pills" role="tablist">
 		@foreach ($locales as $locale => $language)
-			<li{!! $locale === $first ? ' class="active"' : '' !!}><a href="#{{ $locale }}" role="tab" data-toggle="pill">{{ $language['native'] }}</a></li>
+			<li{!! $locale === $first ? ' class="active"' : '' !!}>
+                <a href="#{{ $locale }}" role="tab" data-toggle="pill">{{ title_case($language['native']) }}</a>
+            </li>
 		@endforeach
 		</ul>
 	</div>
