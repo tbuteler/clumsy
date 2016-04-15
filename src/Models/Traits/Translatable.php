@@ -65,11 +65,16 @@ trait Translatable
         return $this->localizeOrderBy($query, $column, $direction);
     }
 
-    public function scopeListsWithId($query, $column)
+    public function scopePluckWithId($query, $column)
     {
         $column = $this->localizeColumn($column);
 
-        return $query->lists($column, 'id');
+        return $query->pluck($column, 'id');
+    }
+
+    public function scopeListsWithId($query, $column)
+    {
+        return $this->scopePluckWithId($query, $column);
     }
 
     public function hasTranslatableGetMutator($key)

@@ -63,7 +63,7 @@ trait Groupable
 
     public function inGroup()
     {
-        $groups = $this->groups->lists('name')->toArray();
+        $groups = $this->groups->pluck('name')->toArray();
 
         foreach (func_get_args() as $groupName) {
 
@@ -77,6 +77,6 @@ trait Groupable
 
     public function getGroupIds()
     {
-        return $this->groups->lists('id')->toArray();
+        return $this->groups->pluck('id')->toArray();
     }
 }
