@@ -177,6 +177,7 @@ $(function(){
             var initializeMap = function() {
                 var mapOptions = $.extend(
                     {
+                        scrollwheel: false,
                         center: {
                             lat: 38.709792,
                             lng: -9.133609
