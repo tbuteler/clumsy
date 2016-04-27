@@ -5,6 +5,7 @@ namespace Clumsy\CMS\Models\Traits;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Support\Str;
 
 trait AdminUser
 {
@@ -36,7 +37,17 @@ trait AdminUser
 
     public function getUsergroupAttribute()
     {
-        return $this->isGroupable() ? str_singular($this->groups->implode('name', ', ')) : null;
+        if ($this->isGroupable()) {
+            $usergroup = str_singular($this->groups->implode('name', ', '));
+            $usergroupLower = Str::lower($usergroup);
+            if (trans()->has("clumsy::fields.roles.{$usergroupLower}")) {
+                return trans("clumsy::fields.roles.{$usergroupLower}");
+            }
+
+            return $usergroup;
+        }
+
+        return null;
     }
 
     public function nameArray()

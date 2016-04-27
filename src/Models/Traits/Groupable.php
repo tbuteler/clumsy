@@ -29,7 +29,7 @@ trait Groupable
     {
         foreach (func_get_args() as $groupName) {
 
-            if ($groupName === 'Users') {
+            if ($groupName === 'User') {
                 continue;
             }
 
@@ -42,7 +42,7 @@ trait Groupable
     {
         foreach (func_get_args() as $groupName) {
 
-            if ($groupName === 'Users') {
+            if ($groupName === 'User') {
                 continue;
             }
 
@@ -67,7 +67,7 @@ trait Groupable
 
         foreach (func_get_args() as $groupName) {
 
-            if (in_array($groupName, $groups) || (empty($groups) && $groupName === 'Users')) {
+            if (in_array($groupName, $groups) || (empty($groups) && $groupName === 'User')) {
                 return true;
             }
         }

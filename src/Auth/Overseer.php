@@ -2,12 +2,13 @@
 
 namespace Clumsy\CMS\Auth;
 
-use Illuminate\Foundation\Application;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Auth\Passwords\DatabaseTokenRepository as DbRepository;
 use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Str;
 use Clumsy\CMS\Models\BaseModel;
 use Clumsy\CMS\Models\Group;
 use Clumsy\CMS\Policies\UserPolicy;
@@ -134,7 +135,14 @@ class Overseer
 
     public function getAvailableGroups()
     {
-        return [null => 'Users'] + Group::lists('name', 'id')->toArray();
+        $groups = [null => 'User'] + Group::pluck('name', 'id')->toArray();
+        return array_map(function ($group) {
+            $groupLower = Str::lower(str_singular($group));
+            if (trans()->has("clumsy::fields.roles.{$groupLower}")) {
+                return trans("clumsy::fields.roles.{$groupLower}");
+            }
+            return $group;
+        }, $groups);
     }
 
     public function canManageUsers()

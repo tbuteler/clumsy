@@ -22,9 +22,9 @@ return [
 
     'back-to-login'    => 'Voltar ao login',
 
-    'role'             => 'Função',
+    'role'             => 'Nível de acesso',
 
-    'current_role'     => 'Função actual',
+    'current_role'     => 'Nível de acesso actual',
 
     'change_password'  => 'Mudar palavra-passe',
 

@@ -22,9 +22,9 @@ return [
 
     'back-to-login'    => 'Back to login',
 
-    'role'             => 'Role',
+    'role'             => 'Access level',
 
-    'current_role'     => 'Current role',
+    'current_role'     => 'Current access level',
 
     'change_password'  => 'Change password',
 

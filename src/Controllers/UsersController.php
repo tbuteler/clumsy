@@ -22,7 +22,7 @@ class UsersController extends AdminController
                     'email' => trans('clumsy::fields.email'),
                 ])
                 ->setData([
-                    'groups' => array_map('str_singular', Overseer::getAvailableGroups()),
+                    'groups' => Overseer::getAvailableGroups(),
                 ]);
     }
 
