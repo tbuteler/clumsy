@@ -4,8 +4,8 @@ namespace Clumsy\CMS\Policies;
 
 class BasePolicy
 {
-    public function before($user, $ability)
+    public function before($user)
     {
-        return (!$user->isGroupable() || $user->inGroup('Administrators', 'Editors'));
+        return (!$user->isGroupable() || $user->inGroup('Administrator', 'Editor'));
     }
 }

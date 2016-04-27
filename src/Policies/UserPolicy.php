@@ -7,7 +7,7 @@ class UserPolicy
     public function before($user, $ability)
     {
         if ($ability !== 'destroy') {
-            if ($user->isGroupable() && $user->inGroup('Administrators')) {
+            if ($user->isGroupable() && $user->inGroup('Administrator')) {
                 return true;
             }
         }
