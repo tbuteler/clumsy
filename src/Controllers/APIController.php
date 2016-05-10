@@ -3,7 +3,7 @@
 namespace Clumsy\CMS\Controllers;
 
 use InvalidArgumentException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
@@ -133,7 +133,7 @@ class APIController extends Controller
 
             $this->authorize($action, $this->getPolicyItem($item));
 
-        } catch (HttpException $e) {
+        } catch (AuthorizationException $e) {
 
             return false;
         }

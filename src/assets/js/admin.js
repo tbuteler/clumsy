@@ -47,9 +47,9 @@ $(function(){
             selector: ".rich-text",
             content_css: handover.admin.urls.base+'/../vendor/clumsy/cms/css/tinymce.css',
             menubar : false,
-            toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist | removeformat",
+            toolbar: "undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link | removeformat",
             statusbar : false,
-            plugins: "autoresize"
+            plugins: "autoresize,link"
         },
         typeof handover.admin.tinymce === 'undefined' ? {} : handover.admin.tinymce
         ));
