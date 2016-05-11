@@ -7,16 +7,10 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Application;
-use Clumsy\Assets\Facade as Asset;
-use Clumsy\Eminem\Facade as MediaManager;
 use Clumsy\CMS\Facades\Clumsy;
 use Clumsy\CMS\Models\BaseModel;
-use Clumsy\CMS\Facades\Overseer;
 
 class APIController extends Controller
 {
@@ -180,26 +174,31 @@ class APIController extends Controller
             return $this->code(403);
         }
 
-        $validator = Validator::make($data = Input::all(), $this->model->rules());
+        $validator = Validator::make($data = request()->all(), $this->model->rules());
 
         if ($validator->fails()) {
             return $this->content($validator->messages(), 400);
         }
 
         foreach ($this->model->booleans() as $check) {
-            if (!Input::has($check)) {
+            if (!request()->has($check)) {
                 $data[$check] = 0;
             }
         }
 
-        $item = $this->model->create($data);
+        $item = $this->triggerStore($data);
 
         // Fire custom Clumsy model events, so controllers can further manipulate
         // items without fear of infinite loops
-        Event::fire("clumsy.created: {$this->modelBaseName}", [$item]);
-        Event::fire("clumsy.saved: {$this->modelBaseName}", [$item]);
+        event("clumsy.created: {$this->modelBaseName}", [$item]);
+        event("clumsy.saved: {$this->modelBaseName}", [$item]);
 
         return $this->content($item->id, 200);
+    }
+
+    public function triggerStore($data)
+    {
+        return $this->model->create($data);
     }
 
     public function show($id)
@@ -221,7 +220,7 @@ class APIController extends Controller
      */
     public function update($id)
     {
-        $data = Input::all();
+        $data = request()->all();
 
         // Use existing model for validation to account for conditional rules
         $item = $this->getItem($id);
@@ -240,21 +239,24 @@ class APIController extends Controller
         }
 
         foreach ($this->model->booleans() as $check) {
-            if (!Input::has($check)) {
+            if (!request()->has($check)) {
                 $data[$check] = 0;
-            } else {
-                $item[$check] = 'boolean';
             }
         }
 
-        $item->update($data);
+        $this->triggerUpdate($item, $data);
 
         // Fire custom Clumsy model events, so controllers can further manipulate
         // items without fear of infinite loops
-        Event::fire("clumsy.updated: {$this->modelBaseName}", [$item]);
-        Event::fire("clumsy.saved: {$this->modelBaseName}", [$item]);
+        event("clumsy.updated: {$this->modelBaseName}", [$item]);
+        event("clumsy.saved: {$this->modelBaseName}", [$item]);
 
         return $this->code(200);
+    }
+
+    public function triggerUpdate($item, $data)
+    {
+        $item->update($data);
     }
 
     /**

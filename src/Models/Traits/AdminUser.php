@@ -17,6 +17,7 @@ trait AdminUser
             'name'     => 'required|max:255',
             'email'    => 'required|email|max:255|unique:'.$this->getTable().',email,'.$this->getKey(),
             'password' => 'required|confirmed|min:6|max:255',
+            'new_password' => 'confirmed|min:6|max:255',
         ];
     }
 

@@ -37,6 +37,15 @@ class UsersController extends AdminController
         return parent::edit($id);
     }
 
+    public function triggerUpdate($item, $data)
+    {
+        if (isset($data['new_password'])) {
+            $data['password'] = $data['new_password'];
+        }
+
+        return parent::triggerUpdate($item, $data);
+    }
+
     public function destroy($id)
     {
         if (Overseer::user()->id == $id) {
