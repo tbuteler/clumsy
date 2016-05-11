@@ -81,7 +81,7 @@ class Overseer
 
             $tokens = $app['clumsy.password.tokens'];
 
-            $users = $app['clumsy.auth']->driver()->getProvider();
+            $users = $app['clumsy.auth']->getProvider();
 
             $view = 'clumsy::emails.auth.reset';
 

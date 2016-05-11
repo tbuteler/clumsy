@@ -186,7 +186,7 @@ class AuthController extends Controller
         ));
 
         $response = Overseer::password()->reset($credentials, function ($user, $password) {
-            $user->password = bcrypt($password);
+            $user->password = $password;
             $user->save();
             Overseer::login($user);
         });
