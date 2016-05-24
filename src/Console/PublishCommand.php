@@ -31,6 +31,11 @@ class PublishCommand extends Command
      */
     public function handle()
     {
+        if (!file_exists(getcwd().'/bootstrap/app.php')) {
+            $this->info("Not inside an app directory. Publishing aborted.");
+            return;
+        }
+
         $packages = [
             'Clumsy Utils'  => 'Clumsy\Utils\UtilsServiceProvider',
             'Clumsy Eminem' => 'Clumsy\Eminem\EminemServiceProvider',
