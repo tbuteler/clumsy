@@ -192,9 +192,11 @@ trait Panel
             'isChild'     => $this->isChild(),
         ]);
 
-        Asset::json('admin', [
-            'resource' => $this->resourceName(),
-        ]);
+        if (!$this->isChild()) {
+            Asset::json('admin', [
+                'resource' => $this->resourceName(),
+            ]);
+        }
     }
 
     public function getType()
