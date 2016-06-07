@@ -1,12 +1,17 @@
 {
   "name": "ClumsyCMS",
   "description": "A CMS for Laravel",
-  "version": "0.25.0",
+  "version": "0.26.2",
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*"
+  },
+  "eslintConfig": {
+    "globals": {
+        "$": false
+    }
   }
 }
