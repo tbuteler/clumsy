@@ -102,12 +102,7 @@ class Clumsy
         $this->app['clumsy.assets']->json('admin', [
             'prefix' => $this->prefix(),
             'urls' => [
-                'base'   => url($this->prefix()),
-            ],
-            'strings' => [
-                'filter_no_results'   => trans('clumsy::fields.filter-no-results'),
-                'delete_confirm'      => trans('clumsy::alerts.delete_confirm'),
-                'delete_confirm_user' => trans('clumsy::alerts.user.delete_confirm'),
+                'base' => url($this->prefix()),
             ],
         ]);
     }

@@ -11,7 +11,7 @@
 				<tr>
 					<th>{{ $filterData['names'][$column] }}</th>
 					<td>
-					{!!	Field::dropdown()->noLabel()->options($items)->selected($filterData['selected'][$column])->multiple()->dataName(str_replace('.', ':', $column))->dataPlaceholder(' ') !!}
+					{!!	Field::dropdown()->noLabel()->options($items)->selected($filterData['selected'][$column])->multiple()->dataName(str_replace('.', ':', $column))->dataPlaceholder(' ')->dataNoResultsText(trans('clumsy::fields.filter-no-results')) !!}
 					</td>
 				</tr>
 			@endforeach

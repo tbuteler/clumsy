@@ -18,7 +18,7 @@ return [
 
     'required_by'    => 'The item can\'t be deleted because other resources depend on it. Please remove the related items first or delete their relationship and try again',
 
-    'delete_confirm' => 'Are you sure you want delete this item?',
+    'delete-confirm' => 'Are you sure you want delete this item?',
 
     'user'   => [
 
@@ -28,7 +28,7 @@ return [
 
         'deleted'   => 'User deleted.',
 
-        'delete_confirm' => 'Are you sure you want delete this user?',
+        'delete-confirm' => 'Are you sure you want delete this user?',
 
         'suicide'   => 'You cannot delete your own user.',
 

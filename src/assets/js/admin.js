@@ -20,10 +20,10 @@ $(function(){
         $(this).closest('form').next('.delete-form').submit();
     });
     $('.delete-form').submit(function(){
-        var msg = $(this).hasClass('user') ? handover.admin.strings.delete_confirm_user : handover.admin.strings.delete_confirm;
+        var $form = $(this).prev('form'),
+            $del = $('.delete', $form),
+            msg = $del.data('confirmText');
         if (confirm(msg)) {
-            var $form = $(this).prev('form');
-            var $del = $('.delete', $form);
             clickOnce($del);
             return true;
         }
@@ -228,26 +228,23 @@ $(function(){
     }
 
     if ($('.filter-box').length) {
-        var chosen_op = {
+        var $filterSelects = $('.filter-box select'),
+            chosenOptions = {
             width: '100%',
-            no_results_text: handover.admin.strings.filter_no_results
+            no_results_text: $filterSelects.first().data('no-results-text')
         };
 
-        $('.filter-box select').chosen(chosen_op);
-
-        $('.filter-box select').chosen().change(function(e,data){
-            $('#filter-submit-btn').removeAttr('disabled');
-
-            if (typeof data.selected != "undefined") {
+        $filterSelects.chosen(chosenOptions).change(function (e, data) {
+            $('#filter-submit-btn').prop('disabled', false);
+            if (typeof data.selected !== 'undefined') {
                $('#filter-form').append('<input type="hidden" name="'+$(this).data('name')+'[]" value="'+data.selected+'">');
-               $(this).parents('.filter-box').find('button').removeAttr('disabled');
+               $(this).parents('.filter-box').find('button').prop('disabled', false);
+               return true;
             }
-            else{
-                $('input[value="' + data.deselected + '"]').remove();
 
-                if ($('input[name="' + $(this).data('name') + '[]"]').length === 0) {
-                    $(this).parents('.filter-box').find('button').attr('disabled','');
-                }
+            $('input[value="'+data.deselected+'"]').remove();
+            if ($('input[name="'+$(this).data('name')+'[]"]').length === 0) {
+                $(this).parents('.filter-box').find('button').prop('disabled', true);
             }
         });
 

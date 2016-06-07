@@ -18,7 +18,7 @@ return [
 
     'required_by'    => 'O item não pode ser removido pois outros recursos dependem dele. Remova os itens relacionados primeiro ou seus vínculos e tente novamente.',
 
-    'delete_confirm' => 'Tem certeza que deseja remover este item?',
+    'delete-confirm' => 'Tem certeza que deseja remover este item?',
 
     'user'   => [
 
@@ -28,7 +28,7 @@ return [
 
         'deleted'   => 'O utilizador foi removido.',
 
-        'delete_confirm' => 'Tem certeza que deseja remover este utilizador?',
+        'delete-confirm' => 'Tem certeza que deseja remover este utilizador?',
 
         'suicide'   => 'Não é possível remover o seu próprio utilizador.',
 
