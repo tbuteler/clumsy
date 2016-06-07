@@ -125,7 +125,7 @@ class ViewResolver
         $domain = $domain ?: $this->domain;
 
         foreach ($this->levels as $level) {
-        // 4) Clumsy package with resource domain, runtime-defined actions and nested actions:
+            // 4) Clumsy package with resource domain, runtime-defined actions and nested actions:
             // - resources.level.nested(.nested-n).slug
             // - resources.level-n.nested(.nested-n).slug
             if ($domain && $this->view->exists("clumsy::{$domain}.$level.$slug")) {

@@ -189,7 +189,6 @@ class CMSServiceProvider extends ServiceProvider
                             }
                         ]);
 
-
                         /*
                         |--------------------------------------------------------------------------
                         | User resource

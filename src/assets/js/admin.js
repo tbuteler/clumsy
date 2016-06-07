@@ -32,7 +32,7 @@ $(function(){
 
     $('.with-tooltip').tooltip();
     $('.navbar').on('show.bs.dropdown', function(event) {
-        $el = $(event.target);
+        var $el = $(event.target);
         if ($el.hasClass('with-tooltip')){
             $el.tooltip('destroy');
             $el.one('hide.bs.dropdown', function() {
@@ -212,7 +212,7 @@ $(function(){
         });
     }
 
-    $editableInline = $('.editable-inline');
+    var $editableInline = $('.editable-inline');
     if ($editableInline.length) {
         $editableInline.click(function(e){
             e.stopPropagation();
