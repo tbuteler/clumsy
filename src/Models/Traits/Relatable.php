@@ -62,13 +62,18 @@ trait Relatable
 
     public function requiredBy()
     {
+        return property_exists($this, 'requiredBy') ? (array)$this->requiredBy : [];
+    }
+
+    public function requiredByModels()
+    {
         $requiredBy = collect();
 
         if (property_exists($this, 'requiredBy')) {
             foreach ((array)$this->requiredBy as $relationship) {
-                $requiredBy = $requiredBy->merge(
-                    $this->$relationship()->first() ? $this->$relationship()->first() : []
-                );
+                if ($item = $this->$relationship()->first()) {
+                    $requiredBy->push($item);
+                }
             }
         }
 
@@ -77,6 +82,6 @@ trait Relatable
 
     public function isRequiredByOthers()
     {
-        return !$this->requiredBy()->isEmpty();
+        return !$this->requiredByModels()->isEmpty();
     }
 }
