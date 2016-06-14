@@ -49,9 +49,6 @@ abstract class Generator
     public function data(array $data)
     {
         $this->templateData = $data;
-        if (!isset($data['namespace'])) {
-            $this->setData('namespace', $this->getNamespace());
-        }
     }
 
     public function setData($key, $value)
@@ -61,13 +58,13 @@ abstract class Generator
         return $this;
     }
 
-    public function getData($key = false)
+    public function getData($key = false, $default = null)
     {
         if (!$key) {
             return $this->templateData;
         }
 
-        return array_get($this->templateData, $key);
+        return array_get($this->templateData, $key, $default);
     }
 
     public function targetBase()
@@ -109,8 +106,21 @@ abstract class Generator
         return $file;
     }
 
+    protected function beforeMakeFile()
+    {
+        if ($this->getData('namespace', false) === false) {
+            $this->setData('namespace', $this->getNamespace());
+        }
+
+        if ($this->getData('model_with_namespace', false) === false) {
+            $this->setData('model_with_namespace', $this->getNamespace('model').'\\'.$this->getData('object_name'));
+        }
+    }
+
     protected function makeFile(File $file = null)
     {
+        $this->beforeMakeFile();
+
         if (is_null($file)) {
             $file = $this->newFileObject($this->targetFile(), $this->origin(), $this->templateData);
         }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Clumsy\CMS\Console;
 
 use Illuminate\Console\Command;

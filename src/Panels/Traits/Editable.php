@@ -7,6 +7,7 @@ use Collective\Html\FormFacade as Form;
 use Clumsy\CMS\Panels\Traits\Panel;
 use Clumsy\CMS\Panels\Traits\Translatable;
 use Clumsy\CMS\Panels\Traits\Location;
+use Clumsy\Utils\Facades\Field;
 
 trait Editable
 {
@@ -97,5 +98,18 @@ trait Editable
     public function buttons()
     {
         return [];
+    }
+
+    public function pivotField($resource, $label, $availableOptions, $options = '')
+    {
+        $output = Field::dropdown("{$resource}Ids[]", $label, $options)
+                       ->options($availableOptions)
+                       ->multiple()
+                       ->addClass('pivot-field')
+                       ->data('placeholder', ' ')
+                       ->data('no_results_text', trans('clumsy::fields.filter-no-results'));
+
+        $output .= Field::hidden("{$resource}IdsFlag", true);
+        return $output;
     }
 }

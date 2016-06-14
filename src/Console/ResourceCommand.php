@@ -1,4 +1,5 @@
 <?php
+
 namespace Clumsy\CMS\Console;
 
 use Illuminate\Console\Command;
@@ -10,7 +11,7 @@ use Clumsy\CMS\Generators\Filesystem\FileAlreadyExists;
  *
  * @author Tomas Buteler <tbuteler@gmail.com>
  */
-class ResourceCommand extends Command
+class ResourceCommand extends GeneratorCommand
 {
     /**
      * The console command name.
@@ -24,11 +25,7 @@ class ResourceCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Publish boilerplate for a Clumsy resource: migrations, seeds, controllers, model, panels and views';
-
-    protected $generators = [];
-
-    protected $templateData = [];
+    protected $description = 'Publishes boilerplate for a Clumsy resource: migrations, seeds, controllers, model, panels and views';
 
     /**
      * Execute the console command.
@@ -37,8 +34,8 @@ class ResourceCommand extends Command
      */
     public function handle()
     {
-        $resource = $this->getResourceName();
-        $resource_plural = $this->getPluralResourceName();
+        $resource = $this->getResourceSlug();
+        $resourceNamePluralInSnakeCase = $this->getResourceNamePluralInSnakeCase();
 
         $generates = [
             'model',
@@ -48,32 +45,20 @@ class ResourceCommand extends Command
             'table panel',
         ];
 
-        foreach ($generates as $generate) {
-
-            try {
-
-                $generatorClass = $this->getGeneratorClass($generate);
-                $generator = new $generatorClass;
-                $generator->data($this->getTemplateData());
-                $generator->make();
-
-                $this->generators[$generate] = $generator;
-
-                $this->info("Created [{$resource}] {$generate}");
-
-            } catch (FileAlreadyExists $e) {
-
-                $this->error("The file for a [{$resource}] {$generate} already exists! I don't want to overwrite it. Aborting...");
-
-                return false;
-            }
+        foreach ($generates as $key) {
+            $this->generate($key);
         }
 
-        $this->call('make:migration', ['name' => str_replace('-', '_', "create_{$resource_plural}_table")]);
+        $this->call('make:migration', ['name' => str_replace('-', '_', "create_{$resourceNamePluralInSnakeCase}_table")]);
 
-        $controller = $this->generators['controller']->targetName();
-        $seed = $this->generators['seed']->targetName();
-        $this->info("All done!\n- Add this to routes.php: [Route::resource('{$resource}', '{$controller}');]\n- Add this to DatabaseSeeder.php: [\$this->call({$seed}::class);]");
+        $controller = array_get($this->generators, 'controller');
+        $controller = $controller ? $controller->targetName() : null;
+        $controllerFeedback = $controller ? "\n- Add this to routes.php:\nRoute::resource('{$resource}', '{$controller}');" : null;
+
+        $seed = array_get($this->generators, 'seed');
+        $seed = $seed ? $seed->targetName() : null;
+        $seedFeedback = $seed ? "\n- Add this to DatabaseSeeder.php:\n\$this->call({$seed}::class);" : null;
+        $this->info("All done!{$controllerFeedback}{$seedFeedback}");
     }
 
     protected function getArguments()
@@ -81,45 +66,5 @@ class ResourceCommand extends Command
         return [
             ['resource_name', InputArgument::REQUIRED, 'The name of the desired Clumsy resource']
         ];
-    }
-
-    protected function getGeneratorClass($model)
-    {
-        return '\\Clumsy\\CMS\\Generators\\'.studly_case($model);
-    }
-
-    /**
-     * Fetch the template data.
-     *
-     * @return array
-     */
-    protected function getTemplateData()
-    {
-        return [
-            'name'               => $this->getResourceName(),
-            'plural'             => $this->getPluralResourceName(),
-            'object_name'        => $this->getObjectName(),
-            'object_name_plural' => $this->getPluralObjectName(),
-        ];
-    }
-
-    protected function getResourceName()
-    {
-        return snake_case($this->argument('resource_name'));
-    }
-
-    protected function getPluralResourceName()
-    {
-        return str_plural($this->getResourceName());
-    }
-
-    protected function getObjectName()
-    {
-        return studly_case($this->getResourceName());
-    }
-
-    protected function getPluralObjectName()
-    {
-        return studly_case($this->getPluralResourceName());
     }
 }

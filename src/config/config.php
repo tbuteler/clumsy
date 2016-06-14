@@ -175,11 +175,13 @@ return [
      |--------------------------------------------------------------------------
      */
 
-    'model-namespace'      => 'App',
+    'model-namespace'       => 'App',
 
-    'controller-namespace' => 'App\\Http\\Controllers',
+    'pivot-trait-namespace' => 'App\\Relations',
 
-    'panel-namespace'      => 'App\\Panels',
+    'controller-namespace'  => 'App\\Http\\Controllers',
+
+    'panel-namespace'       => 'App\\Panels',
 
     /*
      |--------------------------------------------------------------------------

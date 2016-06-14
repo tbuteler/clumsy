@@ -30,6 +30,13 @@ $(function(){
         return false;
     });
 
+    var $pivots = $('.pivot-field');
+    if ($pivots.length) {
+        $pivots.chosen({
+            width: '100%'
+        });
+    }
+
     $('.with-tooltip').tooltip();
     $('.navbar').on('show.bs.dropdown', function(event) {
         var $el = $(event.target);

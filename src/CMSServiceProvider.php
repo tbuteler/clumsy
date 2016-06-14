@@ -94,9 +94,14 @@ class CMSServiceProvider extends ServiceProvider
             return new Console\ResourceCommand();
         });
 
+        $this->app['command.clumsy.pivot'] = $this->app->share(function ($app) {
+            return new Console\PivotCommand();
+        });
+
         $this->commands([
             'command.clumsy.publish',
             'command.clumsy.resource',
+            'command.clumsy.pivot',
         ]);
     }
 

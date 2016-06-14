@@ -194,5 +194,9 @@ class Clumsy
         Blade::directive('breadcrumb', function ($expression) {
             return "<?php echo isset(\$panel) ? \$panel->getBakery()->render{$expression} : with(app()->make('Clumsy\CMS\Support\Bakery'))->render{$expression}; ?>";
         });
+
+        Blade::directive('pivot', function ($expression) {
+            return "<?php echo \$panel->pivotField{$expression}; ?>";
+        });
     }
 }

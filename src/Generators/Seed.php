@@ -17,15 +17,12 @@ class Seed extends Generator
 
     public function makeFile(File $file = null)
     {
-        $modelClass = $this->getNamespace('model').'\\'.$this->getData('object_name');
-        $this->setData('model', $modelClass);
+        parent::makeFile();
 
         $file = App::make(File::class);
         $stub = __DIR__.DIRECTORY_SEPARATOR.'stubs'.DIRECTORY_SEPARATOR.'factory.stub';
         $file->copyContentsFrom($stub, $this->getData());
 
         Filesystem::append(database_path('/factories/ModelFactory.php'), $file->getContents());
-
-        parent::makeFile();
     }
 }

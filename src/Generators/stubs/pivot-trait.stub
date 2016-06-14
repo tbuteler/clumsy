@@ -1,0 +1,36 @@
+<?php
+
+namespace {{namespace}};
+
+use {{model_with_namespace}};
+
+trait {{object_name}}Pivot
+{
+    public static function boot{{object_name}}Pivot()
+    {
+        self::saving(function ($model) {
+            $pivotIdsKey = "{{name}}Ids";
+            $flag = "{{name}}IdsFlag";
+
+            if (request()->has($flag)) {
+                $pivotIds = array_filter((array)request($pivotIdsKey));
+                self::saved(function ($model) use ($pivotIds) {
+                    $model->{{plural}}()->sync($pivotIds);
+                });
+            }
+            request()->replace(request()->except([$pivotIdsKey, $flag]));
+            unset($model->$pivotIdsKey);
+            unset($model->$flag);
+        });
+    }
+
+    public function {{plural}}()
+    {
+        return $this->belongsToMany({{object_name}}::class);
+    }
+
+    public function get{{object_name}}IdsAttribute()
+    {
+        return $this->{{plural}}->pluck('id')->toArray();
+    }
+}

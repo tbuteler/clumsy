@@ -6,7 +6,7 @@
 |--------------------------------------------------------------------------
 */
 
-$factory->define({{model}}::class, function (Faker\Generator $faker) {
+$factory->define({{model_with_namespace}}::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
     ];

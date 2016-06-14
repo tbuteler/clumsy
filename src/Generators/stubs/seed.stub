@@ -6,7 +6,7 @@ class {{object_name_plural}}Seeder extends Seeder
 {
 	public function run()
 	{
-        factory({{model}}::class, 50)->create()->each(function($item) {
+        factory({{model_with_namespace}}::class, 50)->create()->each(function($item) {
 
         });
 	}

@@ -8,6 +8,6 @@ class ViewsFolder extends Generator
 
     public function make()
     {
-        return $this->makeFolder($this->getData('name'));
+        return $this->makeFolder($this->getData('slug'));
     }
 }
