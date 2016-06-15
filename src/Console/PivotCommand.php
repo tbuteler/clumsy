@@ -36,7 +36,7 @@ class PivotCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $resource = $this->getResource();
+        $resource = $this->getResourceSlug();
         $this->parsePivots();
 
         $this->generate($resource, 'pivot-trait');

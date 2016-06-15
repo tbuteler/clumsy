@@ -114,7 +114,7 @@ abstract class GeneratorCommand extends Command
 
         foreach ($this->option('pivot') as $pivots) {
             foreach (explode(',', $pivots) as $pivot) {
-                $this->pivotResources->push($pivot);
+                $this->pivotResources->push($this->getResourceSlug($pivot));
             }
         }
     }

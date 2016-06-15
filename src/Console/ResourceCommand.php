@@ -50,7 +50,7 @@ class ResourceCommand extends GeneratorCommand
             $this->registerPivotResource($pivot);
         }
 
-        $this->generateResource($this->getResource(), $this->pivotResources);
+        $this->generateResource($this->getResourceSlug(), $this->pivotResources);
 
         foreach ($this->pivotResources as $pivot) {
             $this->createPivotResource($pivot);
