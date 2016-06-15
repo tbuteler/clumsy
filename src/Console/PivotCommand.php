@@ -14,18 +14,20 @@ use Clumsy\CMS\Generators\Filesystem\FileAlreadyExists;
 class PivotCommand extends GeneratorCommand
 {
     /**
-     * The console command name.
+     * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'clumsy:pivot';
+    protected $signature = 'clumsy:pivot
+                            {resource : The name of the resource to pivot}
+                            {--pivot=* : In order to create a pivot table migration, specify the related resource(s)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Publishes a Trait for creating a pivot relationship with a given resource';
+    protected $description = 'Publish a Trait for creating a pivot relationship with a given resource';
 
     /**
      * Execute the console command.
@@ -34,20 +36,21 @@ class PivotCommand extends GeneratorCommand
      */
     public function handle()
     {
-        $this->generate('pivot-trait');
-    }
+        $resource = $this->getResource();
+        $this->parsePivots();
 
-    protected function getTemplateData()
-    {
-        return array_merge(parent::getTemplateData(), [
-            'model_namespace' => config("clumsy.cms.model-namespace"),
-        ]);
-    }
+        $this->generate($resource, 'pivot-trait');
 
-    protected function getArguments()
-    {
-        return [
-            ['resource_name', InputArgument::REQUIRED, 'The name of the Clumsy resource to be pivoted']
-        ];
+        foreach ($this->pivotResources as $pivot) {
+            $resources = [
+                $resource,
+                $pivot,
+            ];
+            asort($resources);
+            $this->generate($resource, 'migration-pivot', [
+                'a' => $this->generateTemplateData(array_shift($resources)),
+                'b' => $this->generateTemplateData(array_shift($resources)),
+            ]);
+        }
     }
 }

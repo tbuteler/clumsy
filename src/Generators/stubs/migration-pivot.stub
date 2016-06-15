@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class Create{{a.objectName}}{{b.objectName}}Table extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('{{a.nameInSnakeCase}}_{{b.nameInSnakeCase}}', function (Blueprint $table) {
+            $table->integer('{{a.nameInSnakeCase}}_id')->unsigned();
+            $table->integer('{{b.nameInSnakeCase}}_id')->unsigned();
+            $table->foreign('{{a.nameInSnakeCase}}_id')->references('id')->on('{{a.pluralInSnakeCase}}')->onDelete('cascade');
+            $table->foreign('{{b.nameInSnakeCase}}_id')->references('id')->on('{{b.pluralInSnakeCase}}')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('{{a.nameInSnakeCase}}_{{b.nameInSnakeCase}}', function (Blueprint $table) {
+            $table->dropForeign('{{a.nameInSnakeCase}}_{{b.nameInSnakeCase}}_{{a.nameInSnakeCase}}_id_foreign');
+            $table->dropForeign('{{a.nameInSnakeCase}}_{{b.nameInSnakeCase}}_{{b.nameInSnakeCase}}_id_foreign');
+        });
+
+        Schema::drop('{{a.nameInSnakeCase}}_{{b.nameInSnakeCase}}');
+    }
+}

@@ -6,6 +6,6 @@ class Controller extends Generator
 {
     public function targetName()
     {
-        return array_get($this->templateData, 'object_name_plural').'Controller';
+        return array_get($this->templateData, 'objectNamePlural').'Controller';
     }
 }

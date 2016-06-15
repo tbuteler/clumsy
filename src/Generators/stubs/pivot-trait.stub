@@ -2,11 +2,11 @@
 
 namespace {{namespace}};
 
-use {{model_with_namespace}};
+use {{modelWithNamespace}};
 
-trait {{object_name}}Pivot
+trait {{objectName}}Pivot
 {
-    public static function boot{{object_name}}Pivot()
+    public static function boot{{objectName}}Pivot()
     {
         self::saving(function ($model) {
             $pivotIdsKey = "{{name}}Ids";
@@ -26,10 +26,10 @@ trait {{object_name}}Pivot
 
     public function {{plural}}()
     {
-        return $this->belongsToMany({{object_name}}::class);
+        return $this->belongsToMany({{objectName}}::class);
     }
 
-    public function get{{object_name}}IdsAttribute()
+    public function get{{objectName}}IdsAttribute()
     {
         return $this->{{plural}}->pluck('id')->toArray();
     }

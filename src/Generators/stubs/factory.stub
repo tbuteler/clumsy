@@ -2,11 +2,11 @@
 
 /*
 |--------------------------------------------------------------------------
-| {{object_name}} Factory
+| {{objectName}} Factory
 |--------------------------------------------------------------------------
 */
 
-$factory->define({{model_with_namespace}}::class, function (Faker\Generator $faker) {
+$factory->define({{modelWithNamespace}}::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
     ];

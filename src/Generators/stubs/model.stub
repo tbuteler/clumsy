@@ -4,10 +4,10 @@ namespace {{namespace}};
 
 use Clumsy\CMS\Models\BaseModel;
 use Clumsy\Eminem\Traits\Mediable;
-
-class {{object_name}} extends BaseModel
+{{pivotUseDeclarations}}
+class {{objectName}} extends BaseModel
 {
-    use Mediable;
+    use Mediable{{pivotTraits}};
 
     public $rules = [];
     public $casts = [];

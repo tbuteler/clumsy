@@ -54,7 +54,7 @@ class File
 
     public function make()
     {
-        if ($this->file->exists($this->name)) {
+        if ($this->exists()) {
             throw new FileAlreadyExists;
         }
 
@@ -73,5 +73,10 @@ class File
         $this->make();
 
         return $this;
+    }
+
+    public function exists()
+    {
+        return $this->file->exists($this->name);
     }
 }

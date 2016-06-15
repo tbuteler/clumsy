@@ -13,52 +13,30 @@ use Clumsy\CMS\Generators\Filesystem\FileAlreadyExists;
  */
 abstract class GeneratorCommand extends Command
 {
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'clumsy:resource';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Publish boilerplate for a Clumsy resource: migrations, seeds, controllers, model, panels and views';
-
     protected $generators = [];
 
     protected $templateData = [];
 
-    protected function generate($key)
+    protected $pivotResources;
+
+    protected function generate($resource, $key, $data = null)
     {
-        $resource = $this->getResourceName();
-
         try {
-
-            $generatorClass = $this->getGeneratorClass($key);
-            $generator = new $generatorClass;
-            $generator->data($this->getTemplateData());
+            $generator = $this->newGenerator($key);
+            $generator->data($data ?: $this->generateTemplateData($resource));
             $generator->make();
 
-            $this->generators[$key] = $generator;
+            array_set($this->generators, "{$key}.{$resource}", $generator);
 
-            $this->info("Created [{$resource}] {$key}");
+            $generator = $generator->readableName();
+            $this->info("Created [{$resource}] {$generator}");
 
         } catch (FileAlreadyExists $e) {
-
-            $this->error("The file for a [{$resource}] {$key} already exists! I don't want to overwrite it. Aborting...");
+            $generator = $generator->readableName();
+            $this->error("The file for a [{$resource}] {$generator} already exists! Aborting...");
 
             return false;
         }
-    }
-
-    protected function getArguments()
-    {
-        return [
-            ['resource_name', InputArgument::REQUIRED, 'The name of the desired Clumsy resource']
-        ];
     }
 
     protected function getGeneratorClass($model)
@@ -66,56 +44,78 @@ abstract class GeneratorCommand extends Command
         return '\\Clumsy\\CMS\\Generators\\'.studly_case($model);
     }
 
+    protected function newGenerator($key)
+    {
+        $generatorClass = $this->getGeneratorClass($key);
+        return app()->make($generatorClass);
+    }
+
     /**
      * Fetch the template data.
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function generateTemplateData($resource = null)
     {
         return [
-            'name'               => $this->getResourceName(),
-            'plural'             => $this->getPluralResourceName(),
-            'nameInSnakeCase'    => $this->getResourceNameInSnakeCase(),
-            'pluralInSnakeCase'  => $this->getResourceNamePluralInSnakeCase(),
-            'slug'               => $this->getResourceSlug(),
-            'object_name'        => $this->getObjectName(),
-            'object_name_plural' => $this->getPluralObjectName(),
+            'name'              => $this->getResourceName($resource),
+            'plural'            => $this->getPluralResourceName($resource),
+            'nameInSnakeCase'   => $this->getResourceNameInSnakeCase($resource),
+            'pluralInSnakeCase' => $this->getResourceNamePluralInSnakeCase($resource),
+            'slug'              => $this->getResourceSlug($resource),
+            'objectName'        => $this->getObjectName($resource),
+            'objectNamePlural'  => $this->getPluralObjectName($resource),
         ];
     }
 
-    protected function getResourceName()
+    protected function getResource()
     {
-        return camel_case($this->argument('resource_name'));
+        return $this->argument('resource');
     }
 
-    protected function getPluralResourceName()
+    protected function getResourceName($resource = null)
     {
-        return str_plural($this->getResourceName());
+        return camel_case($resource ?: $this->getResource());
     }
 
-    protected function getResourceNameInSnakeCase()
+    protected function getPluralResourceName($resource = null)
     {
-        return snake_case(camel_case($this->argument('resource_name')));
+        return str_plural($this->getResourceName($resource));
     }
 
-    protected function getResourceNamePluralInSnakeCase()
+    protected function getResourceNameInSnakeCase($resource = null)
     {
-        return str_plural($this->getResourceNameInSnakeCase());
+        return snake_case(camel_case($resource ?: $this->getResource()));
     }
 
-    protected function getResourceSlug()
+    protected function getResourceNamePluralInSnakeCase($resource = null)
     {
-        return str_slug($this->getResourceNameInSnakeCase());
+        return str_plural($this->getResourceNameInSnakeCase($resource));
     }
 
-    protected function getObjectName()
+    protected function getResourceSlug($resource = null)
     {
-        return studly_case($this->getResourceName());
+        return str_slug($this->getResourceNameInSnakeCase($resource));
     }
 
-    protected function getPluralObjectName()
+    protected function getObjectName($resource = null)
     {
-        return studly_case($this->getPluralResourceName());
+        return studly_case($this->getResourceName($resource));
+    }
+
+    protected function getPluralObjectName($resource = null)
+    {
+        return studly_case($this->getPluralResourceName($resource));
+    }
+
+    protected function parsePivots()
+    {
+        $this->pivotResources = collect();
+
+        foreach ($this->option('pivot') as $pivots) {
+            foreach (explode(',', $pivots) as $pivot) {
+                $this->pivotResources->push($pivot);
+            }
+        }
     }
 }

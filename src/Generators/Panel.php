@@ -11,6 +11,6 @@ class Panel extends Generator
 
     public function getNamespace($slug = null)
     {
-        return parent::getNamespace().'\\'.$this->getData('object_name');
+        return parent::getNamespace().'\\'.$this->getData('objectName');
     }
 }

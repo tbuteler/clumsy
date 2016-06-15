@@ -12,7 +12,7 @@ class Seed extends Generator
 
     public function targetName()
     {
-        return $this->getData('object_name_plural').'Seeder';
+        return $this->getData('objectNamePlural').'Seeder';
     }
 
     public function makeFile(File $file = null)

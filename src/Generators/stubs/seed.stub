@@ -2,11 +2,11 @@
 
 use Illuminate\Database\Seeder;
 
-class {{object_name_plural}}Seeder extends Seeder
+class {{objectNamePlural}}Seeder extends Seeder
 {
 	public function run()
 	{
-        factory({{model_with_namespace}}::class, 50)->create()->each(function($item) {
+        factory({{modelWithNamespace}}::class, 50)->create()->each(function($item) {
 
         });
 	}

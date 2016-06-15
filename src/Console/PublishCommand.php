@@ -12,11 +12,11 @@ use Illuminate\Console\Command;
 class PublishCommand extends Command
 {
     /**
-     * The console command name.
+     * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'clumsy:publish';
+    protected $signature = 'clumsy:publish';
 
     /**
      * The console command description.

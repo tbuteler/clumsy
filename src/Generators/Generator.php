@@ -2,9 +2,10 @@
 
 namespace Clumsy\CMS\Generators;
 
+use Clumsy\CMS\Generators\Filesystem\File;
 use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Support\Facades\File as Filesystem;
-use Clumsy\CMS\Generators\Filesystem\File;
+use Illuminate\Support\Str;
 
 abstract class Generator
 {
@@ -81,7 +82,7 @@ abstract class Generator
 
     public function targetName()
     {
-        return $this->getData('object_name');
+        return $this->getData('objectName');
     }
 
     public function targetFileName()
@@ -112,8 +113,8 @@ abstract class Generator
             $this->setData('namespace', $this->getNamespace());
         }
 
-        if ($this->getData('model_with_namespace', false) === false) {
-            $this->setData('model_with_namespace', $this->getNamespace('model').'\\'.$this->getData('object_name'));
+        if ($this->getData('modelWithNamespace', false) === false) {
+            $this->setData('modelWithNamespace', $this->getNamespace('model').'\\'.$this->getData('objectName'));
         }
     }
 
@@ -140,5 +141,21 @@ abstract class Generator
     public function make()
     {
         return $this->makeFile();
+    }
+
+    public function exists()
+    {
+        $file = app()->make(File::class);
+        $file->name($this->targetFile());
+        return $file->exists();
+    }
+
+    public function readableName()
+    {
+        if (property_exists($this, 'readableName')) {
+            return $this->readableName;
+        }
+
+        return Str::lower(str_replace('_', ' ', snake_case(class_basename($this))));
     }
 }
