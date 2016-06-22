@@ -21,8 +21,8 @@ class ResourceCommand extends GeneratorCommand
     protected $signature = 'clumsy:resource
                             {resource : The name of the resource to be created}
                             {--pivot=* : Which resource(s), if any, have a many-to-many relation with the resource being created. If the related resources do not exist, they will be created}
-                            {--only= : Generate only a comma-separated list of resources}
-                            {--except= : Generate all except a comma-separated list of resources}';
+                            {--only= : Generate only a comma-separated list of objects for the resource}
+                            {--except= : Generate all except a comma-separated list of objects for the resource}';
 
     /**
      * The console command description.
@@ -79,53 +79,6 @@ class ResourceCommand extends GeneratorCommand
         }
     }
 
-    protected function generateResource($resource, $pivots = [])
-    {
-        $this->line("Generating [{$resource}] resource...");
-
-        $generates = array_flip([
-            'model',
-            'seed',
-            'controller',
-            'views folder',
-            'table panel',
-            'migration-create',
-        ]);
-
-        if (count($this->parseOnly())) {
-            $generates = array_only($generates, $this->parseOnly());
-        }
-
-        if (count($this->parseExcept())) {
-            $generates = array_except($generates, $this->parseExcept());
-        }
-
-        foreach (array_keys($generates) as $key) {
-            $data = array_merge($this->generateTemplateData($resource), [
-                'pivotUseDeclarations' => count($pivots) ? $this->pivotUseDeclarations() : null,
-                'pivotTraits'          => count($pivots) ? $this->pivotTraits() : null,
-            ]);
-            $this->generate($resource, $key, $data);
-        }
-
-        $this->info("Resource [{$resource}] generated!");
-    }
-
-    protected function parseOnly()
-    {
-        return array_filter(explode(',', $this->option('only')));
-    }
-
-    protected function parseExcept()
-    {
-        return array_filter(explode(',', $this->option('except')));
-    }
-
-    protected function resourceExists($resourceName)
-    {
-        return $this->newGenerator('model')->setData('objectName', studly_case($resourceName))->exists();
-    }
-
     protected function registerPivotResource($resourceName)
     {
         $generator = $this->newGenerator('pivot-trait')->setData('objectName', studly_case($resourceName));
@@ -137,10 +90,6 @@ class ResourceCommand extends GeneratorCommand
 
     protected function createPivotResource($resourceName)
     {
-        if (!$this->resourceExists($resourceName)) {
-            $this->generateResource($resourceName);
-        }
-
         $this->call('clumsy:pivot', ['resource' => $resourceName, '--pivot' => [$this->getResourceSlug()]]);
     }
 
