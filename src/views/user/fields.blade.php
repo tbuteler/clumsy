@@ -13,7 +13,7 @@
         @if (!$item->exists)
 
             @if ($item->isGroupable())
-                @dropdown('group', trans('clumsy::fields.role'), ['options' => $groups])
+                @dropdown('group_ids', trans('clumsy::fields.role'), ['options' => $groups])
             @endif
 
             <h3 class="page-header">@lang('clumsy::fields.password')</h3>
