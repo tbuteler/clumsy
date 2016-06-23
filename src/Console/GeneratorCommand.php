@@ -108,6 +108,16 @@ abstract class GeneratorCommand extends Command
         return studly_case($this->getPluralResourceName($resource));
     }
 
+    protected function parseOnly()
+    {
+        return array_filter(explode(',', $this->option('only')));
+    }
+
+    protected function parseExcept()
+    {
+        return array_filter(explode(',', $this->option('except')));
+    }
+
     protected function parsePivots()
     {
         $this->pivotResources = collect();
@@ -117,5 +127,42 @@ abstract class GeneratorCommand extends Command
                 $this->pivotResources->push($this->getResourceSlug($pivot));
             }
         }
+    }
+
+    protected function resourceExists($resourceName)
+    {
+        return $this->newGenerator('model')->setData('objectName', studly_case($resourceName))->exists();
+    }
+
+    protected function generateResource($resource, $pivots = [])
+    {
+        $this->line("Generating [{$resource}] resource...");
+
+        $generates = array_flip([
+            'model',
+            'seed',
+            'controller',
+            'views folder',
+            'table panel',
+            'migration-create',
+        ]);
+
+        if (count($this->parseOnly())) {
+            $generates = array_only($generates, $this->parseOnly());
+        }
+
+        if (count($this->parseExcept())) {
+            $generates = array_except($generates, $this->parseExcept());
+        }
+
+        foreach (array_keys($generates) as $key) {
+            $data = array_merge($this->generateTemplateData($resource), [
+                'pivotUseDeclarations' => count($pivots) ? $this->pivotUseDeclarations() : null,
+                'pivotTraits'          => count($pivots) ? $this->pivotTraits() : null,
+            ]);
+            $this->generate($resource, $key, $data);
+        }
+
+        $this->info("Resource [{$resource}] generated!");
     }
 }

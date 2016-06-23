@@ -20,7 +20,9 @@ class PivotCommand extends GeneratorCommand
      */
     protected $signature = 'clumsy:pivot
                             {resource : The name of the resource to pivot}
-                            {--pivot=* : In order to create a pivot table migration, specify the related resource(s)}';
+                            {--pivot=* : In order to create a pivot table migration, specify the related resource(s)}
+                            {--only= : Generate only a comma-separated list of objects for the resource}
+                            {--except= : Generate all except a comma-separated list of objects for the resource}';
 
     /**
      * The console command description.
@@ -37,6 +39,11 @@ class PivotCommand extends GeneratorCommand
     public function handle()
     {
         $resource = $this->getResourceSlug();
+
+        if (!$this->resourceExists($resource)) {
+            $this->generateResource($resource);
+        }
+
         $this->parsePivots();
 
         $this->generate($resource, 'pivot-trait');
