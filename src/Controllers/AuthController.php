@@ -48,6 +48,20 @@ class AuthController extends Controller
     }
 
     /**
+     * Check if the current user is logged in
+     *
+     * @return string
+     */
+    public function isLoggedIn()
+    {
+        if (Overseer::check()) {
+            return 'user';
+        }
+
+        return 'guest';
+    }
+
+    /**
      * Show the application login form.
      *
      * @return \Illuminate\Http\Response

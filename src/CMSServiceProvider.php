@@ -141,6 +141,11 @@ class CMSServiceProvider extends ServiceProvider
             ],
             function () {
 
+                $this->app['router']->get('is-logged-in', [
+                    'as'         => 'clumsy.is-logged-in',
+                    'uses'       => 'AuthController@isLoggedIn',
+                ]);
+
                 $this->app['router']->get('login', [
                     'as'         => 'clumsy.login',
                     'middleware' => 'clumsy:assets',
