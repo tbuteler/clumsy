@@ -1,6 +1,6 @@
 <?php
 
-$google_api = config('clumsy.utils.api-google-maps');
+$google_api = env('API_GOOGLE_MAPS', '');
 
 return [
 
@@ -8,7 +8,7 @@ return [
         'set'    => 'styles',
         'path'   => 'vendor/clumsy/cms/css/admin.css',
         'req'    => 'bootstrap',
-        'v'      => '0.27.0',
+        'v'      => '0.27.1',
         'elixir' => false,
     ],
 
@@ -16,7 +16,7 @@ return [
         'set'    => 'footer',
         'path'   => 'vendor/clumsy/cms/js/admin.min.js',
         'req'    => ['bootstrap.js', 'chosen'],
-        'v'      => '0.27.0',
+        'v'      => '0.27.1',
         'elixir' => false,
     ],
 
