@@ -77,6 +77,9 @@ class Clumsy
     public function auth($request, Closure $next)
     {
         if (!$this->auth->check()) {
+            if ($request->ajax()) {
+                return response('Unauthorized.', 401);
+            }
             return redirect()->guest(route('clumsy.login'));
         }
     }
