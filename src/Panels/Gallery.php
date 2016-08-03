@@ -30,7 +30,7 @@ class Gallery
 
     public function galleryThumbnail($item)
     {
-        return '<img src="'.$item->media($this->thumbnailSlot(), 0).'" class="img-responsive" alt="image">';
+        return '<img src="'.$item->firstMedia($this->thumbnailSlot()).'" class="img-responsive" alt="image">';
     }
 
     public function beforeRender()
