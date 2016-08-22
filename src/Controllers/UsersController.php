@@ -2,14 +2,24 @@
 
 namespace Clumsy\CMS\Controllers;
 
+use Clumsy\CMS\Auth\Overseer as Auth;
 use Clumsy\CMS\Facades\Overseer;
 use Clumsy\CMS\Controllers\AdminController;
+use Illuminate\Foundation\Application;
 
 class UsersController extends AdminController
 {
+    protected $auth;
+
+    public function __construct(Application $app, Auth $auth)
+    {
+        $this->auth = $auth;
+        parent::__construct($app);
+    }
+
     public function modelClass($resource = null)
     {
-        return Overseer::getUserModel();
+        return $this->auth->getUserModel();
     }
 
     public function loadPanel($action = null)
@@ -22,7 +32,7 @@ class UsersController extends AdminController
                     'email' => trans('clumsy::fields.email'),
                 ])
                 ->setData([
-                    'groups' => Overseer::getAvailableGroups(),
+                    'groups' => $this->auth->getAvailableGroups(),
                 ]);
     }
 
@@ -30,7 +40,7 @@ class UsersController extends AdminController
     {
         $this->loadPanel();
 
-        if (Overseer::user()->id == $id) {
+        if ($this->auth->user()->id == $id) {
             $this->panel->suppressDelete = true;
         }
 
@@ -48,7 +58,7 @@ class UsersController extends AdminController
 
     public function destroy($id)
     {
-        if (Overseer::user()->id == $id) {
+        if ($this->auth->user()->id == $id) {
             return back()->withAlert([
                'warning' => trans('clumsy::alerts.user.suicide'),
             ]);

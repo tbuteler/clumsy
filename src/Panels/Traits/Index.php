@@ -48,7 +48,7 @@ trait Index
             $this->setData('items', $items);
         }
 
-        $pagination = $items instanceof LengthAwarePaginator ? $items : null;
+        $pagination = $items instanceof LengthAwarePaginator ? ($items->hasPages() ? $items : null) : null;
         if (!is_null($pagination)) {
             if($this->isChild()) {
                 $pagination = $pagination->appends(['show' => $this->resourceName()]);

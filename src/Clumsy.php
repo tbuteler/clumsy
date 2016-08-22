@@ -86,11 +86,9 @@ class Clumsy
 
     public function assets($request)
     {
-        $userRoutePrefix = $this->prefix() ? $this->prefix().'.user' : 'user';
-
         view()->share([
             'adminPrefix'     => $this->prefix(),
-            'userRoutePrefix' => $userRoutePrefix,
+            'userRoutePrefix' => 'user',
             'navbarWrapper'   => $this->view->resolve('navbar-wrapper'),
             'navbarHome'      => $this->view->resolve('navbar-home-link'),
             'navbar'          => $this->view->resolve('navbar'),
@@ -187,19 +185,19 @@ class Clumsy
     protected function registerBladeDirectives()
     {
         Blade::directive('mediaBox', function ($expression) {
-            return "<?php echo \$panel->getItem()->mediaBox{$expression}; ?>";
+            return "<?php echo \$panel->getItem()->mediaBox({$expression}); ?>";
         });
 
         Blade::directive('location', function ($expression) {
-            return "<?php echo \$panel->location{$expression}; ?>";
+            return "<?php echo \$panel->location({$expression}); ?>";
         });
 
         Blade::directive('breadcrumb', function ($expression) {
-            return "<?php echo isset(\$panel) ? \$panel->getBakery()->render{$expression} : with(app()->make('Clumsy\CMS\Support\Bakery'))->render{$expression}; ?>";
+            return "<?php echo isset(\$panel) ? \$panel->getBakery()->render({$expression}) : with(app()->make('Clumsy\CMS\Support\Bakery'))->render({$expression}); ?>";
         });
 
         Blade::directive('pivot', function ($expression) {
-            return "<?php echo \$panel->pivotField{$expression}; ?>";
+            return "<?php echo \$panel->pivotField({$expression}); ?>";
         });
     }
 }

@@ -70,17 +70,11 @@ class APIController extends Controller
      */
     protected function boot()
     {
-        $this->adminPrefix = Clumsy::prefix();
-
         $indicator = $this->route ? $this->route->getName() : null;
 
         if (!str_contains($indicator, '.')) {
             $indicator = ltrim(str_replace('/', '.', request()->path()), '.');
         }
-
-        $indicator = $this->adminPrefix
-                     ? str_replace("{$this->adminPrefix}.", '', $indicator)
-                     : $indicator;
 
         if (str_contains($indicator, '.') && !starts_with($indicator, '_')) {
             $indicatorArray = explode('.', $indicator);
@@ -95,9 +89,6 @@ class APIController extends Controller
                 $this->query = $this->model->select('*');
 
                 $this->routePrefix = $this->model->resourceName();
-                if ($this->adminPrefix) {
-                    $this->routePrefix = $this->adminPrefix.'.'.$this->routePrefix;
-                }
             }
         }
     }

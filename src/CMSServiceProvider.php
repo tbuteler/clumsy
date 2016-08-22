@@ -176,7 +176,7 @@ class CMSServiceProvider extends ServiceProvider
                     'uses' => 'AuthController@postDoReset',
                 ]);
 
-                $this->app['router']->get('logout', [
+                $this->app['router']->post('logout', [
                     'as'   => 'clumsy.logout',
                     'uses' => 'AuthController@getLogout',
                 ]);

@@ -2,7 +2,6 @@
 
 namespace Clumsy\CMS\Controllers;
 
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -14,7 +13,7 @@ use Clumsy\CMS\Facades\Clumsy;
 
 class AuthController extends Controller
 {
-    use AuthenticatesUsers, ThrottlesLogins, ValidatesRequests;
+    use AuthenticatesUsers, ValidatesRequests;
 
     protected $username;
 
@@ -33,7 +32,6 @@ class AuthController extends Controller
         $this->username = config('clumsy.cms.authentication-attribute');
 
         $this->loginPath = "{$this->routePrefix}/login";
-        $this->redirectPath = Clumsy::prefix();
         $this->redirectAfterLogout = $this->loginPath;
 
         if ($this->throttles()) {
@@ -45,6 +43,11 @@ class AuthController extends Controller
     protected function throttles()
     {
         return config('clumsy.cms.authentication-throttling');
+    }
+
+    protected function redirectToHome()
+    {
+        return redirect(Clumsy::prefix());
     }
 
     /**
@@ -69,7 +72,7 @@ class AuthController extends Controller
     public function getLogin()
     {
         if (Overseer::check()) {
-            return redirect($this->redirectPath());
+            return $this->redirectToHome();
         }
 
         $data['bodyClass'] = 'login';
@@ -86,40 +89,32 @@ class AuthController extends Controller
     public function postLogin(Request $request)
     {
         $this->validate($request, [
-            $this->loginUsername() => 'required', 'password' => 'required',
+            $this->username() => 'required', 'password' => 'required',
         ], trans('clumsy::alerts.auth.validate'));
 
         $throttles = $this->throttles();
 
         if ($throttles && $this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
             return $this->sendLockoutResponse($request);
         }
 
-        $credentials = $this->getCredentials($request);
+        $credentials = $this->credentials($request);
 
         if (Overseer::attempt($credentials, $request->has('remember'))) {
-            return $this->handleUserWasAuthenticated($request, $this->throttles());
+            return $this->sendLoginResponse($request);
         }
 
         if ($throttles) {
             $this->incrementLoginAttempts($request);
         }
 
-        return redirect($this->loginPath)
-                ->withInput($request->only($this->loginUsername(), 'remember'))
-                ->withAlert([
-                    'warning' => $this->getFailedLoginMessage(),
-                ]);
-    }
-
-    /**
-     * Get the failed login message.
-     *
-     * @return string
-     */
-    protected function getFailedLoginMessage()
-    {
-        return trans('clumsy::alerts.auth.failed');
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->withAlert([
+                'warning' => trans('clumsy::alerts.auth.failed'),
+            ]);
     }
 
     /**
@@ -136,7 +131,7 @@ class AuthController extends Controller
     public function reset()
     {
         if (Overseer::check()) {
-            return redirect($this->redirectPath());
+            return $this->redirectToHome();
         }
 
         $data['bodyClass'] = 'login';
@@ -147,7 +142,6 @@ class AuthController extends Controller
     public function postReset(Request $request)
     {
         if (!request()->get('email')) {
-
             $alert = trans('clumsy::alerts.auth.login_required');
 
         } else {
@@ -180,7 +174,7 @@ class AuthController extends Controller
     public function doReset($token)
     {
         if (Overseer::check()) {
-            return redirect($this->redirectPath());
+            return $this->redirectToHome();
         }
 
         $bodyClass = 'login';

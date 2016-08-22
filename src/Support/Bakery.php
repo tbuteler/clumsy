@@ -61,7 +61,7 @@ class Bakery
                     foreach (array_reverse($parents) as $parent) {
 
                         $parentResourceName = $parent->resourceName();
-                        $parentRoutePrefix = $this->prefix ? "{$this->prefix}.{$parentResourceName}" : $parentResourceName;
+                        $parentRoutePrefix = $parentResourceName;
 
                         $parentCrumbs[$this->labeler->displayNamePlural($current)] = app('clumsy.http')->queryStringAdd($this->url->route("{$parentRoutePrefix}.edit", $parent->id), 'show', $resourceName);
                         $parentCrumbs[trans('clumsy::titles.edit_item', ['resource' => $this->labeler->displayName($parent)])] = $this->url->route("{$parentRoutePrefix}.edit", $parent->id);
@@ -72,7 +72,7 @@ class Bakery
 
                     $this->breadcrumb = $this->breadcrumb + array_reverse($parentCrumbs);
                 } else {
-                    $routePrefix = $this->prefix ? "{$this->prefix}.{$resourceName}" : $resourceName;
+                    $routePrefix = $resourceName;
                     $this->breadcrumb[$this->labeler->displayNamePlural($current)] = $this->url->route("{$routePrefix}.index");
                 }
 
@@ -82,7 +82,7 @@ class Bakery
 
             case 'reorder':
 
-                $routePrefix = $this->prefix ? "{$this->prefix}.{$resourceName}" : $resourceName;
+                $routePrefix = $resourceName;
                 $this->breadcrumb[$this->labeler->displayNamePlural($current)] = $this->url->route("{$routePrefix}.index");
                 $this->breadcrumb[trans('clumsy::titles.reorder', ['resources' => $this->labeler->displayNamePlural($current)])] = '';
                 break;

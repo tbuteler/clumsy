@@ -1,6 +1,10 @@
 @section('navbar-buttons')
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{ route('clumsy.logout') }}" class="with-tooltip glyphicon glyphicon-off" title="{{ trans('clumsy::buttons.logout') }}" data-placement="bottom"></a></li>
+        <li>
+            @form(['route' => 'clumsy.logout', 'class' => 'form-logout'])
+                <button href="{{ route('clumsy.logout') }}" type="submit" class="with-tooltip glyphicon glyphicon-off" title="{{ trans('clumsy::buttons.logout') }}" data-placement="bottom"></button>
+            @endform
+        </li>
     </ul>
 
     <ul class="nav navbar-nav navbar-right">

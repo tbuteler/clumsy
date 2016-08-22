@@ -53,8 +53,7 @@ trait Panel
 
         $this->view = clone $view;
 
-        $this->prefix = Clumsy::prefix();
-        $this->bakery->setPrefix($this->prefix);
+        $this->bakery->setPrefix(Clumsy::prefix());
     }
 
     protected function getOptionalProperty($key, $default = null)
@@ -78,9 +77,6 @@ trait Panel
         $this->model = $this->hierarchy['current'];
 
         $this->routePrefix = $this->resourceName();
-        if ($this->prefix) {
-            $this->routePrefix = $this->prefix.'.'.$this->routePrefix;
-        }
 
         $this->view->clearLevels()->setDomain($this->resourceName())->pushLevel($this->action);
 
