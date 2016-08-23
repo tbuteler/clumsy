@@ -19,7 +19,7 @@ trait Importable
                 }
 
                 LocalChange::firstOrCreate([
-                    'resource_type' => $item->resource_name,
+                    'resource_type' => $item->resourceName(),
                     'resource_id'   => $item->id,
                     'field'         => $field,
                 ]);
