@@ -44,7 +44,7 @@ trait Toggable
         $toggles = $this->getOptionalProperty('toggleFilters', []);
 
         if (count($toggles) && !$this->suppressToggleAll()) {
-            $toggles = array_prepend($toggles, array_get($toggles, 'all', trans('clumsy::buttons.all_resources')), 'all');
+            $toggles = array_prepend($toggles, array_get($toggles, 'all', trans('clumsy::buttons.all-resources')), 'all');
         }
 
         return $toggles;

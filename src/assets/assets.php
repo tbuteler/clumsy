@@ -14,7 +14,7 @@ return [
 
     'admin.js' => [
         'set'    => 'footer',
-        'path'   => 'vendor/clumsy/cms/js/admin.min.js',
+        'path'   => 'vendor/clumsy/cms/js/admin.js',
         'req'    => ['bootstrap.js', 'chosen'],
         'v'      => '0.28.0',
         'elixir' => false,

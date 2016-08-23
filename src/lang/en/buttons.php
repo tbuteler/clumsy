@@ -2,6 +2,8 @@
 
 return [
 
+    'cancel'        => 'Cancel',
+
     'login'         => 'Sign in',
 
     'logout'        => 'Sign out',
@@ -34,5 +36,7 @@ return [
 
     'apply'         => 'Apply',
 
-    'all_resources' => 'All',
+    'all-resources' => 'All',
+
+    'remove'        => 'Remove item',
 ];

@@ -292,7 +292,7 @@ class AdminController extends APIController
         }
 
         if ($response->getStatusCode() !== 200) {
-            $alert = $response->getStatusCode() === 403 ? trans('clumsy::alerts.unauthorized') : trans('clumsy::alerts.required_by');
+            $alert = $response->getStatusCode() === 403 ? trans('clumsy::alerts.unauthorized') : trans('clumsy::alerts.required-by');
             return redirect()->route("{$this->routePrefix}.edit", $id)->withAlert([
                'warning' => $alert,
             ]);

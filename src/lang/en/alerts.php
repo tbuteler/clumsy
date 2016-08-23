@@ -2,6 +2,8 @@
 
 return [
 
+    'alert'          => 'Warning',
+
     'items'          => 'item|items',
 
     'count'          => '{0} No :resources found|{1}:count :resource found|[2,Inf]:count :resources found',
@@ -16,7 +18,7 @@ return [
 
     'unauthorized'   => 'You do not have sufficient permissions for this action.',
 
-    'required_by'    => 'The item can\'t be deleted because other resources depend on it. Please remove the related items first or delete their relationship and try again',
+    'required-by'    => 'The item can\'t be deleted because other resources depend on it. Please remove the related items first or delete their relationship and try again',
 
     'delete-confirm' => 'Are you sure you want delete this item?',
 

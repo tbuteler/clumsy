@@ -1,3 +1,16 @@
+const sweetalert = require('sweetalert')
+
+sweetalert.setDefaults({
+    showCancelButton: true,
+    cancelButtonText: handover.admin.translations.cancel,
+    closeOnConfirm: false,
+    allowEscapeKey: true
+});
+
+var _alert = function(params) {
+    return sweetalert($.extend(params, params.type === 'warning' ? {confirmButtonColor: '#d9534f'} : {}));
+};
+
 $(function(){
 
     var clickOnce = function($el) {
@@ -23,10 +36,16 @@ $(function(){
         var $form = $(this).prev('form'),
             $del = $('.delete', $form),
             msg = $del.data('confirmText');
-        if (confirm(msg)) {
+        _alert({
+            title: handover.admin.translations.alert,
+            text: msg,
+            type: "warning",
+            confirmButtonText: handover.admin.translations.remove
+        },
+        function(){
             clickOnce($del);
             return true;
-        }
+        });
         return false;
     });
 

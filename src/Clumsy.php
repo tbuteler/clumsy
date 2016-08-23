@@ -102,6 +102,11 @@ class Clumsy
         $this->app['clumsy.assets']->load('admin.js', 10);
         $this->app['clumsy.assets']->json('admin', [
             'prefix' => $this->prefix(),
+            'translations' => [
+                'cancel' => trans('clumsy::buttons.cancel'),
+                'alert'  => trans('clumsy::alerts.alert'),
+                'remove' => trans('clumsy::buttons.remove'),
+            ],
             'urls' => [
                 'base' => url($this->prefix()),
             ],

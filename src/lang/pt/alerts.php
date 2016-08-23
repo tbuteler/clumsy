@@ -2,6 +2,8 @@
 
 return [
 
+    'alert'          => 'Atenção',
+
     'items'          => 'item|items',
 
     'count'          => '{0} Nenhum item encontrado|{1}:count item encontrado|[2,Inf]:count itens encontrados',
@@ -16,7 +18,7 @@ return [
 
     'unauthorized'   => 'Não tem permissões para executar esta ação.',
 
-    'required_by'    => 'O item não pode ser removido pois outros recursos dependem dele. Remova os itens relacionados primeiro ou seus vínculos e tente novamente.',
+    'required-by'    => 'O item não pode ser removido pois outros recursos dependem dele. Remova os itens relacionados primeiro ou seus vínculos e tente novamente.',
 
     'delete-confirm' => 'Tem certeza que deseja remover este item?',
 
