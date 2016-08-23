@@ -9,9 +9,9 @@ require('laravel-elixir-browserify-official');
 
 elixir(function(mix) {
 
-    mix.browserify('admin.js');
-
     mix
+     .eslint('admin.js')
+     .browserify('admin.js')
      .sass('admin.scss')
      .sass('tinymce.scss');
 });
