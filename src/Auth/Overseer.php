@@ -2,6 +2,11 @@
 
 namespace Clumsy\CMS\Auth;
 
+use Carbon\Carbon;
+use Clumsy\CMS\Models\BaseModel;
+use Clumsy\CMS\Models\Group;
+use Clumsy\CMS\Policies\UserPolicy;
+use Clumsy\CMS\Policies\BasePolicy;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Auth\Passwords\DatabaseTokenRepository as DbRepository;
@@ -9,10 +14,6 @@ use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
-use Clumsy\CMS\Models\BaseModel;
-use Clumsy\CMS\Models\Group;
-use Clumsy\CMS\Policies\UserPolicy;
-use Clumsy\CMS\Policies\BasePolicy;
 
 class Overseer
 {
@@ -130,7 +131,14 @@ class Overseer
     public function register(array $user)
     {
         array_set($user, 'password', array_get($user, 'password', str_random(9)));
+        array_set($user, 'last_login', Carbon::now());
         return with(new $this->userModel)->create($user);
+    }
+
+    public function registerLogin()
+    {
+        $this->user()->last_login = Carbon::now();
+        $this->user()->save();
     }
 
     public function getAvailableGroups()

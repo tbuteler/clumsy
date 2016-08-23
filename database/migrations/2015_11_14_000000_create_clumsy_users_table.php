@@ -20,6 +20,7 @@ class CreateClumsyUsersTable extends Migration
             $table->boolean('is_super_admin')->default(0);
             $table->rememberToken();
             $table->timestamps();
+            $table->datetime('last_login');
         });
     }
 

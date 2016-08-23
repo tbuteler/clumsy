@@ -56,6 +56,8 @@ class CMSServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
         $this->loadTranslationsFrom(__DIR__.'/lang', 'clumsy');
 
         $this->registerAuthRoutes();
@@ -118,10 +120,6 @@ class CMSServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/views' => base_path('resources/views/vendor/clumsy'),
         ], 'views');
-
-        $this->publishes([
-            __DIR__.'/../database/migrations' => database_path('migrations')
-        ], 'migrations');
 
         $this->publishes([
             __DIR__.'/../public' => public_path('vendor/clumsy/cms'),

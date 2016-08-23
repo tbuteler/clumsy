@@ -11,11 +11,23 @@ trait AdminUser
 {
     use Authenticatable, Authorizable, CanResetPassword;
 
+    /**
+     * Get the attributes that should be converted to dates.
+     *
+     * @return array
+     */
+    public function getDates()
+    {
+        $defaults = [static::CREATED_AT, static::UPDATED_AT, 'last_login'];
+
+        return $this->timestamps ? array_merge($this->dates, $defaults) : $this->dates;
+    }
+
     public function rules()
     {
         return [
-            'name'     => 'required|max:255',
-            'email'    => 'required|email|max:255|unique:'.$this->getTable().',email,'.$this->getKey(),
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:'.$this->getTable().',email,'.$this->getKey(),
             'password' => 'required|confirmed|min:6|max:255',
             'new_password' => 'confirmed|min:6|max:255',
         ];

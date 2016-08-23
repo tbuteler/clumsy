@@ -11,6 +11,18 @@
     "laravel-elixir-eslint": "^3.0.0"
   },
   "eslintConfig": {
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true,
+            "modules": true
+        },
+        "env": {
+          "es6": true,
+          "browser": true
+        }
+    },
     "globals": {
         "$": false,
         "handover": false

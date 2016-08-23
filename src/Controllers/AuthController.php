@@ -45,9 +45,9 @@ class AuthController extends Controller
         return config('clumsy.cms.authentication-throttling');
     }
 
-    protected function redirectToHome()
+    public function redirectPath()
     {
-        return redirect(Clumsy::prefix());
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
 
     /**
@@ -103,6 +103,8 @@ class AuthController extends Controller
         $credentials = $this->credentials($request);
 
         if (Overseer::attempt($credentials, $request->has('remember'))) {
+            Overseer::registerLogin();
+            $this->redirectPath = Clumsy::prefix();
             return $this->sendLoginResponse($request);
         }
 
