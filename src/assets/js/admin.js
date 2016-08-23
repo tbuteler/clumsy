@@ -49,16 +49,15 @@ $(function(){
     });
 
     if ($('.rich-text').length) {
-        tinymce.init($.extend(
-        {
-            selector: ".rich-text",
-            content_css: handover.admin.urls.base+'/../vendor/clumsy/cms/css/tinymce.css',
-            menubar : false,
-            toolbar: "undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link | removeformat",
-            statusbar : false,
-            plugins: "autoresize,link"
-        },
-        typeof handover.admin.tinymce === 'undefined' ? {} : handover.admin.tinymce
+        tinymce.init($.extend({
+                selector: ".rich-text",
+                content_css: handover.admin.urls.base+'/../vendor/clumsy/cms/css/tinymce.css',
+                menubar : false,
+                toolbar: "undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link | removeformat",
+                statusbar : false,
+                plugins: "autoresize,link"
+            },
+            typeof handover.admin.tinymce === 'undefined' ? {} : handover.admin.tinymce
         ));
     }
 
