@@ -2,9 +2,14 @@
 
     <div class="col-md-{{ $item->exists ? '8' : '12' }}">
 
-        @field('name', trans('clumsy::fields.name'))
-
-        @field('email', trans('clumsy::fields.email'))
+        <div class="row">
+            <div class="col-md-6">
+                @field('name', trans('clumsy::fields.name'))
+            </div>
+            <div class="col-md-6">
+                @field('email', trans('clumsy::fields.email'))
+            </div>
+        </div>
 
         @if ($item->isGroupable() && $item->exists && $item->id != $user->id)
             @dropdown('group_ids', trans('clumsy::fields.role'), ['options' => $groups, 'selected' => $item->getGroupIds()])
@@ -18,9 +23,15 @@
 
             <h3 class="page-header">@lang('clumsy::fields.password')</h3>
 
-            @field('password', trans('clumsy::fields.password'), 'type:password')
+            <div class="row">
+                <div class="col-md-6">
+                    @field('password', trans('clumsy::fields.password'), 'type:password')
+                </div>
+                <div class="col-md-6">
+                    @field('password_confirmation', trans('clumsy::fields.password_confirmation'), 'type:password')
+                </div>
+            </div>
 
-            @field('password_confirmation', trans('clumsy::fields.password_confirmation'), 'type:password')
 
         @elseif ($item->isGroupable() &&$item->id == $user->id)
 
@@ -53,6 +64,10 @@
             <p>{{ trans('clumsy::fields.last_login') }}<strong>{{ $item->last_login ? display_date($item->last_login, 'long with time') : trans('clumsy::fields.never') }}</strong></p>
 
         </div>
+    @else
+
+        @hidden('last_login', Carbon\Carbon::now())
+
     @endif
 
 </div>

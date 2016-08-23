@@ -2,14 +2,15 @@
 
 namespace Clumsy\CMS\Controllers;
 
+use Carbon\Carbon;
+use Clumsy\CMS\Facades\Overseer;
+use Clumsy\CMS\Facades\Clumsy;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
-use Clumsy\CMS\Facades\Overseer;
-use Clumsy\CMS\Facades\Clumsy;
 
 class AuthController extends Controller
 {
@@ -47,7 +48,7 @@ class AuthController extends Controller
 
     public function redirectPath()
     {
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
+        return Clumsy::prefix();
     }
 
     /**
@@ -72,7 +73,7 @@ class AuthController extends Controller
     public function getLogin()
     {
         if (Overseer::check()) {
-            return $this->redirectToHome();
+            return redirect($this->redirectPath());
         }
 
         $data['bodyClass'] = 'login';
@@ -101,10 +102,7 @@ class AuthController extends Controller
         }
 
         $credentials = $this->credentials($request);
-
         if (Overseer::attempt($credentials, $request->has('remember'))) {
-            Overseer::registerLogin();
-            $this->redirectPath = Clumsy::prefix();
             return $this->sendLoginResponse($request);
         }
 
@@ -117,6 +115,19 @@ class AuthController extends Controller
             ->withAlert([
                 'warning' => trans('clumsy::alerts.auth.failed'),
             ]);
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        $user->last_login = Carbon::now();
+        $user->save();
     }
 
     /**
@@ -133,7 +144,7 @@ class AuthController extends Controller
     public function reset()
     {
         if (Overseer::check()) {
-            return $this->redirectToHome();
+            return redirect($this->redirectPath());
         }
 
         $data['bodyClass'] = 'login';
@@ -176,7 +187,7 @@ class AuthController extends Controller
     public function doReset($token)
     {
         if (Overseer::check()) {
-            return $this->redirectToHome();
+            return redirect($this->redirectPath());
         }
 
         $bodyClass = 'login';

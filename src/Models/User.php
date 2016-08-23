@@ -29,7 +29,7 @@ class User extends BaseModel implements Authenticatable, Authorizable, CanResetP
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'group_ids'];
+    protected $fillable = ['name', 'email', 'password', 'group_ids', 'last_login'];
 
     /**
      * The attributes excluded from the model's JSON form.

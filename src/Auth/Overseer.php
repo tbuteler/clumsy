@@ -135,12 +135,6 @@ class Overseer
         return with(new $this->userModel)->create($user);
     }
 
-    public function registerLogin()
-    {
-        $this->user()->last_login = Carbon::now();
-        $this->user()->save();
-    }
-
     public function getAvailableGroups()
     {
         $groups = [null => 'User'] + Group::pluck('name', 'id')->toArray();
