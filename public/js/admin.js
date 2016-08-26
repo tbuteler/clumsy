@@ -1294,12 +1294,14 @@ $(function () {
     $('.delete-form').submit(function () {
         var $form = $(this).prev('form'),
             $del = $('.delete', $form),
-            msg = $del.data('confirmText');
+            msg = $(this).hasClass('user') ? handover.admin.translations.confirmUser : handover.admin.translations.confirm,
+            btn = $(this).hasClass('user') ? handover.admin.translations.removeUser : handover.admin.translations.remove;
+
         _alert({
             title: handover.admin.translations.alert,
             text: msg,
             type: "warning",
-            confirmButtonText: handover.admin.translations.remove
+            confirmButtonText: btn
         }, function () {
             clickOnce($del);
             return true;
@@ -1332,7 +1334,8 @@ $(function () {
             menubar: false,
             toolbar: "undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link | removeformat",
             statusbar: false,
-            plugins: "autoresize,link"
+            plugins: "autoresize,link",
+            language_url: handover.admin.locale !== 'en' ? handover.admin.urls.base + '/../vendor/clumsy/utils/js/tinymce/' + handover.admin.locale + '.min.js' : null
         }, typeof handover.admin.tinymce === 'undefined' ? {} : handover.admin.tinymce));
     }
 

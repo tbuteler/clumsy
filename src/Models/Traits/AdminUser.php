@@ -2,14 +2,16 @@
 
 namespace Clumsy\CMS\Models\Traits;
 
+use Clumsy\CMS\Notifications\Auth\ResetPassword as ResetPasswordNotification;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 trait AdminUser
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     /**
      * Get the attributes that should be converted to dates.
@@ -31,6 +33,11 @@ trait AdminUser
             'password' => 'required|confirmed|min:6|max:255',
             'new_password' => 'confirmed|min:6|max:255',
         ];
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     public function isSuperAdmin()

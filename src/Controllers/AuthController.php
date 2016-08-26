@@ -30,8 +30,6 @@ class AuthController extends Controller
     {
         $this->routePrefix = config('clumsy.cms.authentication-prefix');
 
-        $this->username = config('clumsy.cms.authentication-attribute');
-
         $this->loginPath = "{$this->routePrefix}/login";
         $this->redirectAfterLogout = $this->loginPath;
 
@@ -44,6 +42,16 @@ class AuthController extends Controller
     protected function throttles()
     {
         return config('clumsy.cms.authentication-throttling');
+    }
+
+    protected function authenticationAttributes()
+    {
+        return array_merge((array)config('clumsy.cms.authentication-attributes'), ['password']);
+    }
+
+    protected function credentials(Request $request)
+    {
+        return $request->only($this->authenticationAttributes());
     }
 
     public function redirectPath()
@@ -89,9 +97,8 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
-        $this->validate($request, [
-            $this->username() => 'required', 'password' => 'required',
-        ], trans('clumsy::alerts.auth.validate'));
+        $rules = array_fill_keys($this->authenticationAttributes(), 'required');
+        $this->validate($request, $rules, trans('clumsy::alerts.auth.validate'));
 
         $throttles = $this->throttles();
 
@@ -111,7 +118,7 @@ class AuthController extends Controller
         }
 
         return redirect()->back()
-            ->withInput($request->only($this->username(), 'remember'))
+            ->withInput($request->except('password'))
             ->withAlert([
                 'warning' => trans('clumsy::alerts.auth.failed'),
             ]);
@@ -138,7 +145,7 @@ class AuthController extends Controller
      */
     protected function getLockoutErrorMessage($seconds)
     {
-        return trans('clumsy::alerts.auth.lockout', ['seconds' => $seconds]);
+        return trans('clumsy::alerts.auth.lockout', compact('seconds'));
     }
 
     public function reset()

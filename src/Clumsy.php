@@ -17,6 +17,7 @@ class Clumsy
     protected $auth;
     protected $view;
     protected $adminPrefix;
+    protected $adminLocale;
 
     public function __construct(Application $app, Overseer $auth)
     {
@@ -42,9 +43,9 @@ class Clumsy
 
             $this->adminPrefix = ltrim(str_replace('/', '.', $this->app['request']->route()->getPrefix()), '.');
 
-            $adminLocale = $this->app['config']->get('clumsy.cms.admin-locale');
-            $this->app['config']->set('app.locale', $adminLocale);
-            $this->app->setLocale($adminLocale);
+            $this->adminLocale = $this->app['config']->get('clumsy.cms.admin-locale');
+            $this->app['config']->set('app.locale', $this->adminLocale);
+            $this->app->setLocale($this->adminLocale);
 
             $this->app['clumsy.admin'] = true;
         }
@@ -102,10 +103,14 @@ class Clumsy
         $this->app['clumsy.assets']->load('admin.js', 10);
         $this->app['clumsy.assets']->json('admin', [
             'prefix' => $this->prefix(),
+            'locale' => $this->locale(),
             'translations' => [
                 'cancel' => trans('clumsy::buttons.cancel'),
-                'alert'  => trans('clumsy::alerts.alert'),
+                'alert' => trans('clumsy::alerts.alert'),
                 'remove' => trans('clumsy::buttons.remove'),
+                'removeUser' => trans('clumsy::alerts.user.remove'),
+                'confirm' => trans('clumsy::alerts.delete-confirm'),
+                'confirmUser' => trans('clumsy::alerts.user.delete-confirm'),
             ],
             'urls' => [
                 'base' => url($this->prefix()),
@@ -121,6 +126,11 @@ class Clumsy
     public function prefix()
     {
         return $this->adminPrefix;
+    }
+
+    public function locale()
+    {
+        return $this->adminLocale;
     }
 
     public function isAdmin()

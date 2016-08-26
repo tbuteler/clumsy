@@ -4,7 +4,7 @@ return [
 
     'login'          => 'Login',
 
-    'reset-password' => 'Redefinir palavra-passe',
+    'reset-password' => 'Redefinir palavra-chave',
 
     'new_item'       => 'Adicionar :resource',
 

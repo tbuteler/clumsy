@@ -73,7 +73,13 @@ trait Index
 
     public function itemsPerPage()
     {
-        return $this->getOptionalProperty('itemsPerPage', config('clumsy.cms.per-page'));
+        $perPage = $this->getOptionalProperty('itemsPerPage', config('clumsy.cms.per-page'));
+
+        if ($perPage === 'inherit') {
+            return $this->model->perPage();
+        }
+
+        return $perPage;
     }
 
     public function rowClass($item)

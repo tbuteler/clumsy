@@ -16,9 +16,9 @@ return [
 
     'password'         => 'Palavra-passe',
 
-    'password_confirmation' => 'Confirmar palavra-passe',
+    'password_confirmation' => 'Confirmar palavra-chave',
 
-    'reset-password'   => 'Redefinir palavra-passe',
+    'reset-password'   => 'Redefinir palavra-chave',
 
     'back-to-login'    => 'Voltar ao login',
 
@@ -26,11 +26,11 @@ return [
 
     'current_role'     => 'Nível de acesso actual',
 
-    'change_password'  => 'Mudar palavra-passe',
+    'change_password'  => 'Mudar palavra-chave',
 
-    'new_password'     => 'Nova palavra-passe',
+    'new_password'     => 'Nova palavra-chave',
 
-    'new_password_confirmation' => 'Confirmar nova palavra-passe',
+    'new_password_confirmation' => 'Confirmar nova palavra-chave',
 
     'roles' => [
 

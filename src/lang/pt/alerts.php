@@ -32,6 +32,8 @@ return [
 
         'delete-confirm' => 'Tem certeza que deseja remover este utilizador?',
 
+        'remove' => 'Remover utilizador',
+
         'suicide'   => 'Não é possível remover o seu próprio utilizador.',
 
         'forbidden' => 'Não tem permissões para gerenciar utilizadores.',
@@ -41,7 +43,7 @@ return [
 
         'validate' => [
             'email.required'    => 'O campo email é requerido.',
-            'password.required' => 'O campo palavra-passe é requerido.',
+            'password.required' => 'O campo palavra-chave é requerido.',
         ],
 
         'failed'            => 'Credenciais inválidas. Tente novamente.',
@@ -50,11 +52,11 @@ return [
 
         'logged-out'        => 'A sessão foi terminada.',
 
-        'reset-email-sent'  => 'Instruções para redefinir sua palavra-passe foram enviadas para o seu email.',
+        'reset-email-sent'  => 'Instruções para redefinir sua palavra-chave foram enviadas para o seu email.',
 
-        'password-changed'  => 'Sua palavra-passe foi alterada com sucesso.',
+        'password-changed'  => 'Sua palavra-chave foi alterada com sucesso.',
 
-        'reset-error'       => 'Ocorreu um erro ao redefinir sua palavra-passe. Por favor entre em contacto com o administrador do sistema.',
+        'reset-error'       => 'Ocorreu um erro ao redefinir sua palavra-chave. Por favor entre em contacto com o administrador do sistema.',
 
         'unknown-user'      => 'Não existe um utilizador com o e-mail fornecido.',
     ],

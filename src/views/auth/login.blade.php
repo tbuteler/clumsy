@@ -4,6 +4,10 @@
     @lang('clumsy::titles.login')
 @stop
 
+@section('page-header')
+    <h1 class="page-header">@yield('title')</h1>
+@stop
+
 @section('master')
 
     @form

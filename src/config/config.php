@@ -12,18 +12,6 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Fail silently
-     |--------------------------------------------------------------------------
-     |
-     | Whether to throw exceptions for errors like 404 or token mismatch or
-     | handle them via redirects or error messages.
-     |
-     */
-
-    'silent' => !config('app.debug'),
-
-    /*
-     |--------------------------------------------------------------------------
      | Authentication routes prefix
      |--------------------------------------------------------------------------
      |
@@ -66,7 +54,7 @@ return [
      |
      */
 
-    'authentication-attribute' => 'email',
+    'authentication-attributes' => ['email'],
 
     /*
      |--------------------------------------------------------------------------
@@ -137,9 +125,7 @@ return [
      */
 
     'default-order' => [
-
         'column'    => 'id',
-
         'direction' => 'desc',
     ],
 
@@ -148,11 +134,10 @@ return [
      | Default items per page
      |--------------------------------------------------------------------------
      |
-     | How many items of a given resource should be shown per page. You can
-     | also override this on each model by defining an "admin_per_page"
-     | property.
+     | How many items of a given resource should be shown per page.
      |
-     | To disable paging, set to 'false'.
+     | To disable paging, set to false or null.
+     | To inherit the models "perPage" property, set to 'inherit'.
      |
      */
 

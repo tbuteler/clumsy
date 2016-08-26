@@ -1,7 +1,7 @@
 var elixir = require('laravel-elixir');
 
 elixir.config.assetsPath = 'src/assets';
-elixir.config.production = true;
+elixir.config.production = false;
 elixir.config.css.sass.pluginOptions.outputStyle = 'compressed';
 
 require('laravel-elixir-eslint');

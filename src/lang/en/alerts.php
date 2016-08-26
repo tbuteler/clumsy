@@ -32,6 +32,8 @@ return [
 
         'delete-confirm' => 'Are you sure you want delete this user?',
 
+        'remove' => 'Remove user',
+
         'suicide'   => 'You cannot delete your own user.',
 
         'forbidden' => 'You don\'t have permission to manage users.',
