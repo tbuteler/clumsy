@@ -1,7 +1,50 @@
-## Legacy support
-For Laravel 4.1 or 4.2 support, use 0.22.* versions or below.
+# Clumsy
+A CMS for Laravel
+
+[![Latest Stable Version](https://poser.pugx.org/clumsy/cms/version)](https://packagist.org/packages/clumsy/cms) [![Latest Unstable Version](https://poser.pugx.org/clumsy/cms/v/unstable)](//packagist.org/packages/clumsy/cms) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/49d89e49d2884fa7ba3199c978ea2b65)](https://www.codacy.com/app/tbuteler/clumsy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tbuteler/clumsy&amp;utm_campaign=Badge_Grade) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2a3c7b2f-5980-4ecc-b65b-b57cc747c7ba/mini.png)](https://insight.sensiolabs.com/projects/2a3c7b2f-5980-4ecc-b65b-b57cc747c7ba)
+
+## Installing
+
+- Use Composer to install:
+```
+composer require clumsy/cms
+```
+
+- In the `config/app.php` file, add this to the `providers` key:
+```php
+Clumsy\CMS\CMSServiceProvider::class,
+```
+
+- Optionally, you can set the following aliases:
+```php
+'Clumsy' => Clumsy\CMS\Facades\Clumsy::class,
+'Overseer' => Clumsy\CMS\Facades\Overseer::class,
+'Shortcode' => Clumsy\CMS\Facades\Shortcode::class,
+```
+
+- Publish Clumsy configuration:
+```
+php artisan php artisan vendor:publish --provider="Clumsy\CMS\CMSServiceProvider" --tag=config
+```
+
+- Run migrations to get the admin area's authentication tables and media management tables:
+```
+php artisan migrate
+```
+
+- Finally, publish all Clumsy public assets:
+```
+php artisan clumsy:publish
+```
+
+## Legacy
+
+- For Laravel 5.2 support, use version 0.27.*
+- For Laravel 5.1 support, use version 0.24.*
+- For Laravel 4.1 or 4.2 support, use 0.22.*
 
 ### Upgrading from 0.22
+
 - Users, groups and password reset database structure now follows Laravel's default
 - Form macros have been removed with the exception of `Form::location` and `Form::delete`
 - Parent / Child relations now need to be explicitly declared as methods and return Laravel `Relation` objects in order to work
