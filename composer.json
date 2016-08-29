@@ -14,7 +14,7 @@
         "laravelcollective/html": "5.3.*",
         "clumsy/assets": ">=0.7.0",
         "clumsy/utils": ">=0.9.0",
-        "clumsy/eminem": ">=0.9.0"
+        "clumsy/eminem": ">=0.13.0"
     },
     "autoload": {
         "psr-4": {
