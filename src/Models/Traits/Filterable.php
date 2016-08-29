@@ -2,9 +2,11 @@
 
 namespace Clumsy\CMS\Models\Traits;
 
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
+use InvalidArgumentException;
 
 trait Filterable
 {
@@ -13,7 +15,7 @@ trait Filterable
         return method_exists($this, 'filter'.studly_case(str_replace('.', '_', $column)).'Column');
     }
 
-    public function scopeFiltered($query, $parentId = null)
+    public function scopeFiltered(Builder $query, $parentId = null)
     {
         $resourceName = $this->resourceName();
         $identifier = $parentId ? ".{$parentId}" : null;
@@ -27,7 +29,7 @@ trait Filterable
 
                 if (in_array($column, Schema::getColumnListing($this->getTable()))) {
                     // If the column exists in the table, use it
-                    $query->where(function ($query) use ($values, $column) {
+                    $query->where(function (Builder $query) use ($values, $column) {
 
                         $i = 0;
                         foreach ($values as $item) {
@@ -41,9 +43,9 @@ trait Filterable
                     // Otherwise, assume it's a nested filter and
                     // look for the column in the child model
                     list($model, $newColumn) = explode('.', $column);
-                    $query->whereHas($model, function ($query) use ($newColumn, $values) {
+                    $query->whereHas($model, function (Builder $query) use ($newColumn, $values) {
 
-                        $query->where(function ($query) use ($values, $newColumn) {
+                        $query->where(function (Builder $query) use ($values, $newColumn) {
 
                             $i = 0;
                             foreach ($values as $item) {
@@ -58,7 +60,7 @@ trait Filterable
         }
     }
 
-    public function getFilterData($columns, $query)
+    public function getFilterData($columns, Builder $query)
     {
         $data = [];
 
@@ -88,13 +90,13 @@ trait Filterable
 
             // If the column is a boolean, use 'yes' or 'no' values
             if (in_array($filterKey, $this->booleans()) && !$this->hasGetMutator($filterKey)) {
-                $items->each(function ($item) use ($column, &$values) {
+                $items->each(function (Eloquent $item) use ($column, &$values) {
                     $attributes = $item->getAttributes();
                     $values[$attributes[$column]] = $item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
                 });
             } else {
                 // Otherwise, use the default attribute (will use get mutator, if available)
-                $items->each(function ($item) use ($column, $filterKey, &$values) {
+                $items->each(function (Eloquent $item) use ($column, $filterKey, &$values) {
                     $attributes = $item->getAttributes();
                     if ($attributes[$column]) {
                         $values[$attributes[$column]] = $item->$filterKey;

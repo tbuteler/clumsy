@@ -3,6 +3,7 @@
 namespace Clumsy\CMS\Models\Traits;
 
 use Clumsy\CMS\Models\LocalChange;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 trait Importable
 {
@@ -10,7 +11,7 @@ trait Importable
 
     protected static function bootImportable()
     {
-        self::updating(function ($item) {
+        self::updating(function (Eloquent $item) {
 
             foreach ($item->getDirty() as $field => $value) {
                 // Double check for changes by removing whitespace (HMTL content can be sneaky)

@@ -2,10 +2,6 @@
 
 namespace Clumsy\CMS\Console;
 
-use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Clumsy\CMS\Generators\Filesystem\FileAlreadyExists;
-
 /**
  * Publish a Pivot Trait for arbitrary resource
  *

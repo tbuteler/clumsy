@@ -2,10 +2,6 @@
 
 namespace Clumsy\CMS\Console;
 
-use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Clumsy\CMS\Generators\Filesystem\FileAlreadyExists;
-
 /**
  * Publish boilerplate for a Clumsy resource
  *
@@ -55,8 +51,6 @@ class ResourceCommand extends GeneratorCommand
         foreach ($this->pivotResources as $pivot) {
             $this->createPivotResource($pivot);
         }
-
-        $resource = $this->getResourceSlug();
 
         if (count(array_get($this->generators, 'controller'))) {
             $code = '';

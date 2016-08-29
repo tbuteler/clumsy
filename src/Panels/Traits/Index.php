@@ -2,12 +2,13 @@
 
 namespace Clumsy\CMS\Panels\Traits;
 
-use Illuminate\Pagination\LengthAwarePaginator;
 use Clumsy\CMS\Panels\Traits\Panel;
 use Clumsy\CMS\Panels\Traits\Sortable;
 use Clumsy\CMS\Panels\Traits\Reorderable;
 use Clumsy\CMS\Panels\Traits\Filterable;
 use Clumsy\CMS\Panels\Traits\Toggable;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Index
 {
@@ -87,7 +88,7 @@ trait Index
         return '';
     }
 
-    public function cellClass($item, $column)
+    public function cellClass(Eloquent $item, $column)
     {
         $classes[] = 'cell-'.$column;
 
@@ -146,7 +147,7 @@ trait Index
         return $html;
     }
 
-    public function columnValue($item, $column)
+    public function columnValue(Eloquent $item, $column)
     {
         $value = $item->$column;
 
@@ -180,7 +181,7 @@ trait Index
         return '&nbsp;';
     }
 
-    public function inlineBooleanColumnValue($item, $column)
+    public function inlineBooleanColumnValue(Eloquent $item, $column)
     {
         $method = $this->is('gallery') ? 'booleanCaption' : 'booleanCell';
 
@@ -194,23 +195,23 @@ trait Index
         ], $this->columnName($column));
     }
 
-    public function booleanCell($name, $checked, $options = '')
+    public function booleanCell($name, $isChecked, $options = '')
     {
         return app('clumsy.field')
                 ->checkbox($name, null, $options)
-                ->checked($checked)
+                ->checked($isChecked)
                 ->setGroupClass(null)
                 ->noLabel();
     }
 
-    public function booleanCaption($name, $checked, $options = '', $label = null)
+    public function booleanCaption($name, $isChecked, $options = '', $label = null)
     {
         return app('clumsy.field')
                 ->checkbox($name, $label, $options)
-                ->checked($checked);
+                ->checked($isChecked);
     }
 
-    public function booleanColumnValue($item, $column)
+    public function booleanColumnValue(Eloquent $item, $column)
     {
         return $item->$column == 1 ? trans('clumsy::fields.yes') : trans('clumsy::fields.no');
     }

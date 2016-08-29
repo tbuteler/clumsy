@@ -2,9 +2,11 @@
 
 namespace Clumsy\CMS\Policies;
 
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
 class UserPolicy
 {
-    public function before($user, $ability)
+    public function before(Eloquent $user, $ability)
     {
         if ($ability !== 'destroy') {
             if ($user->isGroupable() && $user->inGroup('Administrator')) {
@@ -13,12 +15,12 @@ class UserPolicy
         }
     }
 
-    public function update($user, $model)
+    public function update(Eloquent $user, Eloquent $model)
     {
         return ($user->id === $model->id);
     }
 
-    public function destroy($user, $model)
+    public function destroy(Eloquent $user, Eloquent $model)
     {
         return ($user->id !== $model->id);
     }

@@ -2,8 +2,7 @@
 
 namespace Clumsy\CMS\Controllers;
 
-use Clumsy\CMS\Auth\Overseer as Auth;
-use Clumsy\CMS\Facades\Overseer;
+use Clumsy\CMS\Auth\Overseer;
 use Clumsy\CMS\Controllers\AdminController;
 use Illuminate\Foundation\Application;
 
@@ -11,7 +10,7 @@ class UsersController extends AdminController
 {
     protected $auth;
 
-    public function __construct(Application $app, Auth $auth)
+    public function __construct(Application $app, Overseer $auth)
     {
         $this->auth = $auth;
         parent::__construct($app);

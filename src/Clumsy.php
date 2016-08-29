@@ -3,13 +3,14 @@
 namespace Clumsy\CMS;
 
 use Closure;
-use InvalidArgumentException;
+use Clumsy\CMS\Auth\Overseer;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\AliasLoader;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Blade;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Clumsy\CMS\Auth\Overseer;
 
 class Clumsy
 {
@@ -53,7 +54,7 @@ class Clumsy
         $this->registerBladeDirectives();
     }
 
-    public function handle($request, Closure $next, $methods = null)
+    public function handle(Request $request, Closure $next, $methods = null)
     {
         if (!$methods) {
             $methods = 'auth+assets+user';
@@ -75,7 +76,7 @@ class Clumsy
         return $next($request);
     }
 
-    public function auth($request, Closure $next)
+    public function auth(Request $request, Closure $next)
     {
         if (!$this->auth->check()) {
             if ($request->ajax()) {
@@ -85,7 +86,7 @@ class Clumsy
         }
     }
 
-    public function assets($request)
+    public function assets(Request $request)
     {
         view()->share([
             'adminPrefix'     => $this->prefix(),

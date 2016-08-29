@@ -2,8 +2,6 @@
 
 namespace Clumsy\CMS\Generators;
 
-use Illuminate\Support\Composer;
-
 class MigrationPivot extends Migration
 {
     protected $readableName = 'pivot table migration';

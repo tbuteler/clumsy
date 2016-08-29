@@ -12,6 +12,7 @@ use Illuminate\Auth\Access\Gate;
 use Illuminate\Auth\Passwords\DatabaseTokenRepository as DbRepository;
 use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
 
@@ -47,7 +48,7 @@ class Overseer
         });
     }
 
-    protected function beforeAuthorize($user, $ability)
+    protected function beforeAuthorize(Eloquent $user, $ability)
     {
         if ($user->isSuperAdmin()) {
             return true;
@@ -59,7 +60,7 @@ class Overseer
         $this->gate = new Gate(
             $this->app,
             function () {
-                    return $this->app['clumsy.auth']->user();
+                return $this->app['clumsy.auth']->user();
             },
             [],
             [

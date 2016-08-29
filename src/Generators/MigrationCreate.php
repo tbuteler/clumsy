@@ -2,8 +2,6 @@
 
 namespace Clumsy\CMS\Generators;
 
-use Illuminate\Support\Composer;
-
 class MigrationCreate extends Migration
 {
     protected $readableName = 'create table migration';

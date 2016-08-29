@@ -3,6 +3,7 @@
 namespace Clumsy\CMS\Panels;
 
 use Clumsy\CMS\Panels\Traits\Index;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Gallery
 {
@@ -28,7 +29,7 @@ class Gallery
         return $this->getOptionalProperty('thumbnailSlot');
     }
 
-    public function galleryThumbnail($item)
+    public function galleryThumbnail(Eloquent $item)
     {
         return '<img src="'.$item->firstMedia($this->thumbnailSlot()).'" class="img-responsive" alt="image">';
     }

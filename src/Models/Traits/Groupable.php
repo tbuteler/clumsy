@@ -2,18 +2,19 @@
 
 namespace Clumsy\CMS\Models\Traits;
 
-use Illuminate\Support\Facades\Event;
 use Clumsy\CMS\Models\Group;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Support\Facades\Event;
 
 trait Groupable
 {
     public static function bootGroupable()
     {
-        self::saving(function ($model) {
+        self::saving(function (Eloquent $model) {
             if (isset($model->group_ids)) {
                 $groups = array_filter((array)$model->group_ids);
                 unset($model->group_ids);
-                Event::listen('clumsy.saved: User', function ($user) use ($groups) {
+                Event::listen('clumsy.saved: User', function (Eloquent $user) use ($groups) {
                     $user->groups()->sync($groups);
                 }, 100);
             }

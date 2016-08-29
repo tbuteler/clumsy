@@ -2,6 +2,7 @@
 
 namespace Clumsy\CMS\Models\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 trait AdminResource
@@ -42,13 +43,13 @@ trait AdminResource
         }));
     }
 
-    public function scopeManaged($query, $parentId = null)
+    public function scopeManaged(Builder $query, $parentId = null)
     {
         return $query->filtered($parentId)
                      ->orderSortable();
     }
 
-    public function scopeGetManaged($query, $parentId = null)
+    public function scopeGetManaged(Builder $query, $parentId = null)
     {
         return $query->managed($parentId)->getPaged();
     }
@@ -72,7 +73,7 @@ trait AdminResource
         return $this->{$context};
     }
 
-    public function scopeWithAdminContext($query, $context, $value)
+    public function scopeWithAdminContext(Builder $query, $context, $value)
     {
         $context = snake_case($this->adminContextPrefix().$context);
         $value = DB::connection()->getPdo()->quote($value);
