@@ -5,34 +5,34 @@ A CMS for Laravel
 
 ## Installing
 
-- Use Composer to install:
+Use Composer to install:
 ```
 composer require clumsy/cms
 ```
 
-- In the `config/app.php` file, add this to the `providers` key:
+In the `config/app.php` file, add this to the `providers` key:
 ```php
 Clumsy\CMS\CMSServiceProvider::class,
 ```
 
-- Optionally, you can set the following aliases:
+Optionally, you can set the following aliases:
 ```php
 'Clumsy' => Clumsy\CMS\Facades\Clumsy::class,
 'Overseer' => Clumsy\CMS\Facades\Overseer::class,
 'Shortcode' => Clumsy\CMS\Facades\Shortcode::class,
 ```
 
-- Publish Clumsy configuration:
+Publish Clumsy configuration:
 ```
 php artisan vendor:publish --provider="Clumsy\CMS\CMSServiceProvider" --tag=config
 ```
 
-- Run migrations to get the admin area's authentication tables and media management tables:
+Run migrations to get the admin area's authentication tables and media management tables:
 ```
 php artisan migrate
 ```
 
-- Finally, publish all Clumsy public assets:
+Finally, publish all Clumsy public assets:
 ```
 php artisan clumsy:publish
 ```
@@ -46,6 +46,48 @@ php artisan clumsy:user
 ```
 
 You will be prompted for email, name, password and optionally a user level.
+
+With a user of your own you can proceed to the admin area. By default this will be http://example.com/admin (you can configure this by editing the `authentication-prefix` in the config). After successful authentication, if you haven't yet defined a route which resolves the http://example.com/admin URL, you will see a simple message that reads: `[Admin home] Clumsy is correctly set up.`
+
+Adding routes to that authenticated admin area is easy: whatever route that uses the `clumsy` middleware will automatically be managed by Clumsy.
+
+### Creating new resources
+
+A resource that will be managed inside the admin area is basically an *Eloquent* model with some standard methods and properties. Most of the funcionalities which make up Clumsy are achieved by those model methods plus a standardized controller and a type of class which we call *Panels*. Because the Clumsy admin area can be customized entirely, all those classes inhabit your local app's folders and not the package's. Luckily there's an easy way to just create all those objects at once:
+
+```
+php artisan clumsy:resource post
+```
+
+The resource name (*post* in this example) defines what the classes will be called. The above command will create the following:
+
+- `App\Post.php` model
+- `App\Http\Controllers\PostsController.php` controller
+- `Panels\Post\Table.php` panel
+- `database\migrations\(...)_create_posts_table.php` migration
+- `database\seeds\PostsSeeder.php` seeder
+- some boilerplate code inside the `database\factories\ModelFactory.php` class
+- `resources\views\admin\post` folder
+
+(The above paths are based on default configuration. All object namespaces can be overridden so that the resource generator puts them in the correct place inside your local application.)
+
+The command output will also give you the resourceful route. By now your `routes\web.php` might look like this:
+
+```php
+<?php
+
+Route::group(['prefix' => 'admin', 'middleware' => ['web', 'clumsy']], function () {
+    Route::resource('post', 'PostsController');
+});
+```
+
+Which means that, after running the newly created migration, you can go to http://example.com/admin/post and see the index for the *post* resource and from there create, update and delete entries.
+
+### Customizing views
+
+Clumsy will prioritize your local application's views whenever they're available and fallback to its default templates. Clumsy's templates are small bits of code in *Blade* syntax, intentionally small so you can override them in a very granular manner.
+
+Say you want to override the editing form of your *post* resource. Instead of overriding the entire page, you can just create a `resources\views\admin\post\fields.blade.php` and place your HTML inputs inside it. Clumsy will use them for the create and edit forms. If you want your create forms to be different from your edit forms, you can create a `resources\views\admin\post\create\fields.blade.php` which will be used **only** during creation.
 
 ## Legacy
 
