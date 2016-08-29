@@ -100,10 +100,15 @@ class CMSServiceProvider extends ServiceProvider
             return new Console\PivotCommand();
         });
 
+        $this->app['command.clumsy.user'] = $this->app->share(function ($app) {
+            return new Console\RegisterUserCommand();
+        });
+
         $this->commands([
             'command.clumsy.publish',
             'command.clumsy.resource',
             'command.clumsy.pivot',
+            'command.clumsy.user',
         ]);
     }
 

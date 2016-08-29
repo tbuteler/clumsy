@@ -24,7 +24,7 @@ Clumsy\CMS\CMSServiceProvider::class,
 
 - Publish Clumsy configuration:
 ```
-php artisan php artisan vendor:publish --provider="Clumsy\CMS\CMSServiceProvider" --tag=config
+php artisan vendor:publish --provider="Clumsy\CMS\CMSServiceProvider" --tag=config
 ```
 
 - Run migrations to get the admin area's authentication tables and media management tables:
@@ -36,6 +36,16 @@ php artisan migrate
 ```
 php artisan clumsy:publish
 ```
+
+## Usage
+
+Clumsy will create an admin area where its users can manage resources. Before you start adding resources and routes, it could be a good idea to make sure you have access to it. Ideally, if you have many users, you would create a seeder in which you would register them all at once. If you just want to get up and running for development, you can user the following:
+
+```
+php artisan clumsy:user
+```
+
+You will be prompted for email, name, password and optionally a user level.
 
 ## Legacy
 
