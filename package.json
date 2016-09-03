@@ -1,7 +1,7 @@
 {
   "name": "ClumsyCMS",
   "description": "A CMS for Laravel",
-  "version": "0.28.1",
+  "version": "0.28.2",
   "devDependencies": {
     "gulp": "^3.9.1",
     "laravel-elixir": "^6.0.0-9",

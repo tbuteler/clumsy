@@ -173,12 +173,19 @@ trait Index
 
         $url = route("{$this->routePrefix}.edit", $item->id);
 
+        $value = $this->sanitizeColumnValue($value);
+
         return $this->is('gallery') ? $value : "<a href=\"{$url}\">{$value}</a>";
     }
 
     public function columnValuePlaceHolder()
     {
         return '&nbsp;';
+    }
+
+    public function sanitizeColumnValue($value)
+    {
+        return e($value);
     }
 
     public function inlineBooleanColumnValue(Eloquent $item, $column)
