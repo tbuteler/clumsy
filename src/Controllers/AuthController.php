@@ -206,7 +206,7 @@ class AuthController extends Controller
     {
         $this->validate($request, [
             'email'    => 'required|email',
-            'password' => 'required|confirmed|min:6|max:255',
+            'password' => 'required|confirmed|min:6|max:191',
         ]);
 
         $credentials = array_merge(compact('token'), $request->only(

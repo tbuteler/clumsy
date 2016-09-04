@@ -14,7 +14,7 @@ class CreateClumsyGroupsTable extends Migration
     {
         Schema::create('clumsy_groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name', 191);
             $table->timestamps();
         });
     }

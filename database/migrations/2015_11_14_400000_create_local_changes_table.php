@@ -13,11 +13,10 @@ class CreateLocalChangesTable extends Migration
     public function up()
     {
         Schema::create('clumsy_local_changes', function (Blueprint $table) {
-
             $table->increments('id');
-            $table->string('resource_type');
+            $table->string('resource_type', 191);
             $table->integer('resource_id');
-            $table->string('field');
+            $table->string('field', 191);
 
             $table->timestamps();
 
