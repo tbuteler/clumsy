@@ -8,8 +8,8 @@ trait Location
 {
     public function location($lat, $lng, $address = null)
     {
-        Asset::enqueue('google-maps-admin');
+        Asset::load('google-maps-admin');
 
-        return view('clumsy::macros.location', compact('lat', 'lng', 'address'))->render();
+        return view($this->view->resolve('macros.location'), compact('lat', 'lng', 'address'))->render();
     }
 }

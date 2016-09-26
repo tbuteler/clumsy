@@ -3,7 +3,6 @@
 namespace Clumsy\CMS\Panels;
 
 use Clumsy\CMS\Panels\Traits\Panel;
-use Clumsy\Assets\Facade as Asset;
 
 class Reorder
 {
@@ -24,13 +23,6 @@ class Reorder
         }
 
         return $columns;
-    }
-
-    public function beforeRender()
-    {
-        $this->setData('title', trans('clumsy::titles.reorder', ['resources' => $this->panel->getLabelPlural()]));
-
-        Asset::enqueue('jquery-ui', 30);
     }
 
     public function loadItems()

@@ -8,15 +8,6 @@ trait Toggable
 
     public function prepareToggable()
     {
-        $this->setData([
-            'toggleFilters' => $this->toggleFilters(),
-            'indexType'     => $this->toggled ?: 'all',
-        ]);
-
-        if ($this->isUsingToggles()) {
-            $this->setData('itemCount', $this->typeCounts());
-        }
-
         if ($this->toggled) {
             $this->query->ofType($this->toggled);
 
@@ -36,6 +27,18 @@ trait Toggable
                 $this->setData('columns', $columns);
             }
 
+        }
+    }
+
+    public function beforeRenderToggable()
+    {
+        $this->setData([
+            'toggleFilters' => $this->toggleFilters(),
+            'indexType'     => $this->toggled ?: 'all',
+        ]);
+
+        if ($this->isUsingToggles()) {
+            $this->setData('itemCount', $this->typeCounts());
         }
     }
 

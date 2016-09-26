@@ -162,7 +162,7 @@ trait Panel
         return $this;
     }
 
-    public function prepareTraits()
+    protected function prepareTraits()
     {
         foreach (class_uses_recursive(get_called_class()) as $trait) {
             if (method_exists(get_called_class(), $method = 'prepare'.class_basename($trait))) {
@@ -171,7 +171,16 @@ trait Panel
         }
     }
 
-    public function preparePanel()
+    protected function beforeRenderTraits()
+    {
+        foreach (class_uses_recursive(get_called_class()) as $trait) {
+            if (method_exists(get_called_class(), $method = 'beforeRender'.class_basename($trait))) {
+                $this->$method();
+            }
+        }
+    }
+
+    protected function preparePanel()
     {
         $this->addContext('view', $this->action);
 
@@ -366,6 +375,8 @@ trait Panel
         if (method_exists($this, 'beforeRender')) {
             $this->beforeRender();
         }
+
+        $this->beforeRenderTraits();
 
         if (method_exists($this, 'loadItems')) {
             $this->loadItems();

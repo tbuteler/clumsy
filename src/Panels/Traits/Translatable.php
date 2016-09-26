@@ -24,11 +24,11 @@ trait Translatable
             compact('locales', 'first', 'fieldColumns', 'translatable')
         );
 
-        return view('clumsy::macros.translatable', $data)->render();
+        return view($this->view->resolve('macros.translatable'), $data)->render();
     }
 
     public function translatedMedia($slot)
     {
-        return view('clumsy::macros.translated-media', array_merge($this->getData(), ['baseSlot' => $slot]));
+        return view($this->view->resolve('macros.translated-media'), array_merge($this->getData(), ['baseSlot' => $slot]));
     }
 }
