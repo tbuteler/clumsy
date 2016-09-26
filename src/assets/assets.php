@@ -8,7 +8,7 @@ return [
         'set'    => 'styles',
         'path'   => 'vendor/clumsy/cms/css/admin.css',
         'req'    => 'bootstrap',
-        'v'      => '0.28.0',
+        'v'      => '0.28.6',
         'elixir' => false,
     ],
 
@@ -16,7 +16,7 @@ return [
         'set'    => 'footer',
         'path'   => 'vendor/clumsy/cms/js/admin.js',
         'req'    => ['bootstrap.js', 'chosen'],
-        'v'      => '0.28.0',
+        'v'      => '0.28.6',
         'elixir' => false,
     ],
 

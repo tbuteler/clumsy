@@ -1364,7 +1364,6 @@ $(function () {
     }
 
     if ($('.timepicker').length) {
-        console.log('timepicking');
         $('.timepicker').timepicker({
             timeFormat: 'HH:mm:ss'
         });

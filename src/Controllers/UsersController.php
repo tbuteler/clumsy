@@ -48,7 +48,7 @@ class UsersController extends AdminController
 
     public function triggerUpdate($item, $data)
     {
-        if (isset($data['new_password'])) {
+        if (array_get($data, 'new_password')) {
             $data['password'] = $data['new_password'];
         }
 
