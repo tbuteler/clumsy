@@ -2,7 +2,6 @@
 
 namespace Clumsy\CMS\Panels\Traits;
 
-use Clumsy\CMS\Panels\Traits\Index;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 trait Gallery
