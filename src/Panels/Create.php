@@ -4,7 +4,7 @@ namespace Clumsy\CMS\Panels;
 
 use Clumsy\CMS\Panels\Traits\Editable;
 
-class Create
+class Create extends Panel
 {
     use Editable;
 

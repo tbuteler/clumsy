@@ -4,14 +4,13 @@ namespace Clumsy\CMS\Panels\Traits;
 
 use UnexpectedValueException;
 use Collective\Html\FormFacade as Form;
-use Clumsy\CMS\Panels\Traits\Panel;
 use Clumsy\CMS\Panels\Traits\Translatable;
 use Clumsy\CMS\Panels\Traits\Location;
 use Clumsy\Utils\Facades\Field;
 
 trait Editable
 {
-    use Panel, Translatable, Location;
+    use Translatable, Location;
 
     protected $item;
 
@@ -100,9 +99,9 @@ trait Editable
         return [];
     }
 
-    public function pivotField($resource, $label, $availableOptions, $options = '')
+    public function pivotField($resource, $label, $availableOptions, $settings = '')
     {
-        $output = Field::dropdown("{$resource}Ids[]", $label, $options)
+        $output = Field::dropdown("{$resource}Ids[]", $label, $settings)
                        ->options($availableOptions)
                        ->multiple()
                        ->addClass('pivot-field')

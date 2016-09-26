@@ -2,7 +2,6 @@
 
 namespace Clumsy\CMS\Panels\Traits;
 
-use Clumsy\CMS\Panels\Traits\Panel;
 use Clumsy\CMS\Panels\Traits\Sortable;
 use Clumsy\CMS\Panels\Traits\Reorderable;
 use Clumsy\CMS\Panels\Traits\Filterable;
@@ -12,7 +11,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Index
 {
-    use Panel, Sortable, Reorderable, Filterable, Toggable;
+    use Sortable, Reorderable, Filterable, Toggable;
 
     protected $items;
 
@@ -113,7 +112,6 @@ trait Index
         return in_array($column, $this->editableInline());
     }
 
-
     public function columnTitle($resource, $column, $name)
     {
         $url = route("{$this->routePrefix}.sort");
@@ -193,12 +191,10 @@ trait Index
         $method = $this->is('gallery') ? 'booleanCaption' : 'booleanCell';
 
         return $this->{$method}($column, $item->$column, [
-
             'id'         => "ei-{$column}-{$item->id}",
             'setClass'   => 'editable-inline',
             'dataId'     => "{$item->id}",
             'dataColumn' => "{$column}",
-
         ], $this->columnName($column));
     }
 

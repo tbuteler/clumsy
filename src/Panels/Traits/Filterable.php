@@ -4,7 +4,7 @@ namespace Clumsy\CMS\Panels\Traits;
 
 trait Filterable
 {
-    public function prepareFilterable()
+    public function beforeRenderFilterable()
     {
         $this->setData('filterData', $this->generateFilterData());
 

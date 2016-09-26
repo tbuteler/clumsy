@@ -2,19 +2,17 @@
 
 namespace Clumsy\CMS\Panels;
 
-use Clumsy\CMS\Panels\Traits\Panel;
+use Clumsy\CMS\Panels\Traits\Reorder as ReorderTrait;
 
-class Reorder
+class Reorder extends Panel
 {
-    use Panel {
-        Panel::getColumns as getPanelColumns;
-    }
+    use ReorderTrait;
 
     protected $action = 'reorder';
 
     protected $items;
 
-    public function getColumns()
+    public function getColumns($columns = null)
     {
         $columns = $this->reorderColumns() ? $this->reorderColumns() : array_slice($this->getBaseColumns(), 0, 1);
 

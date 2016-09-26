@@ -1,6 +1,6 @@
 <?php
 
-namespace Clumsy\CMS\Panels\Traits;
+namespace Clumsy\CMS\Panels;
 
 use Illuminate\Session\Store as Session;
 use Clumsy\CMS\Support\Bakery;
@@ -9,7 +9,7 @@ use Clumsy\CMS\Support\ViewResolver;
 use Clumsy\CMS\Facades\Clumsy;
 use Clumsy\Assets\Facade as Asset;
 
-trait Panel
+abstract class Panel
 {
     public $rendered;
 
@@ -114,7 +114,7 @@ trait Panel
         return $this->getParentModelUrl('edit', $this->getParentModelId());
     }
 
-    public function nest($panel)
+    public function nest(Panel $panel)
     {
         $panel->parent($this);
         $this->children[] = $panel;
@@ -157,6 +157,27 @@ trait Panel
             $this->setData($this->parent->prepare()->getData());
         }
 
+        $this->addContext('view', $this->action);
+
+        $this->setData([
+            'panel'       => $this,
+            'view'        => $this->view,
+            'action'      => $this->action,
+            'type'        => $this->getType(),
+            'model'       => $this->model,
+            'resource'    => $this->resourceName(),
+            'routePrefix' => $this->routePrefix,
+            'columns'     => $this->getColumns(),
+            'breadcrumb'  => $this->bakery->breadcrumb($this->hierarchy, $this->action),
+            'isChild'     => $this->isChild(),
+        ]);
+
+        if (!$this->isChild()) {
+            Asset::json('admin', [
+                'resource' => $this->resourceName(),
+            ]);
+        }
+
         $this->prepareTraits();
 
         return $this;
@@ -177,30 +198,6 @@ trait Panel
             if (method_exists(get_called_class(), $method = 'beforeRender'.class_basename($trait))) {
                 $this->$method();
             }
-        }
-    }
-
-    protected function preparePanel()
-    {
-        $this->addContext('view', $this->action);
-
-        $this->setData([
-            'panel'       => $this,
-            'view'        => $this->view,
-            'action'      => $this->action,
-            'type'        => $this->getType(),
-            'model'       => $this->model,
-            'resource'    => $this->resourceName(),
-            'routePrefix' => $this->routePrefix,
-            'columns'     => $this->getColumns(),
-            'breadcrumb'  => $this->bakery->breadcrumb($this->hierarchy, $this->action),
-            'isChild'     => $this->isChild(),
-        ]);
-
-        if (!$this->isChild()) {
-            Asset::json('admin', [
-                'resource' => $this->resourceName(),
-            ]);
         }
     }
 
@@ -407,7 +404,7 @@ trait Panel
 
     public function renderChildren()
     {
-        array_walk($this->children, function (&$child) {
+        array_walk($this->children, function (Panel &$child) {
             $child->render(true);
         });
     }

@@ -4,7 +4,7 @@ namespace Clumsy\CMS\Panels;
 
 use Clumsy\CMS\Panels\Traits\Index;
 
-class Table
+class Table extends Panel
 {
     use Index;
 
