@@ -1,0 +1,27 @@
+/*
+|--------------------------------------------------------------------------
+| Tabs
+|--------------------------------------------------------------------------
+|
+*/
+
+.tab-pane {
+    display: none;
+
+    &.active {
+        display: block;
+    }
+}
+
+.nav-tabs {
+    margin-bottom: 30px;
+
+    & > li {
+
+        &.active > a,
+        &.active > a:hover,
+        &.active > a:focus {
+            background-color: $body-bg;
+        }
+    }
+}

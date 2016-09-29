@@ -1,0 +1,40 @@
+/*
+|--------------------------------------------------------------------------
+| Page headings
+|--------------------------------------------------------------------------
+|
+*/
+
+.master {
+
+    & > .page-header {
+        margin-top: 15px;
+    }
+}
+
+.main-content {
+
+    & > .page-header {
+        margin-top: 5px;
+    }
+}
+
+.page-header {
+    position: relative;
+    margin-top: 30px;
+    line-height: 42px;
+
+    &.section-header {
+        margin-top: 0;
+    }
+}
+
+.after-title {
+    margin-top: 10px;
+    text-align: left;
+
+    .btn {
+        position: relative;
+        top: -2px;
+    }
+}

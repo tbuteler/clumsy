@@ -1,12 +1,12 @@
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-16">
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 @field('name', trans('clumsy::fields.name'))
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 @field('email', trans('clumsy::fields.email'))
             </div>
         </div>
@@ -22,10 +22,10 @@
                 </ul>
                 <h3 class="page-header">@lang('clumsy::fields.change_password')</h3>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         @password('new_password', trans('clumsy::fields.new_password'))
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         @password('new_password_confirmation', trans('clumsy::fields.new_password_confirmation'))
                     </div>
                 </div>
@@ -35,7 +35,7 @@
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-8">
 
         <h4 class="page-header lead section-header">@lang('clumsy::titles.user_control')</h4>
 

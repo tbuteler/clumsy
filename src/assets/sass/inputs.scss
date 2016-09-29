@@ -1,0 +1,325 @@
+/*
+|--------------------------------------------------------------------------
+| Form & inputs
+|--------------------------------------------------------------------------
+|
+*/
+
+form {
+    margin-bottom: 1em;
+}
+
+#main-form {
+    padding-bottom: 3px;
+}
+
+.bottom-buttons {
+    overflow: hidden;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+
+    button {
+        margin-left: 15px;
+
+        &:first-child {
+            margin-left: 0;
+        }
+
+        &.glyphicon {
+            top: 0;
+        }
+    }
+
+    .delete {
+        color: $gray;
+    }
+}
+
+.form-group {
+
+    &.select {
+        position: relative;
+
+        select {
+            appearance: none;
+        }
+
+        &:after {
+            content: '<>';
+            position: absolute;
+            right: 0;
+            transform: rotate(90deg);
+            font-family: "Consolas", monospace;
+            font-weight: 700;
+            color: #999;
+            top: 2.25em;
+            right: 0.55em;
+        }
+
+        &.select-multiple {
+
+            &:after {
+                content: '';
+            }
+        }
+    }
+}
+
+.form-control {
+    box-shadow: none;
+
+    &:focus {
+        border-color: $brand-primary;
+        box-shadow: inset 3px 0px 0px 0px $brand-primary;
+        outline-offset: 0;
+        outline: 0;
+    }
+}
+
+.form-control-feedback {
+    right: 8px;
+    font-size: 2em;
+}
+
+.input-group + .form-control-feedback {
+    display: none;
+}
+
+.editable-html {
+    font-size: 0.75em;
+    font-family: Monaco, monospace;
+    white-space: pre;
+}
+
+.password-toggle-label {
+    margin-bottom: 0;
+    font-weight: normal;
+    margin-top: 2px;
+    cursor: pointer;
+
+    input {
+        margin-right: 5px;
+        position: relative;
+        top: -1px;
+    }
+}
+
+.geocoder-btn {
+    line-height: 0;
+
+    span {
+        font-size: 21px;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| TinyMCE
+|--------------------------------------------------------------------------
+|
+*/
+
+.form-group {
+
+    .mce-tinymce {
+        border-radius: $border-radius-base;
+    }
+
+    .mce-panel {
+        border-color: #ccc;
+    }
+
+    .mce-toolbar-grp {
+        background: #f0f0f0;
+        border-top-left-radius: $border-radius-base;
+        border-top-right-radius: $border-radius-base;
+    }
+
+    .mce-btn {
+        background: none;
+
+        &:hover {
+            background: darken(#f0f0f0, 10%);
+        }
+    }
+
+    .mce-edit-area,
+    .mce-edit-area iframe {
+        border-bottom-left-radius: $border-radius-base;
+        border-bottom-right-radius: $border-radius-base;
+    }
+}
+
+.mce-widget.mce-tooltip {
+    font-family: $font-family-sans-serif;
+
+    & * {
+        font-family: $font-family-sans-serif;
+        font-size: $font-size-small;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Chosen
+|--------------------------------------------------------------------------
+|
+*/
+
+.form-group.select {
+
+    .chosen-container-single {
+        height: 30px;
+        font-size: 14px;
+
+        & > a {
+            height: 30px;
+            line-height: 28px;
+
+            // Caret
+            b {
+                position: relative;
+                top: 3px;
+            }
+
+            // Reset
+            .search-choice-close {
+                top: 9px;
+            }
+        }
+    }
+
+    .chosen-container-multi {
+
+        .chosen-choices {
+            padding: 3px 9px;
+            border: 1px solid #ccc;
+            background-image: none;
+            border-radius: $border-radius-base;
+
+            .search-choice {
+                margin-top: 3px;
+                margin-bottom: 2px;
+            }
+        }
+
+        .search-field {
+            height: 25px;
+            line-height: 27px;
+
+            input[type=text] {
+                height: 25px;
+            }
+        }
+
+        &.chosen-container-active {
+
+            .chosen-choices {
+                border-color: $brand-primary;
+                box-shadow: inset 3px 0px 0px 0px $brand-primary;
+            }
+        }
+
+        &.chosen-with-drop {
+
+            .chosen-choices {
+                border-bottom-right-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+
+        .chosen-drop {
+            border-bottom-right-radius: $border-radius-base;
+            border-bottom-left-radius: $border-radius-base;
+        }
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Date and time pickers
+|--------------------------------------------------------------------------
+|
+*/
+
+.ui-datepicker {
+    z-index: 100!important;
+
+    table tr th,
+    table tr td {
+        min-width: 0;
+    }
+}
+
+.form-control[readonly].datepicker,
+.form-control[readonly].datetimepicker,
+.form-control[readonly].timepicker {
+    cursor: pointer;
+    background-color: #fff;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Color picker
+|--------------------------------------------------------------------------
+|
+*/
+
+input+.iris-picker{
+    position: absolute;
+    z-index: 9999;
+}
+
+/*
+|--------------------------------------------------------------------------
+| YouTube
+|--------------------------------------------------------------------------
+|
+*/
+
+.embed-video-wrapper {
+
+    .has-error {
+        border-color: $state-danger-border;
+        box-shadow: none;
+    }
+
+    .preview-box{
+        min-height: 200px;
+        position: relative;
+        text-align: center;
+        color: #ccc;
+
+        .placeholders {
+
+            i {
+                position: relative;
+                top: 64px;
+                font-size: 60px;
+            }
+
+            .error {
+                display: none;
+                color: #ff4500;
+            }
+        }
+
+        iframe {
+            width: 100%;
+            min-height: 295px;
+        }
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Map input
+|--------------------------------------------------------------------------
+|
+*/
+
+.map {
+    padding: 0;
+    min-height: 375px;
+}

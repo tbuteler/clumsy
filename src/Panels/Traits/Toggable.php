@@ -8,9 +8,11 @@ trait Toggable
 
     public function beforeRenderToggable()
     {
+        $defaultToggle = $this->suppressToggleAll() ? head(array_keys($this->toggleFilters())) : 'all';
+
         $this->setData([
             'toggleFilters' => $this->toggleFilters(),
-            'indexType'     => $this->toggled ?: 'all',
+            'indexType'     => $this->toggled ?: $defaultToggle,
         ]);
 
         if ($this->isUsingToggles()) {

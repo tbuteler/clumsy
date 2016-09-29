@@ -1,0 +1,41 @@
+/*
+|--------------------------------------------------------------------------
+| Filter Box
+|--------------------------------------------------------------------------
+|
+*/
+
+.filter-panel {
+
+    &,
+    .panel-heading,
+    .panel-footer {
+        background-color: $body-bg;
+    }
+
+    .table {
+
+        tr {
+
+            th {
+                width: 5%;
+                text-align: right;
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .form-group {
+        margin: 5px 0;
+
+        .chosen-choices {
+            min-height: 35px;
+            background-image: none;
+            box-shadow: none;
+        }
+    }
+
+    form {
+        margin-bottom: 0;
+    }
+}

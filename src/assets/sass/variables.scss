@@ -1,0 +1,38 @@
+/*
+|--------------------------------------------------------------------------
+| Variables
+|--------------------------------------------------------------------------
+|
+*/
+
+$body-bg: #f9f9f9 !default;
+$brand-primary: #5e97ce !default;
+$brand-success: #58d39b !default;
+$brand-info: #94c0eb !default;
+$brand-warning: #ffc66a !default;
+$brand-danger: #f7434c !default;
+
+$state-success-text: #16784b !default;
+$state-success-bg: #dcfdee !default;
+$state-warning-text: #ae7820 !default;
+$state-warning-bg: #fff2dd !default;
+$state-danger-text: #f7434c !default;
+$state-danger-bg: #ffdddf !default;
+
+$font-family-sans-serif: "Source Sans Pro", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI" !default;
+$font-size-base: 15px !default;
+$iconProportion: 0.735 !default;
+$headings-font-weight: 300 !default;
+
+$navbar-default-color: #fff !default;
+$navbar-default-bg: #356da3 !default;
+$navbar-default-link-color: #fff !default;
+$navbar-default-link-hover-color: darken($navbar-default-link-color, 10%) !default;
+$navbar-default-link-hover-bg: transparent !default;
+$navbar-default-link-active-color: darken($navbar-default-link-hover-color, 10%) !default;
+
+$border-radius-base: 0 !default;
+$border-radius-large: 0 !default;
+$border-radius-small: 0 !default;
+
+$grid-columns: 24 !default;

@@ -21,7 +21,7 @@ trait Index
 
         if ($this->model->importable) {
             $addResourceUrl = route("{$this->routePrefix}.import");
-            $addResourceLabel = trans('clumsy::buttons.import', ['resources' => $this->getLabelPlural()]);
+            $addResourceLabel = trans('clumsy::buttons.import');
         } else {
             $addResourceUrl = route("{$this->routePrefix}.create");
             $addResourceLabel = trans('clumsy::buttons.add');

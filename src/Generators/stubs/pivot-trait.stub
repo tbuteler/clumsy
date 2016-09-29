@@ -14,9 +14,13 @@ trait {{objectName}}Pivot
 
             if (request()->has($flag)) {
                 $pivotIds = array_filter((array)request($pivotIdsKey));
-                self::saved(function ($model) use ($pivotIds) {
+                if ($model->exists) {
                     $model->{{plural}}()->sync($pivotIds);
-                });
+                } else {
+                    self::saved(function ($model) use ($pivotIds) {
+                        $model->{{plural}}()->sync($pivotIds);
+                    });
+                }
             }
             request()->replace(request()->except([$pivotIdsKey, $flag]));
             unset($model->$pivotIdsKey);

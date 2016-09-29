@@ -1266,8 +1266,8 @@ sweetalert.setDefaults({
     allowEscapeKey: true
 });
 
-var _alert = function _alert(params) {
-    return sweetalert($.extend(params, params.type === 'warning' ? { confirmButtonColor: '#d9534f' } : {}));
+var _alert = function _alert(params, callback) {
+    return sweetalert($.extend(params, params.type === 'warning' ? { confirmButtonColor: '#d9534f' } : {}), callback);
 };
 
 $(function () {
@@ -1289,13 +1289,11 @@ $(function () {
     });
 
     $('.delete').click(function () {
-        $(this).closest('form').next('.delete-form').submit();
-    });
-    $('.delete-form').submit(function () {
-        var $form = $(this).prev('form'),
-            $del = $('.delete', $form),
-            msg = $(this).hasClass('user') ? handover.admin.translations.confirmUser : handover.admin.translations.confirm,
-            btn = $(this).hasClass('user') ? handover.admin.translations.removeUser : handover.admin.translations.remove;
+        var $del = $(this),
+            $form = $(this).closest('form'),
+            $delForm = $form.next('.delete-form'),
+            msg = $form.hasClass('user') ? handover.admin.translations.confirmUser : handover.admin.translations.confirm,
+            btn = $form.hasClass('user') ? handover.admin.translations.removeUser : handover.admin.translations.remove;
 
         _alert({
             title: handover.admin.translations.alert,
@@ -1304,9 +1302,8 @@ $(function () {
             confirmButtonText: btn
         }, function () {
             clickOnce($del);
-            return true;
+            $delForm.submit();
         });
-        return false;
     });
 
     var $pivots = $('.pivot-field');

@@ -7,7 +7,6 @@ return [
     'admin.css' => [
         'set'    => 'styles',
         'path'   => 'vendor/clumsy/cms/css/admin.css',
-        'req'    => 'bootstrap',
         'v'      => '0.28.6',
         'elixir' => false,
     ],

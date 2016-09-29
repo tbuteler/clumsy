@@ -20,7 +20,7 @@ return [
 
     'delete'        => 'Remover',
 
-    'import'        => 'Actualizar :resources',
+    'import'        => 'Actualizar',
 
     'back-to-index' => 'Voltar ao índice',
 

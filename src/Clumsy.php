@@ -88,6 +88,8 @@ class Clumsy
 
     public function assets(Request $request)
     {
+        $this->app['clumsy.assets']->font(['Source Sans Pro' => [300, 400, 600], 'Material Icons']);
+
         view()->share([
             'adminPrefix'     => $this->prefix(),
             'userRoutePrefix' => 'user',

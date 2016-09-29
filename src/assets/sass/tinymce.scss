@@ -5,6 +5,9 @@
 |
 */
 
+@import "variables";
+@import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro';
+
 /*
 |--------------------------------------------------------------------------
 | Styles
@@ -12,8 +15,8 @@
 */
 
 #tinymce {
-	font-family: "Arial", "Helvetica", sans-serif;
-	font-size: 14px;
+	font-family: $font-family-sans-serif;
+	font-size: $font-size-base;
 	color: #555;
 	padding-bottom: 0!important;
 }

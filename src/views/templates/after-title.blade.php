@@ -1,3 +1,3 @@
-<div class="col-sm-4 after-title">
+<div class="col-sm-6 after-title">
    @yield('after-title')
 </div>

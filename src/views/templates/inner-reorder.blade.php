@@ -15,7 +15,7 @@
                         {{ $i }}
                     </td>
                     <td class="reorder-item grabbable">
-                        <i class="glyphicon glyphicon-menu-hamburger"></i>
+                        <i class="material-icons">&#xE8FE;</i>
                         <span>
 
                             @foreach ($columns as $column => $name)

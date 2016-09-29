@@ -1,0 +1,59 @@
+/*
+|--------------------------------------------------------------------------
+| Reorder Box
+|--------------------------------------------------------------------------
+|
+*/
+
+.reorder-table {
+    width: 100%;
+}
+
+.reorder-number {
+    min-width: 30px;
+    text-align: right;
+    padding: 8px;
+    margin-bottom: 5px;
+}
+
+.reorder-item {
+    width: 97%;
+    padding: 7px;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    background-color: #fff;
+
+    i {
+        display: table-cell;
+        vertical-align: middle;
+        padding: 0 10px 0 5px;
+        color: #a0a0a0;
+    }
+
+    span {
+          display: table-cell;
+    }
+}
+
+.grabbable {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+
+    &:active {
+        cursor: grabbing;
+        cursor: -moz-grabbing;
+        cursor: -webkit-grabbing;
+    }
+}
+
+.ui-sortable-helper {
+    display: table;
+}
+
+.sortable-placeholder {
+    width: 0px;
+    padding: 7px;
+    display: block;
+}
