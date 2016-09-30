@@ -1,3 +1,4 @@
+const icheck = require('icheck')
 const sweetalert = require('sweetalert')
 
 sweetalert.setDefaults({
@@ -12,6 +13,12 @@ var _alert = function(params, callback) {
 };
 
 $(function(){
+
+    $('input[type="checkbox"]')
+        .iCheck()
+        .on('ifToggled', function () {
+            $(this).change()
+        });
 
     var clickOnce = function($el) {
         $el.add($el.siblings(':button, :submit')).prop('disabled', true);
@@ -237,7 +244,7 @@ $(function(){
 
     var $editableInline = $('.editable-inline');
     if ($editableInline.length) {
-        $editableInline.click(function(e){
+        $editableInline.change(function(e){
             e.stopPropagation();
             var data = {};
             data._method = 'PUT';
@@ -246,7 +253,8 @@ $(function(){
             $.post($(this).closest('[data-update-url]').data('update-url').replace(':id', $(this).data('id')), data);
         });
         $editableInline.closest('td').click(function(){
-            $(this).find('.editable-inline').click();
+            var $input = $(this).find('.editable-inline');
+            $input.prop('checked', !$input.prop('checked'));
         });
     }
 
