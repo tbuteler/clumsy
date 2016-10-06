@@ -79,7 +79,7 @@ class APIController extends Controller
         if (str_contains($indicator, '.') && !starts_with($indicator, '_')) {
             $indicatorArray = explode('.', $indicator);
             $this->action = last($indicatorArray);
-            $this->resource = head($indicatorArray);
+            $this->resource = $indicatorArray[count($indicatorArray) - 2];
             $this->modelBaseName = studly_case($this->resource);
 
             if ($modelName = $this->modelClass()) {
