@@ -132,6 +132,10 @@ class AdminController extends APIController
             return parent::index();
         }
 
+        if (!$this->allows('index', $this->model)) {
+            return abort(403);
+        }
+
         $this->loadPanel();
 
         return response($this->panel->render());
