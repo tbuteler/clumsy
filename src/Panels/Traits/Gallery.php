@@ -31,6 +31,6 @@ trait Gallery
     {
         $this->columnsPerRow = $this->galleryColumnsPerRow();
 
-        $this->columnSize = 12/$this->columnsPerRow;
+        $this->columnSize = 24/$this->columnsPerRow;
     }
 }
