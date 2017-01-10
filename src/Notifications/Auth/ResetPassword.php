@@ -19,7 +19,7 @@ class ResetPassword extends BaseResetPassword
      *
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail()
+    public function toMail($notifiable)
     {
         return (new MailMessage)
             ->subject(trans('clumsy::titles.reset-password'))
