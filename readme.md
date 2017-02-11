@@ -144,10 +144,8 @@ Where `[...]` are the templates of a given panel currently in view, which extend
     - `inner-index`
         - `filter`
         - `table`
-            - `table-th`
             - `table-tr`
-                - `table-td`
-            - `table-empty` (instead of `table-th` and `table-r`, when no resources exist)
+            - `table-empty` (instead of `table-r`, when no resources exist)
         - `gallery` (instead of `table`)
             - `gallery-item`
                 - `gallery-caption`
@@ -184,6 +182,7 @@ php artisan vendor:publish --provider="Clumsy\CMS\CMSServiceProvider" --tag=view
 
 ## Legacy
 
+- For Laravel 5.3 support, use version 0.28.*
 - For Laravel 5.2 support, use version 0.27.*
 - For Laravel 5.1 support, use version 0.24.*
 - For Laravel 4.1 or 4.2 support, use 0.22.*

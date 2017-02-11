@@ -7,6 +7,8 @@ use HTTP;
 use InvalidArgumentException;
 use Illuminate\Support\Arr;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 trait Exportable
 {
@@ -91,8 +93,8 @@ trait Exportable
     protected function resolveTableExportToXls()
     {
         $this->itemsPerPage = $this->getOptionalProperty('exportMaximumRows', 60000);
-        Excel::create($this->getLabelPlural(), function ($excel) {
-            $excel->sheet($this->getLabelPlural(), function ($sheet) {
+        Excel::create($this->getLabelPlural(), function (LaravelExcelWriter $excel) {
+            $excel->sheet($this->getLabelPlural(), function (LaravelExcelWorksheet $sheet) {
                 $sheet->freezeFirstRow();
                 $sheet->setParser(app(ExcelViewParser::class));
                 $sheet->getView()->setHtml($sheet, $this->template('table')->render());
