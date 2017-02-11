@@ -14,7 +14,7 @@
         "laravelcollective/html": "5.4.*",
         "clumsy/assets": "0.8.*",
         "clumsy/utils": "0.11.*",
-        "clumsy/eminem": "0.14.*",
+        "clumsy/eminem": "0.15.*",
         "erusev/parsedown": "^1.6",
         "maatwebsite/excel": "~2.1.0"
     },
