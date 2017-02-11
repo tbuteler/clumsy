@@ -39,13 +39,14 @@ abstract class Panel
     protected $parent;
     protected $children = [];
 
+    protected $format = 'html';
+
     public function __construct(
         Session $session,
         Bakery $bakery,
         ResourceNameResolver $labeler,
         ViewResolver $view
-    )
-    {
+    ) {
         $this->session = $session;
 
         $this->bakery = $bakery;
@@ -409,6 +410,11 @@ abstract class Panel
         });
     }
 
+    public function resolve()
+    {
+        return response($this->render());
+    }
+
     public function resourceParameter()
     {
         return $this->model->resourceParameter();
@@ -449,6 +455,28 @@ abstract class Panel
         $this->labelPlural($plural);
 
         return $this;
+    }
+
+    public function format($format)
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    public function useHTML()
+    {
+        return $this->format === 'html';
+    }
+
+    public function avoidHTML()
+    {
+        return !$this->useHTML();
     }
 
     /**

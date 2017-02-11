@@ -105,6 +105,10 @@ form {
     }
 }
 
+textarea {
+    resize: vertical;
+}
+
 .geocoder-btn {
     line-height: 0;
 
@@ -127,11 +131,11 @@ form {
     }
 
     .mce-panel {
-        border-color: #ccc;
+        border-color: $input-border;
     }
 
     .mce-toolbar-grp {
-        background: #f0f0f0;
+        background: darken($body-bg, 5%);
         border-top-left-radius: $border-radius-base;
         border-top-right-radius: $border-radius-base;
     }
@@ -140,7 +144,7 @@ form {
         background: none;
 
         &:hover {
-            background: darken(#f0f0f0, 10%);
+            background: darken($body-bg, 10%);
         }
     }
 
@@ -157,6 +161,138 @@ form {
     & * {
         font-family: $font-family-sans-serif;
         font-size: $font-size-small;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| SimpleMDE
+|--------------------------------------------------------------------------
+|
+*/
+
+.markdown-editor + .editor-toolbar {
+    background: darken($body-bg, 5%);
+    opacity: 1;
+    border: 1px solid $input-border;
+    border-bottom: 0;
+    border-top-left-radius: $border-radius-base;
+    border-top-right-radius: $border-radius-base;
+
+    &:before {
+        margin-bottom: 2px;
+    }
+
+    &:after {
+        margin-top: 2px;
+    }
+
+    a {
+        width: 31px;
+        height: 29px;
+        border-radius: $border-radius-base;
+        color: #333 !important;
+        margin-left: 2px;
+
+        &:focus {
+            outline: 0;
+        }
+
+        &.active,
+        &:hover {
+            background: darken($body-bg, 10%);
+            border-color: $input-border;
+        }
+
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+
+    &.disabled-for-preview {
+
+        a {
+
+            &:not(.no-disable) {
+                background: darken($body-bg, 5%);
+                opacity: 0.4;
+            }
+        }
+    }
+
+    .separator {
+        position: relative;
+        top: -5px;
+    }
+
+    // Override fonts with Material Icons
+    .fa {
+
+        &:after {
+            @include icon();
+            position: relative;
+            top: 2px;
+            left: 0;
+            width: 31px;
+            height: 29px;
+        }
+
+        &.fa-bold:after {
+            content: 'format_bold';
+        }
+
+        &.fa-italic:after {
+            content: 'format_italic';
+        }
+
+        &.fa-header:after {
+            content: 'title';
+        }
+
+        &.fa-quote-left:after {
+            content: 'format_quote';
+        }
+
+        &.fa-list-ul:after {
+            content: 'format_list_bulleted';
+        }
+
+        &.fa-list-ol:after {
+            content: 'format_list_numbered';
+        }
+
+        &.fa-link:after {
+            content: 'insert_link';
+        }
+
+        &.fa-picture-o:after {
+            content: 'insert_photo';
+        }
+
+        &.fa-eye:after {
+            content: 'remove_red_eye';
+        }
+
+        &.fa-columns:after {
+            content: 'chrome_reader_mode';
+        }
+
+        &.fa-arrows-alt:after {
+            content: 'fullscreen';
+        }
+
+        &.fa-question-circle:after {
+            content: 'help_outline';
+        }
+    }
+}
+
+.textarea {
+
+    .CodeMirror {
+        border-color: $input-border;
+        border-bottom-left-radius: $border-radius-base;
+        border-bottom-right-radius: $border-radius-base;
     }
 }
 
@@ -194,7 +330,7 @@ form {
 
         .chosen-choices {
             padding: 3px 9px;
-            border: 1px solid #ccc;
+            border: 1px solid $input-border;
             background-image: none;
             border-radius: $border-radius-base;
 
@@ -289,7 +425,7 @@ input+.iris-picker{
         min-height: 200px;
         position: relative;
         text-align: center;
-        color: #ccc;
+        color: $input-border;
 
         .placeholders {
 

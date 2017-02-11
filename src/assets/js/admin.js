@@ -55,14 +55,19 @@ $(function(){
         });
     }
 
-    $('.with-tooltip').tooltip();
-    $('.navbar').on('show.bs.dropdown', function(event) {
-        var $el = $(event.target);
-        if ($el.hasClass('with-tooltip')){
-            $el.tooltip('destroy');
-            $el.one('hide.bs.dropdown', function() {
-                $el.tooltip();
-            });
+    $('.with-tooltip').on({
+        'mouseenter keyup': function() {
+            if (!$(this).data('bs.tooltip')) {
+                $(this).tooltip({
+                    trigger: 'manual'
+                });
+            }
+            if (!$(this).parent('.dropdown').hasClass('open')) {
+                $(this).tooltip('show');
+            }
+        },
+        'mouseleave blur click': function() {
+            $(this).tooltip('hide');
         }
     });
 
@@ -76,6 +81,17 @@ $(function(){
             plugins: "autoresize,link",
             language_url: handover.admin.locale !== 'en' ? handover.admin.urls.base+'/../vendor/clumsy/utils/js/tinymce/'+handover.admin.locale+'.min.js' : null
         }, typeof handover.admin.tinymce === 'undefined' ? {} : handover.admin.tinymce));
+    }
+
+    if ($('.markdown-editor').length) {
+        $('.markdown-editor').each(function(i, element) {
+            new SimpleMDE($.extend({
+                element: element,
+                autoDownloadFontAwesome: false,
+                spellChecker: false,
+                status: false
+            }, typeof handover.admin.simplemde === 'undefined' ? {} : handover.admin.simplemde));
+        });
     }
 
     // If a translatable panel pane has an error that prevents saving, switch to it
@@ -118,7 +134,7 @@ $(function(){
             )
         );
 
-        $(document).on('click',function(e){
+        $('body').on('click',function(e){
             if ($(e.target).attr('class') == 'form-control colorpicker') {
                 $(e.target).iris('show');
             }
@@ -298,14 +314,32 @@ $(function(){
 
         }).disableSelection();
 
-        reorder.on('sortupdate',function(event,ui){
+        reorder.on('sortupdate',function() {
             $('.reorder-table tbody > tr td:first-child').fadeOut().promise().done(function(){
                 $('.reorder-table tbody > tr').each(function(index){
                     $(this).find(' > td:first').text(index + 1);
-                }).promise().done(function(){
+                }).promise().done(function() {
                     $('.reorder-table tbody > tr td:first-child').fadeIn();
                 });
             });
+        });
+    }
+
+    if ($('body').hasClass('user-edit')) {
+        var $currentPassword = $('#current_password'),
+            $currentPasswordRow = $('#current_password').closest('.collapse');
+        $currentPasswordRow.collapse({
+            toggle: $currentPassword.closest('.form-group').hasClass('has-feedback')
+        });
+        $('#new_password, #new_password_confirmation').keyup(function() {
+            var toggle = 'hide';
+            $('#new_password, #new_password_confirmation').each(function(i, element) {
+                if ($(element).val() !== '') {
+                    toggle = 'show';
+                    return false;
+                }
+            });
+            $currentPasswordRow.collapse(toggle);
         });
     }
 });

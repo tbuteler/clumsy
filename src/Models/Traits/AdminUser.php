@@ -27,12 +27,18 @@ trait AdminUser
 
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required|max:191',
             'email' => 'required|email|max:191|unique:'.$this->getTable().',email,'.$this->getKey(),
             'password' => 'required|confirmed|min:6|max:191',
             'new_password' => 'confirmed|min:6|max:191',
         ];
+
+        if ($this->exists()) {
+            $rules['current_password'] = 'required_with:password,new_password|current_password';
+        }
+
+        return $rules;
     }
 
     public function sendPasswordResetNotification($token)

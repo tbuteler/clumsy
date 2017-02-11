@@ -9,8 +9,8 @@
 
     @if (Overseer::canManageUsers())
     <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown with-tooltip" title="{{ trans('clumsy::buttons.manage_site') }}" data-placement="bottom">
-            <a href="#" class="material-icons dropdown-toggle hidden-xs" data-toggle="dropdown">&#xE8B8;</a>
+        <li class="dropdown">
+            <a href="#" class="material-icons with-tooltip dropdown-toggle hidden-xs" data-toggle="dropdown" title="{{ trans('clumsy::buttons.manage_site') }}" data-placement="bottom">&#xE8B8;</a>
             <a href="#" class="dropdown-toggle visible-xs" data-toggle="dropdown">
                 {{ trans('clumsy::buttons.manage_site') }} <b class="caret"></b>
             </a>
@@ -24,8 +24,8 @@
     @endif
 
     <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown with-tooltip" title="{{ trans('clumsy::buttons.session') }}" data-placement="bottom">
-            <a href="#" class="material-icons dropdown-toggle hidden-xs" data-toggle="dropdown">&#xE7FD;</a>
+        <li class="dropdown">
+            <a href="#" class="material-icons with-tooltip dropdown-toggle hidden-xs" data-toggle="dropdown" title="{{ trans('clumsy::buttons.session') }}" data-placement="bottom">&#xE7FD;</a>
             <a href="#" class="dropdown-toggle visible-xs" data-toggle="dropdown">
             {{ trans('clumsy::buttons.session') }} <b class="caret"></b>
             </a>

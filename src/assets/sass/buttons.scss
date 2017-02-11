@@ -48,7 +48,7 @@
     @keyframes checkmark-icon {
         to {
             opacity: 1;
-            top: $iconProportion*0.7em;
+            top: $icon-proportion * .7em;
         }
     }
 
@@ -133,38 +133,54 @@
     }
 
     &.btn-icon {
-        font-size: $iconProportion+1em;
-        line-height: 25px;
+        font-size: $icon-proportion+1em;
+        line-height: 21px;
 
         &.loading {
-            padding-right: $iconProportion*2em;
+            padding-right: $icon-proportion*2em;
 
             &:after {
-                top: $iconProportion*0.8em;
-                right: $iconProportion*0.35em;
-                width: $iconProportion*1em;
-                height: $iconProportion*1em;
+                top: $icon-proportion*0.8em;
+                right: $icon-proportion*0.35em;
+                width: $icon-proportion*1em;
+                height: $icon-proportion*1em;
             }
         }
 
         &.success {
-            padding-right: $iconProportion*2em;
+            padding-right: $icon-proportion*2em;
 
             &:before {
-                top: $iconProportion*0.5em;
-                right: $iconProportion*0.25em;
-                width: $iconProportion*1.25em;
-                height: $iconProportion*1.25em;
+                top: $icon-proportion*0.5em;
+                right: $icon-proportion*0.25em;
+                width: $icon-proportion*1.25em;
+                height: $icon-proportion*1.25em;
             }
 
             &:after {
-                right: $iconProportion*0.7em;
-                top: $iconProportion*0.95em;
-                width: $iconProportion*0.4em;
-                height: $iconProportion*0.6em;
+                right: $icon-proportion*0.7em;
+                top: $icon-proportion*0.95em;
+                width: $icon-proportion*0.4em;
+                height: $icon-proportion*0.6em;
                 animation-name: checkmark-icon;
             }
         }
+
+        &.btn-muted {
+            color: #bbb;
+        }
+    }
+}
+
+.add-new {
+    margin-left: 5px;
+}
+
+.export-dropdown-menu {
+
+    @media (min-width: $screen-sm-min) {
+        left: auto;
+        right: 0;
     }
 }
 
@@ -180,8 +196,10 @@
     top: 5px;
     height: 32px;
     width: 32px;
+    padding: 0;
     overflow: hidden;
     vertical-align: top;
+    background-color: transparent;
     border: 1px solid #bbb;
     border-radius: 20px;
     cursor: pointer;
@@ -195,6 +213,8 @@
         text-decoration: none;
         color: #999;
         border-color: #999;
+        box-shadow: 0 0 0 2px transparentize($brand-primary, .75);
+        outline: none;
     }
 
     &.active {

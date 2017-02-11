@@ -10,11 +10,13 @@
         }
     ],
     "require": {
-        "laravel/framework": "5.3.*",
-        "laravelcollective/html": "5.3.*",
-        "clumsy/assets": "0.7.*",
-        "clumsy/utils": "0.10.*",
-        "clumsy/eminem": "0.14.*"
+        "laravel/framework": "5.4.*",
+        "laravelcollective/html": "5.4.*",
+        "clumsy/assets": "0.8.*",
+        "clumsy/utils": "0.11.*",
+        "clumsy/eminem": "0.14.*",
+        "erusev/parsedown": "^1.6",
+        "maatwebsite/excel": "~2.1.0"
     },
     "autoload": {
         "psr-4": {

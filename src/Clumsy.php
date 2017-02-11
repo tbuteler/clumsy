@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Blade;
 use InvalidArgumentException;
+use Maatwebsite\Excel\ExcelServiceProvider;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class Clumsy
@@ -35,13 +36,13 @@ class Clumsy
 
         AliasLoader::getInstance()->alias('Form', 'Collective\Html\FormFacade');
         AliasLoader::getInstance()->alias('Field', 'Clumsy\Utils\Facades\Field');
+        $this->app->register(ExcelServiceProvider::class);
 
         $adminAssets = include(__DIR__.'/assets/assets.php');
         $this->app['clumsy.assets']->batchRegister($adminAssets);
 
         $this->adminPrefix = null;
         if (!$this->app->runningInConsole()) {
-
             $this->adminPrefix = ltrim(str_replace('/', '.', $this->app['request']->route()->getPrefix()), '.');
 
             $this->adminLocale = $this->app['config']->get('clumsy.cms.admin-locale');
@@ -76,7 +77,7 @@ class Clumsy
         return $next($request);
     }
 
-    public function auth(Request $request, Closure $next)
+    protected function auth(Request $request, Closure $next)
     {
         if (!$this->auth->check()) {
             if ($request->ajax()) {
@@ -86,9 +87,9 @@ class Clumsy
         }
     }
 
-    public function assets(Request $request)
+    protected function assets(Request $request)
     {
-        $this->app['clumsy.assets']->font(['Source Sans Pro' => [300, 400, 600], 'Material Icons']);
+        $this->app['clumsy.assets']->fonts(['Source Sans Pro' => [300, 400, 600], 'Material Icons']);
 
         view()->share([
             'adminPrefix'     => $this->prefix(),
@@ -121,7 +122,7 @@ class Clumsy
         ]);
     }
 
-    public function user()
+    protected function user()
     {
         view()->share('user', $this->auth->user());
     }

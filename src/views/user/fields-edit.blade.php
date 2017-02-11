@@ -29,6 +29,11 @@
                         @password('new_password_confirmation', trans('clumsy::fields.new_password_confirmation'))
                     </div>
                 </div>
+                <div class="row collapse">
+                    <div class="col-md-12">
+                        @password('current_password', trans('clumsy::fields.current_password'))
+                    </div>
+                </div>
             @endif
 
         @endif

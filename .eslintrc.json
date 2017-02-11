@@ -8,14 +8,18 @@
         "ecmaFeatures": {
             "jsx": true,
             "modules": true
-        },
-        "env": {
-            "es6": true,
-            "browser": true
         }
+    },
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true
     },
     "globals": {
         "$": false,
-        "handover": false
+        "handover": false,
+        "google": false,
+        "tinymce": true,
+        "SimpleMDE": true
     }
 }

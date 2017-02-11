@@ -59,7 +59,7 @@ class AdminController extends APIController
 
             $this->parseChildren($this->model);
 
-            $id = $this->route->getParameter($this->model->resourceParameter());
+            $id = $this->route->parameter($this->model->resourceParameter());
             $this->parseParents($this->model, $id);
         }
     }
@@ -138,7 +138,7 @@ class AdminController extends APIController
 
         $this->loadPanel();
 
-        return response($this->panel->render());
+        return $this->panel->resolve();
     }
 
     public function indexOfType($type)
@@ -146,7 +146,7 @@ class AdminController extends APIController
         $this->loadPanel('index');
         $this->panel->toggle($type);
 
-        return response($this->panel->render());
+        return $this->panel->resolve();
     }
 
     /**
@@ -213,7 +213,6 @@ class AdminController extends APIController
         $this->panel->loadItemById($id);
 
         if ($id && $this->model->hasChildren()) {
-
             // Bump current model up on the hierarchy -- it is now a parent
             $parents = $this->modelHierarchy['parents'];
             $parents[] = $this->panel->item;
@@ -238,7 +237,7 @@ class AdminController extends APIController
             }
         }
 
-        return response($this->panel->render());
+        return $this->panel->resolve();
     }
 
     /**
@@ -326,7 +325,7 @@ class AdminController extends APIController
 
         $this->loadPanel();
 
-        return response($this->panel->render());
+        return $this->panel->resolve();
     }
 
     public function updateOrder()
@@ -385,6 +384,6 @@ class AdminController extends APIController
             return parent::__call($method, $parameters);
         }
 
-        return response($this->panel->render());
+        return $this->panel->resolve();
     }
 }

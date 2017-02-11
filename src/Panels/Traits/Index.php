@@ -2,16 +2,12 @@
 
 namespace Clumsy\CMS\Panels\Traits;
 
-use Clumsy\CMS\Panels\Traits\Sortable;
-use Clumsy\CMS\Panels\Traits\Reorderable;
-use Clumsy\CMS\Panels\Traits\Filterable;
-use Clumsy\CMS\Panels\Traits\Toggable;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Index
 {
-    use Sortable, Reorderable, Filterable, Toggable;
+    use Sortable, Reorderable, Filterable, Toggable, Exportable;
 
     protected $items;
 
@@ -50,7 +46,7 @@ trait Index
 
         $pagination = $items instanceof LengthAwarePaginator ? ($items->hasPages() ? $items : null) : null;
         if (!is_null($pagination)) {
-            if($this->isChild()) {
+            if ($this->isChild()) {
                 $pagination = $pagination->appends(['show' => $this->resourceName()]);
             }
             $pagination = $pagination->render();
@@ -76,7 +72,7 @@ trait Index
         $perPage = $this->getOptionalProperty('itemsPerPage', config('clumsy.cms.per-page'));
 
         if ($perPage === 'inherit') {
-            return $this->model->perPage();
+            return $this->model->getPerPage();
         }
 
         return $perPage;
@@ -114,13 +110,17 @@ trait Index
 
     public function columnTitle($resource, $column, $name)
     {
+        if ($this->avoidHTML()) {
+            return $name;
+        }
+
         $url = route("{$this->routePrefix}.sort");
         $class = '';
         $html = '';
 
         if (session()->has("clumsy.order.$resource")) {
             if ($column === head(session("clumsy.order.$resource"))) {
-            $direction = last(session("clumsy.order.$resource"));
+                $direction = last(session("clumsy.order.$resource"));
 
                 $class = "active $direction";
                 $html = '<span class="caret"></span>';
@@ -150,7 +150,7 @@ trait Index
         $value = $item->$column;
 
         if (!$item->hasGetMutator($column)) {
-            if ($this->isEditableInline($column)) {
+            if ($this->isEditableInline($column) && $this->useHTML()) {
                 if ($item->isCasted($column)) {
                     switch ($item->castAs($column)) {
                         case 'bool':
@@ -166,19 +166,19 @@ trait Index
         }
 
         if ($value === false || $value === null) {
-            $value = $this->columnValuePlaceHolder();
+            $value = $this->columnEmptyValuePlaceholder();
         }
 
         $url = route("{$this->routePrefix}.edit", $item->id);
 
         $value = $this->sanitizeColumnValue($value);
 
-        return $this->is('gallery') ? $value : "<a href=\"{$url}\">{$value}</a>";
+        return $this->is('gallery') || $this->avoidHTML() ? $value : "<a href=\"{$url}\">{$value}</a>";
     }
 
-    public function columnValuePlaceHolder()
+    public function columnEmptyValuePlaceholder()
     {
-        return '&nbsp;';
+        return $this->avoidHTML() ? '' : '&nbsp;';
     }
 
     public function sanitizeColumnValue($value)

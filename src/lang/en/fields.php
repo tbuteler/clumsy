@@ -32,6 +32,8 @@ return [
 
     'new_password_confirmation' => 'Confirm new password',
 
+    'current_password' => 'Current password',
+
     'roles' => [
 
         'administrator' => 'Administrator',

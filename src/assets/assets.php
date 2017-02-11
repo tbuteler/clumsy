@@ -5,18 +5,18 @@ $google_api = env('API_GOOGLE_MAPS', '');
 return [
 
     'admin.css' => [
-        'set'    => 'styles',
-        'path'   => 'vendor/clumsy/cms/css/admin.css',
-        'v'      => '0.28.6',
-        'elixir' => false,
+        'set'     => 'styles',
+        'path'    => config('clumsy.cms.admin-css-path'),
+        'hash'    => false,
+        'version' => '0.29.0',
     ],
 
     'admin.js' => [
-        'set'    => 'footer',
-        'path'   => 'vendor/clumsy/cms/js/admin.js',
-        'req'    => ['bootstrap.js', 'chosen'],
-        'v'      => '0.28.6',
-        'elixir' => false,
+        'set'      => 'footer',
+        'path'     => 'vendor/clumsy/cms/js/admin.js',
+        'requires' => ['bootstrap.js', 'chosen'],
+        'hash'     => false,
+        'version'  => '0.29.0',
     ],
 
     'google-maps-admin' => [

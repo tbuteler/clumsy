@@ -32,6 +32,8 @@ return [
 
     'new_password_confirmation' => 'Confirmar nova palavra-chave',
 
+    'current_password' => 'Palavra-chave actual',
+
     'roles' => [
 
         'administrator' => 'Administrador',

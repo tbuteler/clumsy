@@ -2,10 +2,16 @@
 
 namespace Clumsy\CMS;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Foundation\AliasLoader;
-use Clumsy\CMS\Routing\ResourceRegistrar;
+use Clumsy\Assets\AssetsServiceProvider;
+use Clumsy\CMS\Clumsy;
+use Clumsy\CMS\Contracts\ShortcodeInterface;
 use Clumsy\CMS\Facades\Overseer;
+use Clumsy\CMS\Library\Shortcode;
+use Clumsy\CMS\Routing\ResourceRegistrar;
+use Clumsy\Eminem\EminemServiceProvider;
+use Clumsy\Utils\UtilsServiceProvider;
+use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\ServiceProvider;
 
 class CMSServiceProvider extends ServiceProvider
 {
@@ -24,23 +30,23 @@ class CMSServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register('Clumsy\Assets\AssetsServiceProvider');
-        $this->app->register('Clumsy\Utils\UtilsServiceProvider');
-        $this->app->register('Clumsy\Eminem\EminemServiceProvider');
+        $this->app->register(AssetsServiceProvider::class);
+        $this->app->register(UtilsServiceProvider::class);
+        $this->app->register(EminemServiceProvider::class);
 
         $this->mergeConfigFrom(__DIR__.'/config/config.php', 'clumsy.cms');
 
         $loader = AliasLoader::getInstance();
         $loader->alias('Overseer', Overseer::class);
 
-        $this->app['router']->middleware('clumsy', 'Clumsy\CMS\Clumsy');
+        $this->app['router']->aliasMiddleware('clumsy', Clumsy::class);
 
         // Override the resource registrar so we can add more methods to resource controllers
         $this->app->bind('Illuminate\Routing\ResourceRegistrar', function ($app) {
             return new ResourceRegistrar($app['router']);
         });
 
-        $this->app->bind('\Clumsy\CMS\Contracts\ShortcodeInterface', '\Clumsy\CMS\Library\Shortcode');
+        $this->app->bind(ShortcodeInterface::class, Shortcode::class);
 
         $this->app['clumsy.admin'] = false;
 
@@ -64,7 +70,7 @@ class CMSServiceProvider extends ServiceProvider
         $this->registerPublishers();
 
         if ($this->app->runningInConsole()) {
-            $this->app->make('Clumsy\CMS\Clumsy');
+            $this->app->make(Clumsy::class);
         }
 
         $this->loadViewsFrom(__DIR__.'/views', 'clumsy');
@@ -88,19 +94,19 @@ class CMSServiceProvider extends ServiceProvider
 
     protected function registerCommands()
     {
-        $this->app['command.clumsy.publish'] = $this->app->share(function ($app) {
+        $this->app->singleton('command.clumsy.publish', function ($app) {
             return new Console\PublishCommand();
         });
 
-        $this->app['command.clumsy.resource'] = $this->app->share(function ($app) {
+        $this->app->singleton('command.clumsy.resource', function ($app) {
             return new Console\ResourceCommand();
         });
 
-        $this->app['command.clumsy.pivot'] = $this->app->share(function ($app) {
+        $this->app->singleton('command.clumsy.pivot', function ($app) {
             return new Console\PivotCommand();
         });
 
-        $this->app['command.clumsy.user'] = $this->app->share(function ($app) {
+        $this->app->singleton('command.clumsy.user', function ($app) {
             return new Console\RegisterUserCommand();
         });
 

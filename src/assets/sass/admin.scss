@@ -5,9 +5,10 @@
 |
 */
 
-@import "variables";
-@import "../../../node_modules/sweetalert/dist/sweetalert";
-@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import 'variables';
+@import 'mixins';
+@import '../../../node_modules/sweetalert/dist/sweetalert';
+@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
 /*
 |--------------------------------------------------------------------------
@@ -16,16 +17,17 @@
 |
 */
 
-@import "alerts";
-@import "auth";
-@import "navbar";
-@import "breadcrumb";
-@import "tabs";
-@import "headings";
-@import "tooltips";
-@import "tables";
-@import "buttons";
-@import "inputs";
-@import "filter";
-@import "reorder";
-@import "responsive";
+@import 'alerts';
+@import 'navbar';
+@import 'breadcrumb';
+@import 'tabs';
+@import 'headings';
+@import 'tooltips';
+@import 'tables';
+@import 'buttons';
+@import 'inputs';
+@import 'filter';
+@import 'filter-toggles';
+@import 'reorder';
+@import 'responsive';
+@import 'pages/login';

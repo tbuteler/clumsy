@@ -30,7 +30,7 @@
 
             &:hover {
                 color: $navbar-default-link-hover-color;
-                background-color: transparent;
+                background-color: $navbar-default-border;
             }
 
             &:focus {

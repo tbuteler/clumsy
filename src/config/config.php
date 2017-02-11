@@ -141,7 +141,7 @@ return [
      |
      */
 
-    'per-page' => 40,
+    'per-page' => 'inherit',
 
 
     /*
@@ -180,4 +180,18 @@ return [
 
     'views-folder-path' => base_path('resources/views/admin'),
 
+    /*
+     |--------------------------------------------------------------------------
+     | Default admin CSS path
+     |--------------------------------------------------------------------------
+     |
+     | You can load any asset you want in Clumsy's admin area, but sometimes
+     | you might want to extend Clumsy's default Sass files in order to easily
+     | override certain variables before importing the file.
+     |
+     | The path is always relative to the public folder of your app.
+     |
+     */
+
+    'admin-css-path' => 'vendor/clumsy/cms/css/admin.css',
 ];

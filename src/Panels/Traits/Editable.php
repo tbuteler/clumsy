@@ -19,7 +19,7 @@ trait Editable
         $title = $this->action === 'create' ? 'clumsy::titles.new_item' : 'clumsy::titles.edit_item';
         $this->setData([
             'title'          => trans($title, ['resource' => $this->getLabel()]),
-            'id'             => request()->route()->getParameter($this->resourceParameter()),
+            'id'             => request()->route()->parameter($this->resourceParameter()),
             'backLink'       => route("{$this->routePrefix}.index"),
             'showResource'   => request('show', request('reorder')),
             'suppressDelete' => $this->suppressDelete(),

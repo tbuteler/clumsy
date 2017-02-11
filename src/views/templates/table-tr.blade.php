@@ -1,5 +1,5 @@
 <tr class="{{ $panel->rowClass($item) }}">
 @foreach ($columns as $column => $name)
-    @include($view->resolve('table-td'))
+    <td class="{{ $panel->cellClass($item, $column) }}">{!! $panel->columnValue($item, $column) !!}</td>
 @endforeach
 </tr>
